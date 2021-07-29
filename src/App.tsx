@@ -12,6 +12,8 @@ const App = () => {
   return (
     <div className="App">
       <h1>Mernda Express!</h1>
+
+      {/* Map over ever document in the collection and display it on the page */}
       {examples?.map((example) => (
         <p>{example.testField}</p>
       ))}
