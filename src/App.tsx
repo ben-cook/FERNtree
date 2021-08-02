@@ -1,6 +1,9 @@
 import "./App.css";
 import firebase from "firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import Header from "./components/header";
+import { ThemeProvider } from "@material-ui/core";
+import theme from "./theme";
 
 const App = () => {
   // Get a refernce to the 'example' collection of documents
@@ -10,14 +13,16 @@ const App = () => {
   const [examples] = useCollectionData(exampleCollectionReference);
 
   return (
-    <div className="App">
-      <h1>Mernda Express!</h1>
+    <ThemeProvider theme={theme}>
+      <div className="App">
+        <Header />
 
-      {/* Map over ever document in the collection and display it on the page */}
-      {examples?.map((example) => (
-        <p>{example.testField}</p>
-      ))}
-    </div>
+        {/* Map over ever document in the collection and display it on the page */}
+        {examples?.map((example) => (
+          <p>{example.testField}</p>
+        ))}
+      </div>
+    </ThemeProvider>
   );
 };
 
