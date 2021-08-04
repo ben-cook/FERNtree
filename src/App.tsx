@@ -1,8 +1,7 @@
 import "./App.css";
-
+import Router from "./Router";
 import Header from "./components/Header";
 import { Container } from "@material-ui/core";
-import Router from "./Router";
 
 const App = () => {
   return (

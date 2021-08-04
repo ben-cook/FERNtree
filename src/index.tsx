@@ -1,14 +1,12 @@
+import App from "./App";
+import { config } from "./firebaseConfig";
 import "./index.css";
-
+import reportWebVitals from "./reportWebVitals";
+import theme from "./theme";
 import { ThemeProvider } from "@material-ui/core";
 import firebase from "firebase/app";
 import React from "react";
 import ReactDOM from "react-dom";
-
-import App from "./App";
-import { config } from "./firebaseConfig";
-import reportWebVitals from "./reportWebVitals";
-import theme from "./theme";
 import { BrowserRouter as Router } from "react-router-dom";
 
 firebase.initializeApp(config);

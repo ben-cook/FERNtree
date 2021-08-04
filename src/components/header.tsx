@@ -5,9 +5,9 @@ import {
   Typography,
   AppBar
 } from "@material-ui/core";
-import MenuIcon from "@material-ui/icons/Menu";
-import EcoIcon from "@material-ui/icons/Eco";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import EcoIcon from "@material-ui/icons/Eco";
+import MenuIcon from "@material-ui/icons/Menu";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>

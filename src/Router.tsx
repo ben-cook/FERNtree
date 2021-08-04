@@ -1,7 +1,6 @@
-import { Route, Switch } from "react-router-dom";
-
 import SignUp from "./components/Account/Signup";
 import Home from "./components/Home";
+import { Route, Switch } from "react-router-dom";
 
 const Router = () => {
   return (
