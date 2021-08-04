@@ -18,8 +18,8 @@ const App = () => {
         <Header />
 
         {/* Map over ever document in the collection and display it on the page */}
-        {examples?.map((example) => (
-          <p>{example.testField}</p>
+        {examples?.map((example, idx) => (
+          <p key={idx}>{example.testField}</p>
         ))}
       </div>
     </ThemeProvider>
