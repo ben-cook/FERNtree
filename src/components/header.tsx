@@ -3,28 +3,30 @@ import {
   IconButton,
   Toolbar,
   Typography,
-  AppBar,
+  AppBar
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import EcoIcon from "@material-ui/icons/Eco";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      flexGrow: 1,
+      flexGrow: 1
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(2)
     },
     title: {
-      flexGrow: 1,
-    },
+      flexGrow: 1
+    }
   })
 );
 
 const Header = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   return (
     <AppBar position="static">
@@ -37,12 +39,23 @@ const Header = () => {
         >
           <MenuIcon />
         </IconButton>
-        <Typography variant="h6" className={classes.title}>
+
+        <Typography
+          variant="h6"
+          className={classes.title}
+          onClick={() => history.push("/")}
+        >
           Ferntree
           <EcoIcon />
         </Typography>
 
-        <Button color="inherit">Login</Button>
+        {/* We could use the Link component here, but I forget how to do this without messing up the styling */}
+        {/* <Link component={Button} to="/signup">
+          Sign Up
+        </Link> */}
+        <Button color="inherit" onClick={() => history.push("/signup")}>
+          Sign Up
+        </Button>
       </Toolbar>
     </AppBar>
   );

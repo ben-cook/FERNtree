@@ -1,28 +1,18 @@
 import "./App.css";
-import firebase from "firebase";
-import { useCollectionData } from "react-firebase-hooks/firestore";
-import Header from "./components/header";
-import { ThemeProvider } from "@material-ui/core";
-import theme from "./theme";
+
+import Header from "./components/Header";
+import { Container } from "@material-ui/core";
+import Router from "./Router";
 
 const App = () => {
-  // Get a refernce to the 'example' collection of documents
-  const exampleCollectionReference = firebase.firestore().collection("example");
-
-  // Get all the documents in the collection
-  const [examples] = useCollectionData(exampleCollectionReference);
-
   return (
-    <ThemeProvider theme={theme}>
-      <div className="App">
-        <Header />
+    <div className="App">
+      <Header />
 
-        {/* Map over ever document in the collection and display it on the page */}
-        {examples?.map((example, idx) => (
-          <p key={idx}>{example.testField}</p>
-        ))}
-      </div>
-    </ThemeProvider>
+      <Container>
+        <Router />
+      </Container>
+    </div>
   );
 };
 

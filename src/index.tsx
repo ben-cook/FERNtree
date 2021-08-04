@@ -1,5 +1,6 @@
 import "./index.css";
 
+import { ThemeProvider } from "@material-ui/core";
 import firebase from "firebase/app";
 import React from "react";
 import ReactDOM from "react-dom";
@@ -7,12 +8,21 @@ import ReactDOM from "react-dom";
 import App from "./App";
 import { config } from "./firebaseConfig";
 import reportWebVitals from "./reportWebVitals";
+import theme from "./theme";
+import { BrowserRouter as Router } from "react-router-dom";
 
 firebase.initializeApp(config);
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+    {/* ThemeProvider allows us to use a custom theme with Material UI */}
+    <ThemeProvider theme={theme}>
+      {/* The router is responsible for handling react-router-dom stuff */}
+      <Router>
+        {/* Render our App :) */}
+        <App />
+      </Router>
+    </ThemeProvider>
   </React.StrictMode>,
   document.getElementById("root")
 );
