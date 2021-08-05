@@ -1,5 +1,7 @@
+import EmailLogin from "./EmailLogin/EmailLogin";
 import { Grid, Button, Typography } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
+import { useState } from "react";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -9,6 +11,11 @@ const useStyles = makeStyles(() =>
 
 const Login = () => {
   const classes = useStyles();
+  const [isEmailSelected, setIsEmailSelected] = useState<boolean>(false);
+
+  if (isEmailSelected) {
+    return <EmailLogin setIsEmailSelected={setIsEmailSelected} />;
+  }
 
   return (
     <Grid
@@ -28,8 +35,15 @@ const Login = () => {
         </Button>
       </Grid>
       <Grid item>
-        <Button variant="outlined" color="default" fullWidth>
-          Sign in with email
+        <Button
+          variant="outlined"
+          color="default"
+          fullWidth
+          onClick={() => setIsEmailSelected(true)}
+        >
+          <Typography variant="button" color="initial">
+            Sign in with email
+          </Typography>
         </Button>
       </Grid>
     </Grid>
