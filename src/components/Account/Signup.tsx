@@ -31,12 +31,20 @@ const validationSchema = yup.object().shape({
     .required("Password is required")
 });
 
+// Type the form values
+interface FormValues {
+  email: string;
+  password: string;
+}
+
 const SignUp = () => {
   const classes = useStyles();
   const history = useHistory();
 
+  const initialFormValues: FormValues = { email: "", password: "" };
+
   // We run this function when the user click the sign up button
-  const signUp = ({ email, password }: { email: string; password: string }) => {
+  const signUp = ({ email, password }: FormValues) => {
     const auth = firebase.auth();
 
     auth
@@ -61,7 +69,7 @@ const SignUp = () => {
     >
       <Grid item xs={12} sm={12} md={6}>
         <Formik
-          initialValues={{ email: "", password: "" }}
+          initialValues={initialFormValues}
           validationSchema={validationSchema}
           onSubmit={signUp}
         >

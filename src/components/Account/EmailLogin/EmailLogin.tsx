@@ -8,6 +8,7 @@ import {
   Form,
   Formik,
   FormikErrors,
+  FormikHelpers,
   FormikTouched,
   FormikValues
 } from "formik";
@@ -61,9 +62,10 @@ const steps: Step[] = [
 ];
 
 // Handle actually signing into the app
-const handleFormSubmit = (values: FormValues, actions) => {
-  console.log("form submitted, trying to sign in now");
-
+const handleFormSubmit = (
+  values: FormValues,
+  actions: FormikHelpers<FormValues>
+) => {
   const { email, password } = values;
   const auth = firebase.auth();
 
@@ -83,13 +85,15 @@ interface EmailLoginProps {
 const EmailLogin = ({ setIsEmailSelected }: EmailLoginProps): JSX.Element => {
   const classes = useStyles();
 
+  const initialFormValues: FormValues = { email: "", password: "" };
+
   // Keep track of which step we're up to
   const [currentStepIndex, setCurrentStepIndex] = useState<number>(0);
   const incrementStepIndex = () => setCurrentStepIndex(currentStepIndex + 1);
   const decrementStepIndex = () => setCurrentStepIndex(currentStepIndex - 1);
 
   // Go to the next step, or submit the form if we're done
-  const nextStep = (values: FormValues, actions) => {
+  const nextStep = (values: FormValues, actions: FormikHelpers<FormValues>) => {
     if (currentStepIndex < steps.length - 1) {
       incrementStepIndex();
       actions.setSubmitting(false);
@@ -108,12 +112,12 @@ const EmailLogin = ({ setIsEmailSelected }: EmailLoginProps): JSX.Element => {
     }
   };
 
-  // Get the currest step of the form that we're up to
+  // Get the current step of the form that we're up to
   const currentStep = steps[currentStepIndex];
 
   return (
     <Formik
-      initialValues={{ email: "", password: "" }}
+      initialValues={initialFormValues}
       validationSchema={currentStep.validationSchema}
       onSubmit={nextStep}
     >
