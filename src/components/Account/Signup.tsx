@@ -1,6 +1,7 @@
+import Loading from "../Loading";
 import { Button, Grid, TextField, makeStyles } from "@material-ui/core";
 import firebase from "firebase/app";
-import { useFormik } from "formik";
+import { Form, Formik } from "formik";
 import { useHistory } from "react-router-dom";
 import * as yup from "yup";
 
@@ -11,6 +12,10 @@ const useStyles = makeStyles(() => ({
   },
   submitButton: {
     marginTop: "1.5em"
+  },
+  emailField: {
+    marginBottom: "1em",
+    marginTop: "1em"
   }
 }));
 
@@ -46,18 +51,6 @@ const SignUp = () => {
       .catch((reason) => console.error(reason));
   };
 
-  // Formik allows us to create forms super easily.
-  const formik = useFormik({
-    initialValues: {
-      email: "",
-      password: ""
-    },
-    validationSchema: validationSchema,
-    onSubmit: (values) => {
-      signUp(values);
-    }
-  });
-
   return (
     <Grid
       container
@@ -67,40 +60,51 @@ const SignUp = () => {
       justifyContent={"center"}
     >
       <Grid item xs={12} sm={12} md={6}>
-        <form onSubmit={formik.handleSubmit} className={classes.form}>
-          <TextField
-            fullWidth
-            id="email"
-            name="email"
-            label="Email"
-            value={formik.values.email}
-            onChange={formik.handleChange}
-            error={formik.touched.email && Boolean(formik.errors.email)}
-            helperText={formik.touched.email && formik.errors.email}
-            variant="outlined"
-          />
+        <Formik
+          initialValues={{ email: "", password: "" }}
+          validationSchema={validationSchema}
+          onSubmit={signUp}
+        >
+          {({ isSubmitting, errors, values, handleChange, touched }) => (
+            <Form>
+              <TextField
+                fullWidth
+                id="email"
+                name="email"
+                label="Email"
+                value={values.email}
+                onChange={handleChange}
+                error={touched.email && Boolean(errors.email)}
+                helperText={touched.email && errors.email}
+                variant="outlined"
+                className={classes.emailField}
+              />
 
-          <TextField
-            fullWidth
-            id="password"
-            name="password"
-            label="Password"
-            type="password"
-            value={formik.values.password}
-            onChange={formik.handleChange}
-            error={formik.touched.password && Boolean(formik.errors.password)}
-            helperText={formik.touched.password && formik.errors.password}
-            variant="outlined"
-          />
+              <TextField
+                fullWidth
+                id="password"
+                name="password"
+                label="Password"
+                type="password"
+                value={values.password}
+                onChange={handleChange}
+                error={touched.password && Boolean(errors.password)}
+                helperText={touched.password && errors.password}
+                variant="outlined"
+              />
 
-          <Button
-            type="submit"
-            variant={"outlined"}
-            className={classes.submitButton}
-          >
-            Sign up
-          </Button>
-        </form>
+              {isSubmitting && <Loading />}
+
+              <Button
+                type="submit"
+                variant={"outlined"}
+                className={classes.submitButton}
+              >
+                Sign up
+              </Button>
+            </Form>
+          )}
+        </Formik>
       </Grid>
     </Grid>
   );
