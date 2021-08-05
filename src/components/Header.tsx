@@ -8,6 +8,8 @@ import {
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import EcoIcon from "@material-ui/icons/Eco";
 import MenuIcon from "@material-ui/icons/Menu";
+import firebase from "firebase/app";
+import { useAuthState } from "react-firebase-hooks/auth";
 import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,6 +29,8 @@ const useStyles = makeStyles((theme: Theme) =>
 const Header = () => {
   const classes = useStyles();
   const history = useHistory();
+
+  const [user] = useAuthState(firebase.auth());
 
   return (
     <AppBar position="static">
@@ -53,8 +57,9 @@ const Header = () => {
         {/* <Link component={Button} to="/signup">
           Sign Up
         </Link> */}
-        <Button color="inherit" onClick={() => history.push("/signup")}>
-          Sign Up
+        {/* This is bad for accessibility, have to change this soon */}
+        <Button color="inherit" onClick={() => history.push("/account")}>
+          {user?.email ? user.email : "Sign In"}
         </Button>
       </Toolbar>
     </AppBar>

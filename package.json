@@ -1,6 +1,6 @@
 {
-  "name": "mernda-express-client",
-  "version": "0.1.0",
+  "name": "ferntree",
+  "version": "1.0.0",
   "private": true,
   "dependencies": {
     "@fontsource/roboto": "^4.5.0",

@@ -77,6 +77,7 @@ const SignUp = () => {
             onChange={formik.handleChange}
             error={formik.touched.email && Boolean(formik.errors.email)}
             helperText={formik.touched.email && formik.errors.email}
+            variant="outlined"
           />
 
           <TextField
@@ -89,6 +90,7 @@ const SignUp = () => {
             onChange={formik.handleChange}
             error={formik.touched.password && Boolean(formik.errors.password)}
             helperText={formik.touched.password && formik.errors.password}
+            variant="outlined"
           />
 
           <Button
