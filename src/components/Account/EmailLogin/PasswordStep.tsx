@@ -12,7 +12,7 @@ export const passwordStepValidationSchema = yup.object().shape({
 
 const useStyles = makeStyles(() =>
   createStyles({
-    root: { width: "40vw", margin: "auto", marginTop: "1em" }
+    root: { margin: "auto", marginTop: "1em", width: "100%" }
   })
 );
 
@@ -20,16 +20,8 @@ const PasswordStep = ({ values, handleChange, touched, errors }: StepProps) => {
   const classes = useStyles();
 
   return (
-    <Grid
-      container
-      direction="column"
-      className={classes.root}
-      justifyContent="center"
-      alignContent="center"
-      alignItems="stretch"
-      spacing={2}
-    >
-      <Grid item>
+    <Grid container className={classes.root} justifyContent={"center"}>
+      <Grid item xs={12} sm={8} md={6}>
         <TextField
           variant="outlined"
           label="Password"
