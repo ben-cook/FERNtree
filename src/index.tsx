@@ -3,6 +3,7 @@ import { config } from "./firebaseConfig";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
 import theme from "./theme";
+import "@fontsource/roboto";
 import { ThemeProvider } from "@material-ui/core";
 import firebase from "firebase/app";
 import React from "react";
