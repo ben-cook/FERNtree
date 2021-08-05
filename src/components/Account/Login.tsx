@@ -6,7 +6,10 @@ import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() =>
   createStyles({
-    buttonGroup: { width: "20vw", margin: "auto", marginTop: "1em" }
+    root: {
+      width: "100%",
+      marginTop: "1em"
+    }
   })
 );
 
@@ -22,30 +25,35 @@ const Login = () => {
     <Grid
       container
       direction="column"
-      className={classes.buttonGroup}
+      className={classes.root}
       justifyContent="center"
       alignContent="center"
       alignItems="stretch"
       spacing={1}
     >
-      <Grid item>
-        <Button variant="outlined" color="default" fullWidth>
-          <Typography variant="button" color="initial">
-            Sign in with Google
-          </Typography>
-        </Button>
+      <Grid item container justifyContent="center">
+        <Grid item xs={12} sm={8} md={6}>
+          <Button variant="outlined" color="default" fullWidth>
+            <Typography variant="button" color="initial">
+              Sign in with Google
+            </Typography>
+          </Button>
+        </Grid>
       </Grid>
-      <Grid item>
-        <Button
-          variant="outlined"
-          color="default"
-          fullWidth
-          onClick={() => setIsEmailSelected(true)}
-        >
-          <Typography variant="button" color="initial">
-            Sign in with email
-          </Typography>
-        </Button>
+
+      <Grid item container justifyContent="center">
+        <Grid item xs={12} sm={8} md={6}>
+          <Button
+            variant="outlined"
+            color="default"
+            fullWidth
+            onClick={() => setIsEmailSelected(true)}
+          >
+            <Typography variant="button" color="initial">
+              Sign in with email
+            </Typography>
+          </Button>
+        </Grid>
       </Grid>
 
       <Typography variant="subtitle1" color="initial">

@@ -1,7 +1,7 @@
 import Loading from "../../Loading";
 import EmailStep, { emailStepValidationSchema } from "./EmailStep";
 import PasswordStep, { passwordStepValidationSchema } from "./PasswordStep";
-import { Button } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import firebase from "firebase/app";
 import {
@@ -22,6 +22,9 @@ const useStyles = makeStyles(() =>
     wrapper: {},
     submitButton: {
       marginTop: "1.5em"
+    },
+    root: {
+      width: "100%"
     }
   })
 );
@@ -74,7 +77,7 @@ const handleFormSubmit = (
     .then((credentials) =>
       console.log(`Signed in as ${credentials.user?.email}`)
     )
-    .catch((reason) => console.log(reason))
+    .catch((reason) => console.error(reason))
     .finally(() => actions.setSubmitting(false));
 };
 
@@ -120,6 +123,7 @@ const EmailLogin = ({ setIsEmailSelected }: EmailLoginProps): JSX.Element => {
       initialValues={initialFormValues}
       validationSchema={currentStep.validationSchema}
       onSubmit={nextStep}
+      className={classes.root}
     >
       {({ isSubmitting, errors, values, handleChange, touched }) => (
         <Form>
@@ -130,29 +134,38 @@ const EmailLogin = ({ setIsEmailSelected }: EmailLoginProps): JSX.Element => {
             touched={touched}
           />
 
-          <div className={classes.buttons}>
-            <div className={classes.wrapper}>
-              {isSubmitting && <Loading />}
-              <Button
-                disabled={isSubmitting}
-                type="submit"
-                variant="contained"
-                color="primary"
-                className={classes.button}
-              >
-                {currentStepIndex === steps.length - 1 ? "Sign in" : "Next"}
-              </Button>
-            </div>
+          <Grid container direction="column">
+            {isSubmitting && <Loading />}
 
-            <Button
-              onClick={previousStep}
-              className={classes.button}
-              variant="contained"
-              color="primary"
-            >
-              Back
-            </Button>
-          </div>
+            <Grid item container justifyContent="center">
+              <Grid item xs={10} sm={6} md={3}>
+                <Button
+                  disabled={isSubmitting}
+                  type="submit"
+                  variant="contained"
+                  color="primary"
+                  className={classes.button}
+                  fullWidth
+                >
+                  {currentStepIndex === steps.length - 1 ? "Sign in" : "Next"}
+                </Button>
+              </Grid>
+            </Grid>
+
+            <Grid item container justifyContent="center">
+              <Grid item xs={6} sm={4} md={2}>
+                <Button
+                  onClick={previousStep}
+                  className={classes.button}
+                  variant="contained"
+                  color="primary"
+                  fullWidth
+                >
+                  Back
+                </Button>
+              </Grid>
+            </Grid>
+          </Grid>
         </Form>
       )}
     </Formik>
