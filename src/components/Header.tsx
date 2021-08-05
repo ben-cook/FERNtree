@@ -53,8 +53,9 @@ const Header = () => {
         {/* <Link component={Button} to="/signup">
           Sign Up
         </Link> */}
-        <Button color="inherit" onClick={() => history.push("/signup")}>
-          Sign Up
+        {/* This is bad for accessibility, have to change this soon */}
+        <Button color="inherit" onClick={() => history.push("/login")}>
+          Log In
         </Button>
       </Toolbar>
     </AppBar>
