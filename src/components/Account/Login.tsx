@@ -2,6 +2,7 @@ import EmailLogin from "./EmailLogin/EmailLogin";
 import { Grid, Button, Typography } from "@material-ui/core";
 import { createStyles, makeStyles } from "@material-ui/core/styles";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -46,6 +47,10 @@ const Login = () => {
           </Typography>
         </Button>
       </Grid>
+
+      <Typography variant="subtitle1" color="initial">
+        {`Don't have a account?`} <Link to="/signup">Sign up here</Link>
+      </Typography>
     </Grid>
   );
 };
