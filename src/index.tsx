@@ -6,6 +6,8 @@ import theme from "./theme";
 import "@fontsource/roboto";
 import { ThemeProvider } from "@material-ui/core";
 import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
