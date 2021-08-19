@@ -128,7 +128,7 @@ const Home = () => {
         <Grid container spacing={1} className={classes.grid}>
           {clientsData.map((client, idx) => (
             <Grid item key={idx} xs={12} sm={6} md={4}>
-              <Card variant="outlined">
+              <Card variant="outlined" style={{ height: "30vh" }}>
                 <CardContent>
                   {client.firstName} {client.lastName}
                 </CardContent>
@@ -137,8 +137,6 @@ const Home = () => {
           ))}
         </Grid>
       )}
-
-      <pre>{JSON.stringify(clientsData, null, 2)}</pre>
     </>
   );
 };
