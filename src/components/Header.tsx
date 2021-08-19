@@ -17,6 +17,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logoIcon: {
       marginLeft: theme.spacing(2)
+    },
+    noTextDecoration: {
+      textDecoration: "none",
+      color: "black"
     }
   })
 );
@@ -42,10 +46,14 @@ const Header = () => {
         <Container>
           <Grid container justifyContent={"space-between"}>
             <Grid item>
-              <Link component={LogoIcon} to="/" />
+              <Link to="/" className={classes.noTextDecoration}>
+                <LogoIcon />
+              </Link>
             </Grid>
             <Grid item>
-              <Link component={ProfileButton} to="/signup" />
+              <Link to="/account" className={classes.noTextDecoration}>
+                <ProfileButton />
+              </Link>
             </Grid>
           </Grid>
         </Container>
