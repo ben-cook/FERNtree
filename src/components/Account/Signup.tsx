@@ -8,7 +8,7 @@ import {
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 
 interface FormValues {
@@ -41,6 +41,7 @@ const useStyles = makeStyles((theme) =>
 
 const Signup = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const initialValues: FormValues = {
     email: "",
@@ -73,7 +74,16 @@ const Signup = () => {
         ) => {
           setSubmitting(true);
 
-          console.log("submitted");
+          const { email, password } = values;
+          const auth = firebase.auth();
+
+          auth
+            .createUserWithEmailAndPassword(email, password)
+            .then(() => {
+              history.push("/");
+            })
+            .catch((reason) => console.error(reason))
+            .finally(() => setSubmitting(false));
         }}
       >
         {({ isSubmitting }) => (

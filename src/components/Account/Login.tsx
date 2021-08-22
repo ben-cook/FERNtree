@@ -74,9 +74,6 @@ const Login = () => {
 
           auth
             .signInWithEmailAndPassword(email, password)
-            .then((credentials) =>
-              console.log(`Signed in as ${credentials.user?.email}`)
-            )
             .catch((reason) => console.error(reason))
             .finally(() => setSubmitting(false));
         }}

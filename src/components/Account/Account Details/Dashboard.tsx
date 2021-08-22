@@ -50,6 +50,8 @@ const Dashboard = (user: firebase.User) => {
         </Typography>
         {` categories.`}
       </Typography>
+
+      <pre>{JSON.stringify(user.email, null, 2)}</pre>
     </>
   );
 };
