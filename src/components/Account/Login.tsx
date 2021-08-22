@@ -32,7 +32,8 @@ const useStyles = makeStyles((theme) =>
       color: theme.palette.primary.main
     },
     form: {
-      display: "inline-grid"
+      display: "inline-grid",
+      minWidth: 250
     }
   })
 );
@@ -102,7 +103,7 @@ const Login = () => {
               className={classes.input}
             />
             <Grid container direction={"row"}>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <Button
                   type={"submit"}
                   variant={"contained"}
@@ -113,7 +114,7 @@ const Login = () => {
                   Log In
                 </Button>
               </Grid>
-              <Grid item xs={8}>
+              <Grid item xs={7}>
                 <Button
                   variant={"text"}
                   color={"default"}
@@ -121,7 +122,7 @@ const Login = () => {
                   className={classes.input}
                   size={"small"}
                 >
-                  Forgot email or password?
+                  Forgot password?
                 </Button>
               </Grid>
             </Grid>
