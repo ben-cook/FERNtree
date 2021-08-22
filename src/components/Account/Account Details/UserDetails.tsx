@@ -1,4 +1,5 @@
 import Dashboard from "./Dashboard";
+import DeleteAccountButton from "./DeleteAccountButton";
 import {
   Button,
   Typography,
@@ -26,11 +27,6 @@ const useStyles = makeStyles((theme) =>
     subtitle: {
       marginTop: theme.spacing(6),
       marginBottom: theme.spacing(2)
-    },
-    deleteAccount: {
-      marginLeft: theme.spacing(2),
-      backgroundColor: theme.palette.error.light,
-      color: theme.palette.error.contrastText
     },
     form: {
       marginTop: theme.spacing(8)
@@ -69,18 +65,7 @@ const UserDetails = (user: firebase.User) => {
           >
             Sign Out
           </Button>
-          <Button
-            variant="contained"
-            className={classes.deleteAccount}
-            onClick={() => {
-              firebase
-                .auth()
-                .currentUser?.delete()
-                .catch((err) => console.error(err));
-            }}
-          >
-            Delete Account
-          </Button>
+          <DeleteAccountButton />
 
           <Formik
             enableReinitialize
