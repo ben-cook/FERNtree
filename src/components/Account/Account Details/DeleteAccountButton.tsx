@@ -59,7 +59,8 @@ const DeleteAccountButton = () => {
         <DialogTitle id="Delete Account">Delete Account?</DialogTitle>
         <DialogContent>
           <DialogContentText id="Are you sure you wish to permanently delete your account?">
-            Are you sure you wish to permanently delete your account?
+            Are you sure you wish to permanently delete your account? This
+            action cannot be reversed.
           </DialogContentText>
         </DialogContent>
         <DialogActions>
