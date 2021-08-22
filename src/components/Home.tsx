@@ -10,7 +10,8 @@ import {
   MenuItem,
   FormGroup,
   FormControlLabel,
-  Checkbox
+  Checkbox,
+  Typography
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
 import firebase from "firebase";
@@ -46,16 +47,16 @@ const Home = () => {
       label: "All"
     },
     {
-      value: "EUR",
-      label: "€"
+      value: "Technology",
+      label: "Technology"
     },
     {
-      value: "BTC",
-      label: "฿"
+      value: "Journalism",
+      label: "Journalism"
     },
     {
-      value: "JPY",
-      label: "¥"
+      value: "Mentor",
+      label: "Mentor"
     }
   ];
 
@@ -63,45 +64,31 @@ const Home = () => {
     <>
       <Card variant="outlined" className={classes.searchCard}>
         <CardContent>
-          <Grid container direction="row" spacing={1}>
+          <Grid container direction="row" spacing={1} alignItems={"center"}>
             {/* Search bar and filters */}
-            <Grid container direction="column" item xs={12} sm={10}>
-              <Grid item>
-                <TextField
-                  variant="outlined"
-                  label="Find your Client"
-                  className={classes.clientSearchField}
-                  fullWidth
-                  margin="normal"
-                  size="medium"
-                  InputProps={{
-                    style: { backgroundColor: "white" },
-                    endAdornment: (
-                      <InputAdornment component="div" position="end">
-                        <IconButton>
-                          <SearchIcon />
-                        </IconButton>
-                      </InputAdornment>
-                    )
-                  }}
-                />
-              </Grid>
-
-              <Grid item>
-                <FormGroup row>
-                  {labels.map((label) => (
-                    <FormControlLabel
-                      key={label.value}
-                      control={<Checkbox color="primary" />}
-                      label={label.label}
-                    />
-                  ))}
-                </FormGroup>
-              </Grid>
+            <Grid item xs={12} sm={8}>
+              <TextField
+                variant="outlined"
+                label="Find your Client"
+                className={classes.clientSearchField}
+                fullWidth
+                margin="normal"
+                size="medium"
+                InputProps={{
+                  style: { backgroundColor: "white" },
+                  endAdornment: (
+                    <InputAdornment component="div" position="end">
+                      <IconButton>
+                        <SearchIcon />
+                      </IconButton>
+                    </InputAdornment>
+                  )
+                }}
+              />
             </Grid>
 
             {/* Selection and buttons */}
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={4}>
               <TextField
                 variant="outlined"
                 className={classes.clientSearchField}
@@ -119,6 +106,19 @@ const Home = () => {
                   </MenuItem>
                 ))}
               </TextField>
+            </Grid>
+
+            <Grid item xs={12} sm={4}>
+              <FormGroup row>
+                <Typography>Categories - remove this stuff</Typography>
+                {labels.map((label) => (
+                  <FormControlLabel
+                    key={label.value}
+                    control={<Checkbox color="primary" />}
+                    label={label.label}
+                  />
+                ))}
+              </FormGroup>
             </Grid>
           </Grid>
         </CardContent>
