@@ -42,7 +42,7 @@ const Dashboard = (user: firebase.User) => {
       <Typography variant="h6" paragraph>
         {`You have `}
         <Typography variant="h6" display={"inline"} color="primary">
-          50
+          0
         </Typography>
         {` clients under `}
         <Typography variant="h6" display={"inline"} color="primary">
