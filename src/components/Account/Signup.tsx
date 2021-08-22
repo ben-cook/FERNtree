@@ -1,121 +1,158 @@
-import Loading from "../Loading";
-import { Button, Grid, TextField, makeStyles } from "@material-ui/core";
+import {
+  Button,
+  createStyles,
+  Grid,
+  makeStyles,
+  Typography
+} from "@material-ui/core";
 import firebase from "firebase/app";
-import { Form, Formik } from "formik";
-import { useHistory } from "react-router-dom";
-import * as yup from "yup";
+import { Field, Form, Formik, FormikHelpers } from "formik";
+import { TextField } from "formik-material-ui";
+import { Link, useHistory } from "react-router-dom";
+import * as Yup from "yup";
 
-// CSS Styling for this component
-const useStyles = makeStyles(() => ({
-  form: {
-    marginTop: "2em"
-  },
-  submitButton: {
-    marginTop: "1.5em"
-  },
-  emailField: {
-    marginBottom: "1em",
-    marginTop: "1em"
-  }
-}));
-
-// Yup allows us to realy easily validate user input in conjunction with Formik
-const validationSchema = yup.object().shape({
-  email: yup
-    .string()
-    .email("Enter a valid email")
-    .required("Email is required"),
-  password: yup
-    .string()
-    .min(8, "Password should be of minimum 8 characters length")
-    .required("Password is required")
-});
-
-// Type the form values
 interface FormValues {
   email: string;
   password: string;
+  firstName: string;
+  lastName: string;
 }
 
-const SignUp = () => {
+const useStyles = makeStyles((theme) =>
+  createStyles({
+    title: {
+      marginTop: theme.spacing(5)
+    },
+    subtitle: {
+      marginTop: theme.spacing(6)
+    },
+    link: {
+      color: theme.palette.primary.main
+    },
+    form: {
+      marginTop: theme.spacing(6)
+    },
+    submitButton: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  })
+);
+
+const Signup = () => {
   const classes = useStyles();
   const history = useHistory();
 
-  const initialFormValues: FormValues = { email: "", password: "" };
-
-  // We run this function when the user click the sign up button
-  const signUp = ({ email, password }: FormValues) => {
-    const auth = firebase.auth();
-
-    auth
-      .createUserWithEmailAndPassword(email, password)
-      .then((credentials) => {
-        console.log(
-          `Created account and signed in as ${credentials.user?.email}`
-        );
-        // Redirect back to the home page after the user has signed up and logged in
-        history.push("/");
-      })
-      .catch((reason) => console.error(reason));
+  const initialValues: FormValues = {
+    email: "",
+    password: "",
+    firstName: "",
+    lastName: ""
   };
 
   return (
-    <Grid
-      container
-      alignContent={"center"}
-      alignItems={"center"}
-      direction={"row"}
-      justifyContent={"center"}
-    >
-      <Grid item xs={12} sm={12} md={6}>
-        <Formik
-          initialValues={initialFormValues}
-          validationSchema={validationSchema}
-          onSubmit={signUp}
-        >
-          {({ isSubmitting, errors, values, handleChange, touched }) => (
-            <Form>
-              <TextField
-                fullWidth
-                id="email"
-                name="email"
-                label="Email"
-                value={values.email}
-                onChange={handleChange}
-                error={touched.email && Boolean(errors.email)}
-                helperText={touched.email && errors.email}
-                variant="outlined"
-                className={classes.emailField}
-              />
+    <>
+      <Typography variant="h2" className={classes.title}>
+        Create an account.
+      </Typography>
+      <Typography variant="h5" className={classes.subtitle}>
+        Please register to use Ferntree CRM.
+      </Typography>
 
-              <TextField
-                fullWidth
-                id="password"
-                name="password"
-                label="Password"
-                type="password"
-                value={values.password}
-                onChange={handleChange}
-                error={touched.password && Boolean(errors.password)}
-                helperText={touched.password && errors.password}
-                variant="outlined"
-              />
+      <Formik
+        enableReinitialize
+        initialValues={initialValues}
+        validationSchema={Yup.object().shape({
+          email: Yup.string()
+            .email("Please enter a valid email address.")
+            .required("Please enter your email address."),
+          password: Yup.string().required("Please enter your password.")
+        })}
+        onSubmit={(
+          values: FormValues,
+          { setSubmitting }: FormikHelpers<FormValues>
+        ) => {
+          setSubmitting(true);
 
-              {isSubmitting && <Loading />}
+          const { email, password } = values;
+          const auth = firebase.auth();
 
-              <Button
-                type="submit"
-                variant={"outlined"}
-                className={classes.submitButton}
-              >
-                Sign up
-              </Button>
-            </Form>
-          )}
-        </Formik>
-      </Grid>
-    </Grid>
+          auth
+            .createUserWithEmailAndPassword(email, password)
+            .then(() => {
+              history.push("/");
+            })
+            .catch((reason) => console.error(reason))
+            .finally(() => setSubmitting(false));
+        }}
+      >
+        {({ isSubmitting }) => (
+          <Form className={classes.form}>
+            <Grid container direction="row" spacing={2}>
+              <Grid item>
+                <Field
+                  component={TextField}
+                  variant={"outlined"}
+                  label={"First Name"}
+                  name={"firstName"}
+                  type={"text"}
+                  placeholder={"First Name"}
+                />
+              </Grid>
+              <Grid item>
+                <Field
+                  component={TextField}
+                  variant={"outlined"}
+                  label={"Family Name"}
+                  name={"lastName"}
+                  type={"text"}
+                  placeholder={"Family Name"}
+                />
+              </Grid>
+            </Grid>
+            <Grid container direction="row" spacing={2}>
+              <Grid item>
+                <Field
+                  component={TextField}
+                  variant={"outlined"}
+                  label={"Email"}
+                  name={"email"}
+                  type={"text"}
+                  placeholder={"Email"}
+                />
+              </Grid>
+              <Grid item>
+                <Field
+                  component={TextField}
+                  variant={"outlined"}
+                  label={"Password"}
+                  name={"password"}
+                  type={"password"}
+                  placeholder={"Password"}
+                />
+              </Grid>
+            </Grid>
+            <Button
+              variant="contained"
+              color="primary"
+              type={"submit"}
+              disabled={isSubmitting}
+              onClick={() => firebase.auth().signOut()}
+              className={classes.submitButton}
+            >
+              Register
+            </Button>
+          </Form>
+        )}
+      </Formik>
+
+      <Typography variant="subtitle1" color="primary">
+        <Link to="/account" className={classes.link}>
+          Already have an account?
+        </Link>
+      </Typography>
+    </>
   );
 };
 
-export default SignUp;
+export default Signup;
