@@ -82,7 +82,15 @@ const UserDetails = (user: firebase.User) => {
             ) => {
               setSubmitting(true);
 
-              console.log("submitted");
+              const { firstName, lastName } = values;
+              const firestore = firebase.firestore();
+
+              firestore
+                .collection("users")
+                .doc(user.uid)
+                .set({ firstName, lastName }, { merge: true })
+                .catch((err) => console.error(err))
+                .finally(() => setSubmitting(false));
             }}
           >
             {({ isSubmitting }) => (
@@ -139,7 +147,6 @@ const UserDetails = (user: firebase.User) => {
                   color="primary"
                   type={"submit"}
                   disabled={isSubmitting}
-                  onClick={() => firebase.auth().signOut()}
                   className={classes.submitButton}
                 >
                   Update Details
