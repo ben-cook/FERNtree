@@ -97,6 +97,7 @@ const Signup = () => {
                   name={"firstName"}
                   type={"text"}
                   placeholder={"First Name"}
+                  data-cy="firstname"
                 />
               </Grid>
               <Grid item>
@@ -107,6 +108,7 @@ const Signup = () => {
                   name={"lastName"}
                   type={"text"}
                   placeholder={"Family Name"}
+                  data-cy="lastname"
                 />
               </Grid>
             </Grid>
@@ -119,6 +121,7 @@ const Signup = () => {
                   name={"email"}
                   type={"text"}
                   placeholder={"Email"}
+                  data-cy="email"
                 />
               </Grid>
               <Grid item>
@@ -129,6 +132,7 @@ const Signup = () => {
                   name={"password"}
                   type={"password"}
                   placeholder={"Password"}
+                  data-cy="password"
                 />
               </Grid>
             </Grid>
@@ -138,6 +142,7 @@ const Signup = () => {
               type={"submit"}
               disabled={isSubmitting}
               className={classes.submitButton}
+              data-cy="submit"
             >
               Register
             </Button>

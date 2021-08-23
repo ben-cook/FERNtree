@@ -46,6 +46,7 @@ const DeleteAccountButton = () => {
         variant="contained"
         className={classes.red}
         onClick={handleClickOpen}
+        data-cy="delete-account"
       >
         Delete Account
       </Button>
