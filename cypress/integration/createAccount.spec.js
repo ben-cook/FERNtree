@@ -31,11 +31,17 @@ describe("Register a new account", () => {
 
   it("deletes created user", () => {
     cy.get("[data-cy=delete-account]").click();
+    cy.wait(500);
+    cy.get("[data-cy=confirm-delete]").click();
+  });
+
+  it("cannot log back into deleted user", () => {
     cy.contains("Welcome back to Ferntree!");
 
     cy.get("[data-cy=email]").type(email);
     cy.get("[data-cy=password]").type(password);
     cy.get("[data-cy=submit]").click();
-    // There should be a notification that signup failed
+
+    cy.contains("Incorrect username or password.");
   });
 });

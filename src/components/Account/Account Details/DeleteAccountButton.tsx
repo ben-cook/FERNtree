@@ -68,7 +68,12 @@ const DeleteAccountButton = () => {
           <Button onClick={handleClose} color="primary">
             No
           </Button>
-          <Button onClick={deleteAccount} className={classes.red} autoFocus>
+          <Button
+            onClick={deleteAccount}
+            className={classes.red}
+            autoFocus
+            data-cy="confirm-delete"
+          >
             Yes
           </Button>
         </DialogActions>
