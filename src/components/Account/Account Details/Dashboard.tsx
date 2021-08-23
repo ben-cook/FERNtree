@@ -10,6 +10,9 @@ const useStyles = makeStyles((theme) =>
       [theme.breakpoints.up("sm")]: {
         marginTop: theme.spacing(16)
       }
+    },
+    section: {
+      marginBottom: theme.spacing(2)
     }
   })
 );
@@ -23,33 +26,47 @@ const Dashboard = (user: firebase.User) => {
         Dashboard
       </Typography>
 
-      <Typography variant="h6" paragraph>
-        {`You've been using Ferntree since `}
+      <div className={classes.section}>
+        <Typography variant="h6" display={"inline"}>
+          {`You've been using Ferntree since `}
+        </Typography>
         <Typography variant="h6" display={"inline"} color="primary">
           2021
         </Typography>
-        {`.`}
-      </Typography>
+        <Typography variant="h6" display={"inline"} paragraph>
+          {`.`}
+        </Typography>
+      </div>
 
-      <Typography variant="h6" paragraph>
-        {`You've earned `}
+      <div className={classes.section}>
+        <Typography variant="h6" display={"inline"}>
+          {`You've earned `}
+        </Typography>
         <Typography variant="h6" display={"inline"} color="primary">
           $0
         </Typography>
-        {` so far.`}
-      </Typography>
+        <Typography variant="h6" display={"inline"}>
+          {` so far.`}
+        </Typography>
+      </div>
 
-      <Typography variant="h6" paragraph>
-        {`You have `}
+      <div className={classes.section}>
+        <Typography variant="h6" display={"inline"}>
+          {`You have `}
+        </Typography>
         <Typography variant="h6" display={"inline"} color="primary">
           0
         </Typography>
-        {` clients under `}
+        <Typography variant="h6" display={"inline"}>
+          {` clients under `}
+        </Typography>
         <Typography variant="h6" display={"inline"} color="primary">
           0
         </Typography>
-        {` categories.`}
-      </Typography>
+        <Typography variant="h6" display={"inline"}>
+          {` categories.`}
+        </Typography>
+      </div>
 
       <pre>{JSON.stringify(user.email, null, 2)}</pre>
     </>
