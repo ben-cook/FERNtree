@@ -17,6 +17,8 @@ interface FormValues {
   business: string;
   address: string;
 
+  category: string;
+
   email: string;
   phone: string;
 
@@ -49,6 +51,7 @@ const NewClient = () => {
     lastName: "",
     business: "",
     address: "",
+    category: "",
     email: "",
     phone: "",
     payRate: "",
@@ -134,6 +137,22 @@ const NewClient = () => {
                     />
                   </Grid>
                   <Grid item xs={12}>
+                    <Field
+                      component={TextField}
+                      variant={"outlined"}
+                      label={"Category"}
+                      name={"category"}
+                      type={"text"}
+                      placeholder={"Category"}
+                      fullWidth
+                      select
+                    >
+                      <MenuItem value="Not Started">Not Started</MenuItem>
+                      <MenuItem value="In Progress">In Progress</MenuItem>
+                      <MenuItem value="Completed">Completed</MenuItem>
+                    </Field>
+                  </Grid>
+                  <Grid item xs={12}>
                     <Typography variant="h5">Contact Information</Typography>
                   </Grid>
                   <Grid item xs={12} sm={6}>
@@ -211,7 +230,7 @@ const NewClient = () => {
                     disabled={isSubmitting}
                     className={classes.submitButton}
                   >
-                    Log In
+                    Save
                   </Button>
                 </Box>
               </Form>
