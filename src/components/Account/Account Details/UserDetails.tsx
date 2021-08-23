@@ -1,3 +1,4 @@
+import ChangeUserDetailsForm from "./ChangeUserDetailsForm";
 import Dashboard from "./Dashboard";
 import DeleteAccountButton from "./DeleteAccountButton";
 import {
@@ -8,16 +9,6 @@ import {
   Grid
 } from "@material-ui/core";
 import firebase from "firebase/app";
-import { Field, Form, Formik, FormikHelpers } from "formik";
-import { TextField } from "formik-material-ui";
-import * as Yup from "yup";
-
-interface FormValues {
-  email: string;
-  password: string;
-  firstName: string;
-  lastName: string;
-}
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -40,13 +31,6 @@ const useStyles = makeStyles((theme) =>
 const UserDetails = (user: firebase.User) => {
   const classes = useStyles();
 
-  const initialValues: FormValues = {
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: ""
-  };
-
   return (
     <>
       <Grid container>
@@ -65,95 +49,10 @@ const UserDetails = (user: firebase.User) => {
           >
             Sign Out
           </Button>
+
           <DeleteAccountButton />
 
-          <Formik
-            enableReinitialize
-            initialValues={initialValues}
-            validationSchema={Yup.object().shape({
-              email: Yup.string()
-                .email("Please enter a valid email address.")
-                .required("Please enter your email address."),
-              password: Yup.string().required("Please enter your password.")
-            })}
-            onSubmit={(
-              values: FormValues,
-              { setSubmitting }: FormikHelpers<FormValues>
-            ) => {
-              setSubmitting(true);
-
-              const { firstName, lastName } = values;
-              const firestore = firebase.firestore();
-
-              firestore
-                .collection("users")
-                .doc(user.uid)
-                .set({ firstName, lastName }, { merge: true })
-                .catch((err) => console.error(err))
-                .finally(() => setSubmitting(false));
-            }}
-          >
-            {({ isSubmitting }) => (
-              <Form className={classes.form}>
-                <Typography variant="h6" className={classes.subtitle}>
-                  User Profile
-                </Typography>
-                <Grid container direction="row" spacing={2}>
-                  <Grid item>
-                    <Field
-                      component={TextField}
-                      variant={"outlined"}
-                      label={"First Name"}
-                      name={"firstName"}
-                      type={"text"}
-                      placeholder={"First Name"}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Field
-                      component={TextField}
-                      variant={"outlined"}
-                      label={"Family Name"}
-                      name={"lastName"}
-                      type={"text"}
-                      placeholder={"Family Name"}
-                    />
-                  </Grid>
-                </Grid>
-                <Grid container direction="row" spacing={2}>
-                  <Grid item>
-                    <Field
-                      component={TextField}
-                      variant={"outlined"}
-                      label={"Email"}
-                      name={"email"}
-                      type={"text"}
-                      placeholder={"Email"}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Field
-                      component={TextField}
-                      variant={"outlined"}
-                      label={"Password"}
-                      name={"password"}
-                      type={"password"}
-                      placeholder={"Password"}
-                    />
-                  </Grid>
-                </Grid>
-                <Button
-                  variant="contained"
-                  color="primary"
-                  type={"submit"}
-                  disabled={isSubmitting}
-                  className={classes.submitButton}
-                >
-                  Update Details
-                </Button>
-              </Form>
-            )}
-          </Formik>
+          <ChangeUserDetailsForm {...user} />
         </Grid>
 
         <Grid item xs={12} sm={5}>
