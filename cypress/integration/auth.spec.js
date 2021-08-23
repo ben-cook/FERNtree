@@ -33,4 +33,13 @@ describe("Basic Authentication", () => {
     cy.visit("/client/new");
     cy.url().should("eq", "http://localhost:3000/account");
   });
+
+  it("can't log in to user with fake email and password", () => {
+    cy.visit("/account");
+    cy.get("[data-cy=email]").type("bademail@kjashdkabskda.asjdkla");
+    cy.get("[data-cy=password]").type("alsjdhnaoujbwdajhd");
+    cy.get("[data-cy=submit]").click();
+    cy.contains("Incorrect username or password.");
+    cy.contains("Welcome back to Ferntree!");
+  });
 });
