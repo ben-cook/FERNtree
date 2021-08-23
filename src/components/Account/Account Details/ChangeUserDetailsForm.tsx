@@ -50,7 +50,7 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
   }
 
   const initialValues: FormValues = {
-    email: "",
+    email: user.email,
     password: "",
     firstName: data?.firstName,
     lastName: data?.lastName
@@ -61,10 +61,10 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
       enableReinitialize
       initialValues={initialValues}
       validationSchema={Yup.object().shape({
-        email: Yup.string()
-          .email("Please enter a valid email address.")
-          .required("Please enter your email address."),
-        password: Yup.string().required("Please enter your password.")
+        email: Yup.string().email("Please enter a valid email address."),
+        password: Yup.string(),
+        firstName: Yup.string(),
+        lastName: Yup.string()
       })}
       onSubmit={(
         values: FormValues,
@@ -72,15 +72,40 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
       ) => {
         setSubmitting(true);
 
-        const { firstName, lastName } = values;
+        const { email, password, firstName, lastName } = values;
+        const auth = firebase.auth();
 
-        userDocumentReference
-          .set({ firstName, lastName }, { merge: true })
+        const promises = [];
+
+        console.log(user);
+
+        if (
+          firstName !== initialValues.firstName ||
+          lastName !== initialValues.lastName
+        ) {
+          // Promise to update first and last name
+          promises.push(
+            userDocumentReference.set({ firstName, lastName }, { merge: true })
+          );
+        }
+
+        if (email !== initialValues.email) {
+          // Promise to update email
+          auth.currentUser.updateEmail(email);
+        }
+
+        if (password.length >= 8) {
+          // Promise to update password
+          auth.currentUser.updatePassword(password);
+        }
+
+        // We want to catch all the promise errors, and stop submitting once they've all resolved
+        Promise.all(promises)
           .catch((err) => console.error(err))
           .finally(() => setSubmitting(false));
       }}
     >
-      {({ isSubmitting }) => (
+      {({ isSubmitting, dirty }) => (
         <Form className={classes.form}>
           <Typography variant="h6" className={classes.subtitle}>
             User Profile
@@ -133,7 +158,7 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
             variant="contained"
             color="primary"
             type={"submit"}
-            disabled={isSubmitting}
+            disabled={!dirty || isSubmitting}
             className={classes.submitButton}
           >
             Update Details
