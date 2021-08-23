@@ -21,3 +21,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# Don't allow anyone to accidentally use npm instead of yarn
+package-lock.json
