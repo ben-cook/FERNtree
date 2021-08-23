@@ -8,6 +8,7 @@ import {
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
+import { useSnackbar } from "notistack";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -40,6 +41,7 @@ const useStyles = makeStyles((theme) =>
 
 const Login = () => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const initialValues: FormValues = {
     email: "",
@@ -74,7 +76,12 @@ const Login = () => {
 
           auth
             .signInWithEmailAndPassword(email, password)
-            .catch((reason) => console.error(reason))
+            .catch((reason) => {
+              console.error(reason);
+              enqueueSnackbar("Incorrect username or password.", {
+                variant: "error"
+              });
+            })
             .finally(() => setSubmitting(false));
         }}
       >
