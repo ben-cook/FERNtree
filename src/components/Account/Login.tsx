@@ -88,6 +88,7 @@ const Login = () => {
               type={"text"}
               placeholder={"Email"}
               className={classes.input}
+              data-cy="email"
             />
             <Field
               component={TextField}
@@ -97,6 +98,7 @@ const Login = () => {
               type={"password"}
               placeholder={"Password"}
               className={classes.input}
+              data-cy="password"
             />
             <Grid container direction={"row"}>
               <Grid item xs={5}>
@@ -106,6 +108,7 @@ const Login = () => {
                   color={"primary"}
                   disabled={isSubmitting}
                   className={classes.input}
+                  data-cy="submit"
                 >
                   Log In
                 </Button>
@@ -128,7 +131,7 @@ const Login = () => {
 
       <Typography variant="subtitle1" color="primary">
         New to Ferntree CRM?{" "}
-        <Link to="/signup" className={classes.link}>
+        <Link to="/signup" className={classes.link} data-cy="signup-link">
           Create an account.
         </Link>
       </Typography>

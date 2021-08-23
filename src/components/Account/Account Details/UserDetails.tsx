@@ -46,6 +46,7 @@ const UserDetails = (user: firebase.User) => {
             variant="contained"
             color="primary"
             onClick={() => firebase.auth().signOut()}
+            data-cy="logout"
           >
             Sign Out
           </Button>
