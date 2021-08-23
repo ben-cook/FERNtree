@@ -151,6 +151,7 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
                 name={"password"}
                 type={"password"}
                 placeholder={"Password"}
+                autoComplete="new-password"
               />
             </Grid>
           </Grid>
