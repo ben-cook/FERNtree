@@ -4,7 +4,8 @@ import {
   createStyles,
   Button,
   Grid,
-  Box
+  Box,
+  MenuItem
 } from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
@@ -82,6 +83,7 @@ const NewClient = () => {
               setSubmitting(true);
 
               console.log("submitting");
+              console.log(values);
             }}
           >
             {({ isSubmitting }) => (
@@ -179,7 +181,12 @@ const NewClient = () => {
                       type={"text"}
                       placeholder={"Job Status"}
                       fullWidth
-                    />
+                      select
+                    >
+                      <MenuItem value="Not Started">Not Started</MenuItem>
+                      <MenuItem value="In Progress">In Progress</MenuItem>
+                      <MenuItem value="Completed">Completed</MenuItem>
+                    </Field>
                   </Grid>
                   <Grid item xs={12}>
                     <Typography variant="h5">Additional Information</Typography>
