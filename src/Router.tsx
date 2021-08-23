@@ -1,6 +1,7 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
 import Home from "./components/Home";
+import Loading from "./components/Loading";
 import NewClient from "./components/NewClient/NewClient";
 import firebase from "firebase/app";
 import { ReactElement } from "react";
@@ -22,7 +23,11 @@ const AuthenticatedRoute = (props: AuthenticatedRouteProps) => {
 };
 
 const Router = () => {
-  const [user] = useAuthState(firebase.auth());
+  const [user, loading] = useAuthState(firebase.auth());
+
+  if (loading) {
+    return <Loading />;
+  }
 
   return (
     <Switch>
@@ -35,7 +40,7 @@ const Router = () => {
         user={user}
       />
 
-      <Route path="/" component={Home} />
+      <AuthenticatedRoute path="/" component={Home} user={user} />
     </Switch>
   );
 };
