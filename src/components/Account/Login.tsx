@@ -77,7 +77,6 @@ const Login = () => {
             .catch((reason) => console.error(reason))
             .finally(() => setSubmitting(false));
         }}
-        sty
       >
         {({ isSubmitting }) => (
           <Form className={classes.form}>
