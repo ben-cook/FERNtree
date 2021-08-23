@@ -79,11 +79,11 @@ const Signup = () => {
 
           auth
             .createUserWithEmailAndPassword(email, password)
-            .then(() => {
-              history.push("/");
-            })
             .catch((reason) => console.error(reason))
-            .finally(() => setSubmitting(false));
+            .finally(() => {
+              setSubmitting(false);
+              history.push("/");
+            });
         }}
       >
         {({ isSubmitting }) => (
