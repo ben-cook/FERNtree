@@ -8,6 +8,7 @@ import {
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
+import { useSnackbar } from "notistack";
 import { Link, useHistory } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -42,6 +43,7 @@ const useStyles = makeStyles((theme) =>
 const Signup = () => {
   const classes = useStyles();
   const history = useHistory();
+  const { enqueueSnackbar } = useSnackbar();
 
   const initialValues: FormValues = {
     email: "",
@@ -66,7 +68,9 @@ const Signup = () => {
           email: Yup.string()
             .email("Please enter a valid email address.")
             .required("Please enter your email address."),
-          password: Yup.string().required("Please enter your password.")
+          password: Yup.string()
+            .min(6, "Please choose a password with at least 6 characters.")
+            .required("Please enter your password.")
         })}
         onSubmit={(
           values: FormValues,
@@ -79,10 +83,17 @@ const Signup = () => {
 
           auth
             .createUserWithEmailAndPassword(email, password)
-            .catch((reason) => console.error(reason))
-            .finally(() => {
+            .then(() => {
               setSubmitting(false);
               history.push("/");
+            })
+            .catch((reason) => {
+              setSubmitting(false);
+
+              console.error(reason);
+              enqueueSnackbar(reason.message, {
+                variant: "error"
+              });
             });
         }}
       >
