@@ -4,12 +4,12 @@ import firebase from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const Account = () => {
-  const [user] = useAuthState(firebase.auth());
+  const [user, loading] = useAuthState(firebase.auth());
 
   return (
     <>
       {!user && <Login />}
-      {user && <UserDetails {...user} />}
+      {user && !loading && <UserDetails {...user} />}
     </>
   );
 };

@@ -79,11 +79,11 @@ const Signup = () => {
 
           auth
             .createUserWithEmailAndPassword(email, password)
-            .then(() => {
-              history.push("/");
-            })
             .catch((reason) => console.error(reason))
-            .finally(() => setSubmitting(false));
+            .finally(() => {
+              setSubmitting(false);
+              history.push("/");
+            });
         }}
       >
         {({ isSubmitting }) => (
@@ -137,7 +137,6 @@ const Signup = () => {
               color="primary"
               type={"submit"}
               disabled={isSubmitting}
-              onClick={() => firebase.auth().signOut()}
               className={classes.submitButton}
             >
               Register

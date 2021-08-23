@@ -77,7 +77,6 @@ const Login = () => {
             .catch((reason) => console.error(reason))
             .finally(() => setSubmitting(false));
         }}
-        sty
       >
         {({ isSubmitting }) => (
           <Form className={classes.form}>
@@ -115,9 +114,9 @@ const Login = () => {
                 <Button
                   variant={"text"}
                   color={"default"}
-                  disabled={isSubmitting}
                   className={classes.input}
                   size={"small"}
+                  disabled={true}
                 >
                   Forgot password?
                 </Button>
