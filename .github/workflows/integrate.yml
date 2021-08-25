@@ -1,8 +1,6 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -19,7 +17,7 @@ jobs:
       - name: install dependencies
         run: yarn
       - name: run ESLint
-        run: 
+        run: yarn run lint
       - name: build project
         run: yarn run build
       - name: run Cypress tests

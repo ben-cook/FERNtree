@@ -2,8 +2,7 @@ name: Deploy to Live Channel
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
 
 jobs:
   deploy_live_website:
@@ -15,7 +14,8 @@ jobs:
         run: yarn
       - name: build project
         run: yarn run build
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+      - name: deploy live project to firebase
+        uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
           firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT_MERNDA_EXPRESS }}"
