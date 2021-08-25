@@ -18,5 +18,7 @@ jobs:
           node-version: "14"
       - name: install dependencies
         run: yarn
+      - name: run ESLint
+        run: 
       - name: build project
         run: yarn run build
