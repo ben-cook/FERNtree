@@ -12,7 +12,7 @@ describe("Basic Authentication", () => {
   });
 
   it("has a title", () => {
-    cy.visit("/account", { timeout: 25000 });
+    cy.visit("/account");
     cy.contains("Welcome back to Ferntree!");
   });
 
