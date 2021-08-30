@@ -32,6 +32,7 @@
     "cypress": "^8.3.0",
     "eslint": "^7.32.0",
     "eslint-plugin-react": "^7.24.0",
+    "eslint-plugin-cypress": "^2.11.3",
     "import-sort-style-module": "^6.0.0",
     "prettier": "^2.3.2"
   },
@@ -40,7 +41,7 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "lint": "eslint . --ext .ts",
+    "lint": "eslint .",
     "cypress": "cypress open"
   },
   "eslintConfig": {

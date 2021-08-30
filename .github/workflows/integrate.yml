@@ -1,8 +1,6 @@
 name: Continuous Integration
 
 on:
-  push:
-    branches: [main]
   pull_request:
     branches: [main]
 
@@ -18,5 +16,24 @@ jobs:
           node-version: "14"
       - name: install dependencies
         run: yarn
+      - name: run ESLint
+        run: yarn run lint
       - name: build project
         run: yarn run build
+      - name: run Cypress tests
+        uses: cypress-io/github-action@v2
+        with: 
+          start: yarn start
+          wait-on: "http://localhost:3000"
+      - name: save Cypress screenshots on test failure
+        uses: actions/upload-artifact@v2
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+      - name: save Cypress videos 
+        uses: actions/upload-artifact@v2
+        if: always()
+        with:
+          name: cypress-videos
+          path: cypress/videos
