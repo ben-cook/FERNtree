@@ -42,12 +42,7 @@ describe("Register a new account", () => {
     cy.get("[data-cy=submit]").click();
     cy.wait("@createAccount");
     cy.wait("@createAccount");
-    // cy.wait("@writeAccountDetails");
-    // cy.wait("@writeAccountDetails");
     cy.get("[data-cy=profile-button]").click();
-
-    // cy.visit("/account");
-    // cy.wait("@getAccountDetails");
     cy.url().should("eq", "http://localhost:3000/account");
     cy.contains("Account Details");
     cy.contains(firstName);
