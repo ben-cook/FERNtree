@@ -23,7 +23,8 @@ jobs:
       - name: run Cypress tests
         uses: cypress-io/github-action@v2
         with: 
-          start: yarn start & sleep 30
+          start: yarn start
+          wait-on: "http://localhost:3000"
       - name: save Cypress screenshots on test failure
         uses: actions/upload-artifact@v2
         if: failure()
