@@ -10,6 +10,7 @@ import {
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
+import { useSnackbar } from "notistack";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import * as Yup from "yup";
 
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) =>
 
 const ChangeUserDetailsForm = (user: firebase.User) => {
   const classes = useStyles();
+  const { enqueueSnackbar } = useSnackbar();
 
   const userDocumentReference = firebase
     .firestore()
@@ -101,7 +103,17 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
 
         // We want to catch all the promise errors, and stop submitting once they've all resolved
         Promise.all(promises)
-          .catch((err) => console.error(err))
+          .then(() =>
+            enqueueSnackbar("Details updated successfully.", {
+              variant: "success"
+            })
+          )
+          .catch((reason) => {
+            console.error(reason);
+            enqueueSnackbar(reason.message, {
+              variant: "error"
+            });
+          })
           .finally(() => setSubmitting(false));
       }}
     >

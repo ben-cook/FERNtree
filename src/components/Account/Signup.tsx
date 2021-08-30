@@ -78,11 +78,18 @@ const Signup = () => {
         ) => {
           setSubmitting(true);
 
-          const { email, password } = values;
+          const { email, password, firstName, lastName } = values;
           const auth = firebase.auth();
 
           auth
             .createUserWithEmailAndPassword(email, password)
+            .then((userCredential: firebase.auth.UserCredential) =>
+              firebase
+                .firestore()
+                .collection("users")
+                .doc(userCredential.user.uid)
+                .set({ firstName, lastName })
+            )
             .then(() => {
               setSubmitting(false);
               history.push("/");
