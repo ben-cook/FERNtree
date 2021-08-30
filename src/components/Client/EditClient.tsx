@@ -39,6 +39,10 @@ const useStyles = makeStyles((theme) =>
     submitButton: {
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(3)
+    },
+    deleteButton: {
+      backgroundColor: theme.palette.error.light,
+      color: theme.palette.error.contrastText
     }
   })
 );
@@ -64,7 +68,7 @@ const NewClient = () => {
       <Grid container justifyContent="center">
         <Grid item xs={12} sm={8} md={6}>
           <Typography variant="h4" className={classes.title}>
-            New Client Profile
+            EDIT CLIENT (PAGE NOT DONE)
           </Typography>
           <Formik
             initialValues={initialValues}
@@ -223,6 +227,12 @@ const NewClient = () => {
                   </Grid>
                 </Grid>
                 <Box textAlign="center">
+                  <Button
+                    variant={"contained"}
+                    className={classes.deleteButton}
+                  >
+                    Delete Client
+                  </Button>
                   <Button
                     type={"submit"}
                     variant={"contained"}

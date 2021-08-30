@@ -1,8 +1,8 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
+import NewClient from "./components/Client/NewClient";
 import Home from "./components/Home";
 import Loading from "./components/Loading";
-import NewClient from "./components/NewClient/NewClient";
 import firebase from "firebase/app";
 import { ReactElement } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
