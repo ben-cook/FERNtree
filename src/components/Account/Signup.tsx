@@ -65,6 +65,8 @@ const Signup = () => {
         enableReinitialize
         initialValues={initialValues}
         validationSchema={Yup.object().shape({
+          firstName: Yup.string().required("Please enter your first name."),
+          lastName: Yup.string().required("Please enter your family name."),
           email: Yup.string()
             .email("Please enter a valid email address.")
             .required("Please enter your email address."),
