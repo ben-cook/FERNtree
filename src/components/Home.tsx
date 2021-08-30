@@ -16,6 +16,7 @@ import {
 import SearchIcon from "@material-ui/icons/Search";
 import firebase from "firebase";
 import { useCollectionData } from "react-firebase-hooks/firestore";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -26,12 +27,22 @@ const useStyles = makeStyles((theme) =>
     clientSearchField: {},
     grid: {
       marginTop: "1rem"
+    },
+    newClientContainer: {
+      height: "100%",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      "&:hover": {
+        cursor: "pointer"
+      }
     }
   })
 );
 
 const Home = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const clientsReference = firebase
     .firestore()
@@ -126,11 +137,29 @@ const Home = () => {
 
       {clientsData && (
         <Grid container spacing={1} className={classes.grid}>
+          {/* New Client Card */}
+          <Grid item xs={12} sm={6} md={4}>
+            <Card
+              variant="outlined"
+              style={{ height: "30vh" }}
+              onClick={() => history.push("/client/new")}
+            >
+              <div className={classes.newClientContainer}>
+                <Typography variant="h6" align="center">
+                  Add New Client
+                </Typography>
+              </div>
+            </Card>
+          </Grid>
+
+          {/* Regular Client Cards */}
           {clientsData.map((client, idx) => (
             <Grid item key={idx} xs={12} sm={6} md={4}>
               <Card variant="outlined" style={{ height: "30vh" }}>
                 <CardContent>
-                  {client.firstName} {client.lastName}
+                  <Typography variant="h6">
+                    {client.firstName} {client.lastName}
+                  </Typography>
                 </CardContent>
               </Card>
             </Grid>
