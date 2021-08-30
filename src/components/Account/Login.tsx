@@ -9,7 +9,7 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { Link, useHistory } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as Yup from "yup";
 
 interface FormValues {
@@ -41,7 +41,6 @@ const useStyles = makeStyles((theme) =>
 
 const Login = () => {
   const classes = useStyles();
-  const history = useHistory();
   const { enqueueSnackbar } = useSnackbar();
 
   const initialValues: FormValues = {
@@ -77,21 +76,13 @@ const Login = () => {
 
           auth
             .signInWithEmailAndPassword(email, password)
-            .then(() => {
-              console.log("a");
-
-              setSubmitting(false);
-              history.push("/");
-              console.log("b");
-            })
             .catch((reason) => {
-              setSubmitting(false);
-
               console.error(reason);
               enqueueSnackbar("Incorrect username or password.", {
                 variant: "error"
               });
-            });
+            })
+            .finally(() => setSubmitting(false));
         }}
       >
         {({ isSubmitting }) => (
