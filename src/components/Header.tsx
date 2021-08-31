@@ -51,7 +51,11 @@ const Header = () => {
               </Link>
             </Grid>
             <Grid item>
-              <Link to="/account" className={classes.noTextDecoration}>
+              <Link
+                to="/account"
+                className={classes.noTextDecoration}
+                data-cy="profile-button"
+              >
                 <ProfileButton />
               </Link>
             </Grid>

@@ -65,6 +65,8 @@ const Signup = () => {
         enableReinitialize
         initialValues={initialValues}
         validationSchema={Yup.object().shape({
+          firstName: Yup.string().required("Please enter your first name."),
+          lastName: Yup.string().required("Please enter your family name."),
           email: Yup.string()
             .email("Please enter a valid email address.")
             .required("Please enter your email address."),
@@ -78,11 +80,18 @@ const Signup = () => {
         ) => {
           setSubmitting(true);
 
-          const { email, password } = values;
+          const { email, password, firstName, lastName } = values;
           const auth = firebase.auth();
 
           auth
             .createUserWithEmailAndPassword(email, password)
+            .then((userCredential: firebase.auth.UserCredential) =>
+              firebase
+                .firestore()
+                .collection("users")
+                .doc(userCredential.user.uid)
+                .set({ firstName, lastName })
+            )
             .then(() => {
               setSubmitting(false);
               history.push("/");

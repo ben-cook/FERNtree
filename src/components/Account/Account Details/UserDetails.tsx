@@ -1,3 +1,4 @@
+import { User } from "../../../types";
 import ChangeUserDetailsForm from "./ChangeUserDetailsForm";
 import Dashboard from "./Dashboard";
 import DeleteAccountButton from "./DeleteAccountButton";
@@ -9,6 +10,7 @@ import {
   Grid
 } from "@material-ui/core";
 import firebase from "firebase/app";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -31,6 +33,13 @@ const useStyles = makeStyles((theme) =>
 const UserDetails = (user: firebase.User) => {
   const classes = useStyles();
 
+  const userDocumentReference = firebase
+    .firestore()
+    .collection("users")
+    .doc(user.uid);
+
+  const [data, loading] = useDocumentData<User>(userDocumentReference);
+
   return (
     <>
       <Grid container>
@@ -38,9 +47,11 @@ const UserDetails = (user: firebase.User) => {
           <Typography variant="h4" className={classes.title}>
             Account Details
           </Typography>
-          <Typography variant="h6" className={classes.subtitle}>
-            {`You're logged in as ${user.email}`}
-          </Typography>
+          {!loading && (
+            <Typography variant="h6" className={classes.subtitle}>
+              {`You're logged in as ${data?.firstName} ${data?.lastName}.`}
+            </Typography>
+          )}
 
           <Button
             variant="contained"
