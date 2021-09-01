@@ -186,22 +186,21 @@ const Home = () => {
           {/*Add new client card*/}
           <Grid item key={0} xs={12} sm={6} md={4}>
 
-          <Link to="/client/new">
+            <Link to="/client/new">
 
               <Card className={classes.addClientCard} >
-                
-                <Grid container direction="column" justify="center" alignItems="center">
+
+                <Grid container direction="column" justifyContent="center" alignItems="center">
+
                   <Grid item>
                     <Link to="/client/new">
                       <PersonAddButton />
                     </Link>
                   </Grid>
+
                 </Grid>
-
               </Card>
-
             </Link>
-            
           </Grid>
 
           {clientsData
