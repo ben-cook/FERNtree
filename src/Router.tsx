@@ -1,7 +1,7 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
 import Client from "./components/Client/Client";
-import Home from "./components/Home";
+import Home from "./components/Home/Home";
 import Loading from "./components/Loading";
 import firebase from "firebase/app";
 import { useAuthState } from "react-firebase-hooks/auth";
