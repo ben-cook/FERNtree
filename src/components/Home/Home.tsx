@@ -1,9 +1,8 @@
+import { Client } from "../../types";
 import ClientCard from "./ClientCard";
 import {
   Card,
   CardContent,
-  CardActions,
-  CardActionArea,
   createStyles,
   Grid,
   IconButton,
@@ -35,14 +34,6 @@ const useStyles = makeStyles((theme) =>
       marginTop: "1rem"
     },
 
-    addClientCard: {
-      minWidth: 225,
-      minHeight: 375,
-      marginLeft: 20,
-      marginRight: 12,
-      marginBottom: 12
-    },
-
     cardContent: {
       margin: "auto",
       justifyContent: "center",
@@ -64,10 +55,6 @@ const Home = () => {
 
   const [user, loading] = useAuthState(firebase.auth());
 
-  const handleAddClient = () => {
-    console.info("Add client button clicked!");
-  };
-
   const PersonAddButton = () => (
     <IconButton color="primary" size="medium" className={classes.icon}>
       <PersonAddIcon fontSize="large" />
@@ -83,7 +70,7 @@ const Home = () => {
     .doc(user.uid)
     .collection("clients");
 
-  const [clientsData] = useCollectionData(clientsReference);
+  const [clientsData] = useCollectionData<Client>(clientsReference);
 
   const labels = [
     {
@@ -170,7 +157,7 @@ const Home = () => {
 
       {/* Show all clients as cards */}
       {user && !loading && clientsData && (
-        <Grid container spacing={1} className={classes.grid}>
+        <Grid container spacing={3} className={classes.grid}>
           {/* {clientsData.map((client, idx) => (
             <Grid item key={idx} xs={12} sm={6} md={4}>
               <Card variant="outlined" style={{ height: "30vh" }}>
@@ -184,17 +171,17 @@ const Home = () => {
           {/*Add new client card*/}
           <Grid item key={0} xs={12} sm={6} md={4}>
             <Link to="/client/new">
-              <Card className={classes.addClientCard}>
+              <Card style={{ height: "100%" }}>
                 <Grid
                   container
                   direction="column"
                   justifyContent="center"
+                  alignContent="stretch"
                   alignItems="center"
+                  style={{ height: "100%" }}
                 >
                   <Grid item>
-                    <Link to="/client/new">
-                      <PersonAddButton />
-                    </Link>
+                    <PersonAddButton />
                   </Grid>
                 </Grid>
               </Card>
@@ -203,7 +190,7 @@ const Home = () => {
 
           {clientsData
             /*Order client cards alphabetically*/
-            .sort((client, idx) => client.firstName)
+            .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .reverse()
             /*Map to individual cards*/
             .map((client, idx) => (

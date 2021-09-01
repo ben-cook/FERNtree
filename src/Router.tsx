@@ -1,6 +1,5 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
-import ClientCard from "./components/Home/ClientCard";
 import Home from "./components/Home/Home";
 import Loading from "./components/Loading";
 import NewClient from "./components/NewClient/NewClient";

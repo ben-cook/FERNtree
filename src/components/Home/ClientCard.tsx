@@ -1,3 +1,4 @@
+import { Client } from "../../types";
 import {
   Card,
   CardContent,
@@ -12,13 +13,7 @@ import EditIcon from "@material-ui/icons/Edit";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {
-      minWidth: 225,
-      minHeight: 375,
-      marginLeft: 20,
-      marginRight: 12,
-      marginBottom: 12
-    },
+    root: {},
 
     content: {
       marginLeft: 30,
@@ -41,7 +36,7 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const ClientCard = (client) => {
+const ClientCard = (client: Client) => {
   const classes = useStyles();
 
   const handleCategoryFilter = () => {
@@ -59,52 +54,46 @@ const ClientCard = (client) => {
     // To link to client profile page
   };
 
-  {
-    /*Individual Card with details for each Client*/
-  }
   return (
-    <>
-      <Card className={classes.root} style={{ height: "30vh" }}>
-        <CardContent className={classes.label}>
-          {/*Job Status Label*/}
-          <Chip label={client.status} clickable onClick={handleStatusFilter} />
+    <Card>
+      <CardContent className={classes.label}>
+        {/*Job Status Label*/}
+        <Chip label={client.jobStatus} clickable onClick={handleStatusFilter} />
 
-          {/*Category Label*/}
-          <Chip
-            label={client.category}
-            color="primary"
-            clickable
-            onClick={handleCategoryFilter}
-          />
-        </CardContent>
+        {/*Category Label*/}
+        <Chip
+          label={"Example Client Category"}
+          color="primary"
+          clickable
+          onClick={handleCategoryFilter}
+        />
+      </CardContent>
 
-        <CardContent className={classes.content}>
-          {/*Client Details*/}
-          <Typography variant="h4" gutterBottom>
-            {client.firstName} {client.lastName}
-          </Typography>
-          <br />
+      <CardContent className={classes.content}>
+        {/*Client Details*/}
+        <Typography variant="h4" gutterBottom>
+          {client.firstName} {client.lastName}
+        </Typography>
+        <br />
 
-          <Typography>{client?.companyName}</Typography>
+        <Typography>{client?.business}</Typography>
+        <Typography>{client?.address}</Typography>
+        <Typography>{client?.email}</Typography>
+        <Typography>{client?.phone}</Typography>
+        <Typography>{client?.payRate}</Typography>
+        <Typography>{client?.notes}</Typography>
+      </CardContent>
 
-          <Typography>{client?.email}</Typography>
-
-          <Typography>{client?.phoneNums}</Typography>
-
-          <Typography>{client?.payRate}</Typography>
-        </CardContent>
-
-        <CardActions>
-          <IconButton
-            className={classes.button}
-            aria-label="editClient"
-            onClick={handleEditClient}
-          >
-            <EditIcon />
-          </IconButton>
-        </CardActions>
-      </Card>
-    </>
+      <CardActions>
+        <IconButton
+          className={classes.button}
+          aria-label="editClient"
+          onClick={handleEditClient}
+        >
+          <EditIcon />
+        </IconButton>
+      </CardActions>
+    </Card>
   );
 };
 
