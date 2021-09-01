@@ -1,4 +1,4 @@
-import { User } from "../../types";
+import { Client as ClientType, User } from "../../types";
 import Loading from "../Loading";
 import {
   Typography,
@@ -54,12 +54,9 @@ const Client = () => {
   const classes = useStyles();
   const { clientId } = useParams<{ clientId: string }>();
   const { enqueueSnackbar } = useSnackbar();
+  const isNewClient = clientId == "new";
 
   const [authUser, authLoading] = useAuthState(firebase.auth());
-
-  if (authLoading) {
-    return <Loading />;
-  }
 
   const userReference = firebase
     .firestore()
@@ -69,13 +66,19 @@ const Client = () => {
   const [firestoreUser, firestoreLoading] =
     useDocumentData<User>(userReference);
 
-  if (firestoreLoading) {
+  const customCategories = firestoreUser?.customCategories || {};
+
+  const existingClientReference = userReference
+    .collection("clients")
+    .doc(clientId);
+
+  const [clientData, clientLoading] = useDocumentData<ClientType>(
+    existingClientReference
+  );
+
+  if (authLoading || firestoreLoading || (!isNewClient && clientLoading)) {
     return <Loading />;
   }
-
-  const customCategories = firestoreUser.customCategories || {};
-
-  const isNewClient = clientId == "new";
 
   // Revisit this whole category business at a later date when categories are implemented.
   const category = [];
@@ -87,7 +90,7 @@ const Client = () => {
     return acc;
   }, {});
 
-  const initialValues: FormValues = {
+  const newClientInitialValues: FormValues = {
     firstName: "",
     lastName: "",
     business: "",
@@ -101,17 +104,32 @@ const Client = () => {
     ...categoryInitialValues
   };
 
+  const existingClientInitialValues: FormValues = {
+    firstName: clientData?.firstName,
+    lastName: clientData?.lastName,
+    business: clientData?.business,
+    address: clientData?.address,
+    category: "not implemented",
+    email: clientData?.email,
+    phone: clientData?.phone,
+    payRate: clientData?.payRate,
+    jobStatus: clientData?.jobStatus || "Not Started",
+    notes: clientData?.notes,
+    ...categoryInitialValues
+  };
+
   return (
     <>
       <Grid container justifyContent="center">
         <Grid item xs={12} sm={8} md={6}>
           <Typography variant="h4" className={classes.title}>
             {isNewClient && "New Client Profile"}
-            {!isNewClient &&
-              `${firestoreUser?.firstName} ${firestoreUser?.lastName}`}
+            {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
           </Typography>
           <Formik
-            initialValues={initialValues}
+            initialValues={
+              isNewClient ? newClientInitialValues : existingClientInitialValues
+            }
             validationSchema={Yup.object().shape({
               firstName: Yup.string(),
               lastName: Yup.string(),
