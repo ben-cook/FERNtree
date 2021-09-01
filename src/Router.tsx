@@ -1,6 +1,6 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
-import Home from "./components/Home";
+import Home from "./components/Home/Home";
 import Loading from "./components/Loading";
 import NewClient from "./components/NewClient/NewClient";
 import firebase from "firebase/app";
