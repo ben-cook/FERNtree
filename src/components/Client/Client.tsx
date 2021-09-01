@@ -12,6 +12,7 @@ import {
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
+import { useSnackbar } from "notistack";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useParams } from "react-router-dom";
@@ -52,6 +53,7 @@ const useStyles = makeStyles((theme) =>
 const Client = () => {
   const classes = useStyles();
   const { clientId } = useParams<{ clientId: string }>();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [authUser, authLoading] = useAuthState(firebase.auth());
 
@@ -73,10 +75,8 @@ const Client = () => {
 
   const customCategories = firestoreUser.customCategories || {};
 
-  console.log(customCategories);
-
-  //temp dummy array to emulate category 'fields' (attribute of category object)
-  const category = ["customField1", "customField2", "customField3"];
+  // Revisit this whole category business at a later date when categories are implemented.
+  const category = [];
 
   // Here we generate initialValues object for the custom categories to satisfy the
   // react uncontrolled to controlled input error, using a bit of functional programming magic :D
@@ -127,7 +127,21 @@ const Client = () => {
               setSubmitting(true);
 
               console.log("submitting");
-              console.log(values);
+              // We're using add() instead of set() because we want an auto-generated UUID
+              userReference
+                .collection("clients")
+                .add(values)
+                .then(() => {
+                  enqueueSnackbar("New client created!", {
+                    variant: "success"
+                  });
+                })
+                .catch((err) => {
+                  console.error(err);
+                  enqueueSnackbar("Something went wrong.", {
+                    variant: "error"
+                  });
+                });
 
               setSubmitting(false);
             }}
