@@ -9,8 +9,7 @@ import {
 } from "@material-ui/core";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
-import { useState } from "react";
-import { useParams, matchPath, useLocation } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
 interface FormValues {
@@ -73,12 +72,7 @@ const Client = () => {
     ...categoryInitialValues
   };
 
-  const match = matchPath(useLocation().pathname, {
-    path: "/client/:clientId"
-  });
-  //const { clientId } = useParams<{ clientId: string }>();
-  const clientId = match.params["clientId"];
-  console.log("Client Id: ", clientId);
+  const { clientId } = useParams<{ clientId: string }>();
 
   return (
     <>
@@ -90,6 +84,17 @@ const Client = () => {
           </Typography>
           <Formik
             initialValues={initialValues}
+            validationSchema={Yup.object().shape({
+              firstName: Yup.string(),
+              lastName: Yup.string(),
+              business: Yup.string(),
+              address: Yup.string(),
+              email: Yup.string().email(),
+              phone: Yup.string(),
+              payRate: Yup.string(),
+              jobStatus: Yup.string(),
+              notes: Yup.string()
+            })}
             onSubmit={(
               values: FormValues,
               { setSubmitting }: FormikHelpers<FormValues>
