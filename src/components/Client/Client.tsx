@@ -1,3 +1,5 @@
+import { User } from "../../types";
+import Loading from "../Loading";
 import {
   Typography,
   makeStyles,
@@ -7,8 +9,11 @@ import {
   Box,
   MenuItem
 } from "@material-ui/core";
+import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useParams } from "react-router-dom";
 import * as Yup from "yup";
 
@@ -46,6 +51,30 @@ const useStyles = makeStyles((theme) =>
 
 const Client = () => {
   const classes = useStyles();
+  const { clientId } = useParams<{ clientId: string }>();
+
+  const [authUser, authLoading] = useAuthState(firebase.auth());
+
+  if (authLoading) {
+    return <Loading />;
+  }
+
+  const userReference = firebase
+    .firestore()
+    .collection("users")
+    .doc(authUser.uid);
+
+  const [firestoreUser, firestoreLoading] =
+    useDocumentData<User>(userReference);
+
+  if (firestoreLoading) {
+    return <Loading />;
+  }
+
+  const customCategories = firestoreUser.customCategories || {};
+
+  console.log(customCategories);
+
   //temp dummy array to emulate category 'fields' (attribute of category object)
   const category = ["customField1", "customField2", "customField3"];
 
@@ -55,8 +84,6 @@ const Client = () => {
     acc[cur] = "";
     return acc;
   }, {});
-
-  console.log(categoryInitialValues);
 
   const initialValues: FormValues = {
     firstName: "",
@@ -71,8 +98,6 @@ const Client = () => {
     notes: "",
     ...categoryInitialValues
   };
-
-  const { clientId } = useParams<{ clientId: string }>();
 
   return (
     <>
@@ -165,9 +190,11 @@ const Client = () => {
                       fullWidth
                       select
                     >
-                      <MenuItem value="Not Started">Not Started</MenuItem>
-                      <MenuItem value="In Progress">In Progress</MenuItem>
-                      <MenuItem value="Completed">Completed</MenuItem>
+                      {Object.keys(customCategories).map((categoryName) => (
+                        <MenuItem value={categoryName} key={categoryName}>
+                          {categoryName}
+                        </MenuItem>
+                      ))}
                     </Field>
                   </Grid>
                   <Grid item xs={12}>
