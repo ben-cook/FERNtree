@@ -70,7 +70,14 @@ const Home = () => {
     .doc(user.uid)
     .collection("clients");
 
-  const [clientsData] = useCollectionData<Client>(clientsReference);
+  const [clientsData] = useCollectionData<Client & { id: string }>(
+    clientsReference,
+    {
+      idField: "id"
+    }
+  );
+
+  console.log(clientsData);
 
   const labels = [
     {

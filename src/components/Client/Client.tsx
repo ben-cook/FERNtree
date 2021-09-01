@@ -75,6 +75,8 @@ const Client = () => {
 
   const customCategories = firestoreUser.customCategories || {};
 
+  const isNewClient = clientId == "new";
+
   // Revisit this whole category business at a later date when categories are implemented.
   const category = [];
 
@@ -104,8 +106,9 @@ const Client = () => {
       <Grid container justifyContent="center">
         <Grid item xs={12} sm={8} md={6}>
           <Typography variant="h4" className={classes.title}>
-            {clientId == "new" && "New Client Profile"}
-            {clientId != "new" && clientId}
+            {isNewClient && "New Client Profile"}
+            {!isNewClient &&
+              `${firestoreUser?.firstName} ${firestoreUser?.lastName}`}
           </Typography>
           <Formik
             initialValues={initialValues}
@@ -126,27 +129,45 @@ const Client = () => {
             ) => {
               setSubmitting(true);
 
-              console.log("submitting");
-              // We're using add() instead of set() because we want an auto-generated UUID
-              userReference
-                .collection("clients")
-                .add(values)
-                .then(() => {
-                  enqueueSnackbar("New client created!", {
-                    variant: "success"
-                  });
-                })
-                .catch((err) => {
-                  console.error(err);
-                  enqueueSnackbar("Something went wrong.", {
-                    variant: "error"
-                  });
-                });
-
-              setSubmitting(false);
+              if (isNewClient) {
+                // We're using add() instead of set() because we want an auto-generated UUID
+                userReference
+                  .collection("clients")
+                  .add(values)
+                  .then(() => {
+                    enqueueSnackbar("New client created!", {
+                      variant: "success"
+                    });
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    enqueueSnackbar("Something went wrong.", {
+                      variant: "error"
+                    });
+                  })
+                  .finally(() => setSubmitting(false));
+              } else {
+                // We're using add() instead of set() because we want an auto-generated UUID
+                userReference
+                  .collection("clients")
+                  .doc(clientId)
+                  .set(values, { merge: true })
+                  .then(() => {
+                    enqueueSnackbar("Updated client details.", {
+                      variant: "success"
+                    });
+                  })
+                  .catch((err) => {
+                    console.error(err);
+                    enqueueSnackbar("Something went wrong.", {
+                      variant: "error"
+                    });
+                  })
+                  .finally(() => setSubmitting(false));
+              }
             }}
           >
-            {({ isSubmitting }) => (
+            {({ isSubmitting, dirty }) => (
               <Form>
                 <Grid container direction={"row"} spacing={2}>
                   <Grid item xs={12} sm={6}>
@@ -280,6 +301,7 @@ const Client = () => {
                       fullWidth
                     />
                   </Grid>
+
                   {/* dynamic form fields occurs here - done by mapping category fields */}
                   {category.map((attb, idx) => (
                     <Grid item key={idx} xs={12}>
@@ -294,15 +316,17 @@ const Client = () => {
                       />
                     </Grid>
                   ))}
+
                   <Box textAlign="center">
                     <Button
                       type={"submit"}
                       variant={"contained"}
                       color={"primary"}
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !dirty}
                       className={classes.submitButton}
                     >
-                      Save
+                      {isNewClient && "Save"}
+                      {!isNewClient && "Update"}
                     </Button>
                   </Box>
                 </Grid>
