@@ -1,6 +1,6 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
-import NewClient from "./components/Client/NewClient";
+import Client from "./components/Client/Client";
 import Home from "./components/Home";
 import Loading from "./components/Loading";
 import firebase from "firebase/app";
@@ -35,8 +35,8 @@ const Router = () => {
       <Route exact path="/account" component={Account} />
       <AuthenticatedRoute
         exact
-        path="/client/new"
-        component={NewClient}
+        path="/client/:clientId"
+        component={Client}
         user={user}
       />
 
