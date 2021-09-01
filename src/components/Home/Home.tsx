@@ -1,3 +1,4 @@
+import ClientCard from "./ClientCard";
 import {
   Card,
   CardContent,
@@ -15,15 +16,12 @@ import {
   Checkbox,
   Typography
 } from "@material-ui/core";
+import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
-import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import firebase from "firebase";
-import { useCollectionData } from "react-firebase-hooks/firestore";
 import { useAuthState } from "react-firebase-hooks/auth";
-import ClientCard from "./Home/ClientCard";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 import { Link } from "react-router-dom";
-
-
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -42,21 +40,21 @@ const useStyles = makeStyles((theme) =>
       minHeight: 375,
       marginLeft: 20,
       marginRight: 12,
-      marginBottom: 12,
+      marginBottom: 12
     },
 
     cardContent: {
-      margin: 'auto',
-      justifyContent: 'center',
-      alignContent : 'center',
-      alignItems : 'center',
-      display: 'flex',
-      flexDirection: 'column',
+      margin: "auto",
+      justifyContent: "center",
+      alignContent: "center",
+      alignItems: "center",
+      display: "flex",
+      flexDirection: "column"
     },
 
     icon: {
       width: 60,
-      height: 60,
+      height: 60
     }
   })
 );
@@ -72,11 +70,13 @@ const Home = () => {
 
   const PersonAddButton = () => (
     <IconButton color="primary" size="medium" className={classes.icon}>
-      <PersonAddIcon fontSize="large"/>
+      <PersonAddIcon fontSize="large" />
     </IconButton>
   );
 
-  {/* Pull client data for user */}
+  {
+    /* Pull client data for user */
+  }
   const clientsReference = firebase
     .firestore()
     .collection("users")
@@ -168,7 +168,6 @@ const Home = () => {
         </CardContent>
       </Card>
 
-
       {/* Show all clients as cards */}
       {user && !loading && clientsData && (
         <Grid container spacing={1} className={classes.grid}>
@@ -182,22 +181,21 @@ const Home = () => {
             </Grid>
           ))} */}
 
-
           {/*Add new client card*/}
           <Grid item key={0} xs={12} sm={6} md={4}>
-
             <Link to="/client/new">
-
-              <Card className={classes.addClientCard} >
-
-                <Grid container direction="column" justifyContent="center" alignItems="center">
-
+              <Card className={classes.addClientCard}>
+                <Grid
+                  container
+                  direction="column"
+                  justifyContent="center"
+                  alignItems="center"
+                >
                   <Grid item>
                     <Link to="/client/new">
                       <PersonAddButton />
                     </Link>
                   </Grid>
-
                 </Grid>
               </Card>
             </Link>
@@ -210,13 +208,9 @@ const Home = () => {
             /*Map to individual cards*/
             .map((client, idx) => (
               <Grid item key={idx} xs={12} sm={6} md={4}>
-                <ClientCard {...client}/>
+                <ClientCard {...client} />
               </Grid>
-            )
-
-            )
-          }
-
+            ))}
         </Grid>
       )}
     </>

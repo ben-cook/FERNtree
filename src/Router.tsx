@@ -1,14 +1,13 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
-import Home from "./components/Home";
+import ClientCard from "./components/Home/ClientCard";
+import Home from "./components/Home/Home";
 import Loading from "./components/Loading";
 import NewClient from "./components/NewClient/NewClient";
-import ClientCard from "./components/Home/ClientCard";
 import firebase from "firebase/app";
 import { ReactElement } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Redirect, Route, Switch, RouteProps } from "react-router-dom";
-
 
 type AuthenticatedRouteProps = RouteProps & {
   user: firebase.User | undefined;
