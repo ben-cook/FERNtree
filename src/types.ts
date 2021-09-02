@@ -1,8 +1,14 @@
 export interface User {
   firstName: string;
   lastName: string;
-  customCategories: { [categoryName: string]: string[] };
+  customCategories: { categoryName: CustomCategory }[];
 }
+
+export interface CustomCategory {
+  notes: string;
+  customFields: string[];
+}
+
 export interface Client {
   firstName: string;
   lastName: string;

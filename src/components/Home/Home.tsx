@@ -20,7 +20,7 @@ import SettingsIcon from "@material-ui/icons/Settings";
 import firebase from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -52,6 +52,7 @@ const useStyles = makeStyles((theme) =>
 
 const Home = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [user] = useAuthState(firebase.auth());
 
@@ -143,7 +144,7 @@ const Home = () => {
 
             <Grid item xs={10}>
               <ButtonGroup className={classes.categoryButtonGroup}>
-                <Button onClick={() => console.log("add new category")}>
+                <Button onClick={() => history.push("/category/new")}>
                   <AddIcon />
                 </Button>
                 {labels.map((label) => (
