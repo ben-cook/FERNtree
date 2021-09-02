@@ -1,22 +1,20 @@
 import Account from "./components/Account/Account";
 import SignUp from "./components/Account/Signup";
+import Client from "./components/Client/Client";
 import Home from "./components/Home/Home";
 import Loading from "./components/Loading";
-import NewClient from "./components/NewClient/NewClient";
 import firebase from "firebase/app";
-import { ReactElement } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { Redirect, Route, Switch, RouteProps } from "react-router-dom";
 
 type AuthenticatedRouteProps = RouteProps & {
   user: firebase.User | undefined;
-  component: (props: RouteProps) => ReactElement;
 };
 
 const AuthenticatedRoute = (props: AuthenticatedRouteProps) => {
-  const { user, component: Component, ...rest } = props;
+  const { user, ...routeProps } = props;
   if (user) {
-    return <Component {...rest} />;
+    return <Route {...routeProps} />;
   }
 
   return <Redirect to="/account" />;
@@ -35,8 +33,8 @@ const Router = () => {
       <Route exact path="/account" component={Account} />
       <AuthenticatedRoute
         exact
-        path="/client/new"
-        component={NewClient}
+        path="/client/:clientId"
+        component={Client}
         user={user}
       />
 

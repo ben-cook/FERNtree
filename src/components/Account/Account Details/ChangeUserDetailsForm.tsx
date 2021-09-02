@@ -96,7 +96,7 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
           auth.currentUser.updateEmail(email);
         }
 
-        if (password.length >= 8) {
+        if (password.length >= 6) {
           // Promise to update password
           auth.currentUser.updatePassword(password);
         }

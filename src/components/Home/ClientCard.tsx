@@ -10,6 +10,7 @@ import {
   Typography
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -36,8 +37,24 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-const ClientCard = (client: Client) => {
+type ExtraProps = {
+  id: string;
+};
+
+const ClientCard = ({
+  id,
+  firstName,
+  lastName,
+  business,
+  address,
+  email,
+  phone,
+  payRate,
+  notes,
+  jobStatus
+}: Client & ExtraProps) => {
   const classes = useStyles();
+  const history = useHistory();
 
   const handleCategoryFilter = () => {
     console.info("You clicked the category button.");
@@ -50,15 +67,14 @@ const ClientCard = (client: Client) => {
   };
 
   const handleEditClient = () => {
-    console.info("You clicked the edit client button.");
-    // To link to client profile page
+    history.push(`/client/${id}`);
   };
 
   return (
     <Card>
       <CardContent className={classes.label}>
         {/*Job Status Label*/}
-        <Chip label={client.jobStatus} clickable onClick={handleStatusFilter} />
+        <Chip label={jobStatus} clickable onClick={handleStatusFilter} />
 
         {/*Category Label*/}
         <Chip
@@ -72,16 +88,16 @@ const ClientCard = (client: Client) => {
       <CardContent className={classes.content}>
         {/*Client Details*/}
         <Typography variant="h4" gutterBottom>
-          {client.firstName} {client.lastName}
+          {firstName} {lastName}
         </Typography>
         <br />
 
-        <Typography>{client?.business}</Typography>
-        <Typography>{client?.address}</Typography>
-        <Typography>{client?.email}</Typography>
-        <Typography>{client?.phone}</Typography>
-        <Typography>{client?.payRate}</Typography>
-        <Typography>{client?.notes}</Typography>
+        <Typography>{business}</Typography>
+        <Typography>{address}</Typography>
+        <Typography>{email}</Typography>
+        <Typography>{phone}</Typography>
+        <Typography>{payRate}</Typography>
+        <Typography>{notes}</Typography>
       </CardContent>
 
       <CardActions>
