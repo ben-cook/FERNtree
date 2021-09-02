@@ -10,13 +10,13 @@ import {
   makeStyles,
   TextField,
   MenuItem,
-  FormGroup,
-  FormControlLabel,
-  Checkbox,
-  Typography
+  ButtonGroup,
+  Button
 } from "@material-ui/core";
+import AddIcon from "@material-ui/icons/Add";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
+import SettingsIcon from "@material-ui/icons/Settings";
 import firebase from "firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useCollectionData } from "react-firebase-hooks/firestore";
@@ -28,12 +28,10 @@ const useStyles = makeStyles((theme) =>
       marginTop: "1rem",
       backgroundColor: theme.palette.primary.light
     },
-
     clientSearchField: {},
     grid: {
       marginTop: "1rem"
     },
-
     cardContent: {
       margin: "auto",
       justifyContent: "center",
@@ -42,10 +40,12 @@ const useStyles = makeStyles((theme) =>
       display: "flex",
       flexDirection: "column"
     },
-
     icon: {
       width: 60,
       height: 60
+    },
+    categoryButtonGroup: {
+      backgroundColor: "white"
     }
   })
 );
@@ -53,7 +53,7 @@ const useStyles = makeStyles((theme) =>
 const Home = () => {
   const classes = useStyles();
 
-  const [user, loading] = useAuthState(firebase.auth());
+  const [user] = useAuthState(firebase.auth());
 
   const PersonAddButton = () => (
     <IconButton color="primary" size="medium" className={classes.icon}>
@@ -61,9 +61,6 @@ const Home = () => {
     </IconButton>
   );
 
-  {
-    /* Pull client data for user */
-  }
   const clientsReference = firebase
     .firestore()
     .collection("users")
@@ -76,8 +73,6 @@ const Home = () => {
       idField: "id"
     }
   );
-
-  console.log(clientsData);
 
   const labels = [
     {
@@ -146,69 +141,60 @@ const Home = () => {
               </TextField>
             </Grid>
 
-            <Grid item xs={12} sm={4}>
-              <FormGroup row>
-                <Typography>Categories - remove this stuff</Typography>
+            <Grid item xs={10}>
+              <ButtonGroup className={classes.categoryButtonGroup}>
+                <Button onClick={() => console.log("add new category")}>
+                  <AddIcon />
+                </Button>
                 {labels.map((label) => (
-                  <FormControlLabel
-                    key={label.value}
-                    control={<Checkbox color="primary" />}
-                    label={label.label}
-                  />
+                  <Button key={label.value}>{label.value}</Button>
                 ))}
-              </FormGroup>
+              </ButtonGroup>
+            </Grid>
+
+            <Grid item xs={2}>
+              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                <IconButton>
+                  <SettingsIcon style={{ color: "black", fontSize: 28 }} />
+                </IconButton>
+              </div>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
 
       {/* Show all clients as cards */}
-      {user && !loading && clientsData && (
-        <Grid container spacing={3} className={classes.grid}>
-          {/* {clientsData.map((client, idx) => (
-            <Grid item key={idx} xs={12} sm={6} md={4}>
-              <Card variant="outlined" style={{ height: "30vh" }}>
-                <CardContent>
-                  <Typography variant="h6">
-                    {client.firstName} {client.lastName}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Grid>
-          ))} */}
-
-          {/*Add new client card*/}
-          <Grid item key={0} xs={12} sm={6} md={4}>
-            <Link to="/client/new">
-              <Card style={{ height: "100%" }}>
-                <Grid
-                  container
-                  direction="column"
-                  justifyContent="center"
-                  alignContent="stretch"
-                  alignItems="center"
-                  style={{ height: "100%" }}
-                >
-                  <Grid item>
-                    <PersonAddButton />
-                  </Grid>
+      <Grid container spacing={3} className={classes.grid}>
+        {/*Add new client card*/}
+        <Grid item key={0} xs={12} sm={6} md={4}>
+          <Link to="/client/new">
+            <Card style={{ height: "100%" }}>
+              <Grid
+                container
+                direction="column"
+                justifyContent="center"
+                alignContent="stretch"
+                alignItems="center"
+                style={{ height: "100%" }}
+              >
+                <Grid item>
+                  <PersonAddButton />
                 </Grid>
-              </Card>
-            </Link>
-          </Grid>
+              </Grid>
+            </Card>
+          </Link>
+        </Grid>
 
-          {clientsData
-            /*Order client cards alphabetically*/
+        {clientsData &&
+          clientsData
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .reverse()
-            /*Map to individual cards*/
             .map((client, idx) => (
               <Grid item key={idx} xs={12} sm={6} md={4}>
                 <ClientCard {...client} />
               </Grid>
             ))}
-        </Grid>
-      )}
+      </Grid>
     </>
   );
 };
