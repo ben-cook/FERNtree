@@ -8,7 +8,12 @@ import {
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import EcoIcon from "@material-ui/icons/Eco";
-import { Link } from "react-router-dom";
+import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined';
+import { useLocation, Link } from "react-router-dom";
+import Client from "./Client/Client";
+
+console.log("client: "+Client);
+//console.log("Path:" + window.location.pathname); 
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,6 +22,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logoIcon: {
       marginLeft: theme.spacing(2)
+    },
+    clientButton: {
+     // marginRight: theme.spacing(2)
     },
     noTextDecoration: {
       textDecoration: "none",
@@ -40,6 +48,21 @@ const Header = () => {
     </IconButton>
   );
 
+  const ClientButton = () => (
+    <IconButton color="inherit" size="medium" className={classes.clientButton}>
+      <PersonAddOutlinedIcon fontSize="large" />
+    </IconButton>
+  );
+
+  const location = useLocation();
+  //console.log(location.pathname);
+
+  // const usePathname = () => {
+  //   const location = useLocation();
+  //   console.log(location.pathname);
+  // }
+  
+
   return (
     <AppBar position="static">
       <Toolbar>
@@ -51,6 +74,16 @@ const Header = () => {
               </Link>
             </Grid>
             <Grid item>
+
+              {/* Add Client button only visible on account and any client pages but not new client page */}
+              {( (location.pathname == "/account") || ((location.pathname.indexOf("/client")) > -1) ) && (!(location.pathname == "/client/new") ) && (
+              <Link
+                to="/client/new"
+                className={classes.noTextDecoration}
+              >
+                <ClientButton />
+              </Link>)}
+            
               <Link
                 to="/account"
                 className={classes.noTextDecoration}
@@ -65,5 +98,7 @@ const Header = () => {
     </AppBar>
   );
 };
+
+
 
 export default Header;
