@@ -57,6 +57,7 @@ const Header = () => {
       color="inherit"
       size="medium"
       className={classes.newClientButton}
+      disabled={!user || location.pathname == "/client/new"}
     >
       <PersonAddOutlinedIcon fontSize="large" />
     </IconButton>
@@ -74,24 +75,21 @@ const Header = () => {
             </Grid>
             <Grid item>
               {/* My Clients Button visible when logged in and not on home page. */}
-              {user && location.pathname != "/" && (
-                <Link to="/" className={classes.noTextDecoration}>
-                  <Button
-                    variant="outlined"
-                    color="inherit"
-                    className={classes.myClientsButton}
-                  >
-                    My Clients
-                  </Button>
-                </Link>
-              )}
+              <Link to="/" className={classes.noTextDecoration}>
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  className={classes.myClientsButton}
+                  disabled={!user || location.pathname == "/"}
+                >
+                  My Clients
+                </Button>
+              </Link>
 
               {/* Add Client button visible everywhere when logged in expect new client page */}
-              {user && location.pathname != "/client/new" && (
-                <Link to="/client/new" className={classes.noTextDecoration}>
-                  <NewClientButton />
-                </Link>
-              )}
+              <Link to="/client/new" className={classes.noTextDecoration}>
+                <NewClientButton />
+              </Link>
 
               <Link
                 to="/account"
