@@ -1,5 +1,6 @@
 import {
   IconButton,
+  Button,
   Toolbar,
   AppBar,
   Container,
@@ -8,7 +9,10 @@ import {
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
 import EcoIcon from "@material-ui/icons/Eco";
-import { Link } from "react-router-dom";
+import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
+import firebase from "firebase/app";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useLocation, Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -17,6 +21,12 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     logoIcon: {
       marginLeft: theme.spacing(2)
+    },
+    newClientButton: {
+      marginRight: theme.spacing(2)
+    },
+    myClientsButton: {
+      marginRight: theme.spacing(2)
     },
     noTextDecoration: {
       textDecoration: "none",
@@ -27,6 +37,8 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header = () => {
   const classes = useStyles();
+  const location = useLocation();
+  const [user] = useAuthState(firebase.auth());
 
   const LogoIcon = () => (
     <IconButton color="inherit" size="medium" className={classes.logoIcon}>
@@ -37,6 +49,17 @@ const Header = () => {
   const ProfileButton = () => (
     <IconButton color="inherit" size="medium" className={classes.profileButton}>
       <AccountCircleIcon fontSize="large" />
+    </IconButton>
+  );
+
+  const NewClientButton = () => (
+    <IconButton
+      color="inherit"
+      size="medium"
+      className={classes.newClientButton}
+      disabled={!user || location.pathname == "/client/new"}
+    >
+      <PersonAddOutlinedIcon fontSize="large" />
     </IconButton>
   );
 
@@ -51,6 +74,23 @@ const Header = () => {
               </Link>
             </Grid>
             <Grid item>
+              {/* My Clients Button visible when logged in and not on home page. */}
+              <Link to="/" className={classes.noTextDecoration}>
+                <Button
+                  variant="outlined"
+                  color="inherit"
+                  className={classes.myClientsButton}
+                  disabled={!user || location.pathname == "/"}
+                >
+                  My Clients
+                </Button>
+              </Link>
+
+              {/* Add Client button visible everywhere when logged in expect new client page */}
+              <Link to="/client/new" className={classes.noTextDecoration}>
+                <NewClientButton />
+              </Link>
+
               <Link
                 to="/account"
                 className={classes.noTextDecoration}
