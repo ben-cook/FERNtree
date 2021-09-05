@@ -1,5 +1,6 @@
 import {
   IconButton,
+  Button,
   Toolbar,
   AppBar,
   Container,
@@ -74,15 +75,26 @@ const Header = () => {
               </Link>
             </Grid>
             <Grid item>
+              
+              {/* My Clients Button only visible on account and any client pages */}
+              {( (location.pathname == "/account") || ((location.pathname.indexOf("/client")) > -1) ) && (
+                <Link
+                  to="/"
+                  className={classes.noTextDecoration}
+                >
+                  <Button variant="outlined" color = "inherit"> 
+                    My Clients 
+                  </Button>
+                </Link>)}
 
               {/* Add Client button only visible on account and any client pages but not new client page */}
               {( (location.pathname == "/account") || ((location.pathname.indexOf("/client")) > -1) ) && (!(location.pathname == "/client/new") ) && (
-              <Link
-                to="/client/new"
-                className={classes.noTextDecoration}
-              >
-                <ClientButton />
-              </Link>)}
+                <Link
+                  to="/client/new"
+                  className={classes.noTextDecoration}
+                >
+                  <ClientButton />
+                </Link>)}
             
               <Link
                 to="/account"
