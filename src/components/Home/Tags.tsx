@@ -62,10 +62,10 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
 
     // Add tag to user collection
     if (!firestoreUser.userTags) {
-      userReference.set({ tags: [tagToAdd] }, { merge: true });
+      userReference.set({ userTags: [tagToAdd] }, { merge: true });
     } else if (!firestoreUser.userTags.includes(tagToAdd)) {
       userReference.set(
-        { tags: [...firestoreUser.userTags, tagToAdd] },
+        { userTags: [...firestoreUser.userTags, tagToAdd] },
         { merge: true }
       );
     }
