@@ -1,3 +1,4 @@
+import { User } from "../../types";
 import {
   Chip,
   createStyles,
@@ -9,7 +10,10 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import firebase from "firebase/app";
 import { useState } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -27,17 +31,54 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Tags = () => {
+const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
   const classes = useStyles();
+
+  const [authUser, authLoading] = useAuthState(firebase.auth());
+
+  const userReference = firebase
+    .firestore()
+    .collection("users")
+    .doc(authUser.uid);
+
+  const [firestoreUser, firestoreLoading] =
+    useDocumentData<User>(userReference);
+
   const [showAddTag, setShowAddTag] = useState<boolean>(false);
 
-  const [chips, setChips] = useState<string[]>(["Example Tag"]);
+  const addTag = (tagToAdd: string) => {
+    // Add tag to client collection
+    if (!tags) {
+      userReference
+        .collection("clients")
+        .doc(clientID)
+        .set({ tags: [tagToAdd] }, { merge: true });
+    } else if (!tags.includes(tagToAdd)) {
+      userReference
+        .collection("clients")
+        .doc(clientID)
+        .set({ tags: [...tags, tagToAdd] }, { merge: true });
+    }
 
-  const deleteChip = (chipToDelete: string) => () =>
-    setChips((chips) => chips.filter((chip) => chip !== chipToDelete));
+    // Add tag to user collection
+    if (!firestoreUser.userTags) {
+      userReference.set({ tags: [tagToAdd] }, { merge: true });
+    } else if (!firestoreUser.userTags.includes(tagToAdd)) {
+      userReference.set(
+        { tags: [...firestoreUser.userTags, tagToAdd] },
+        { merge: true }
+      );
+    }
+  };
 
-  const addChip = (chipToAdd: string) =>
-    setChips((chips) => [...chips, chipToAdd]);
+  const deleteTag = (tagToDelete: string) => () =>
+    userReference
+      .collection("clients")
+      .doc(clientID)
+      .set(
+        { tags: tags.filter((tag) => tag !== tagToDelete) },
+        { merge: true }
+      );
 
   const [textFieldValue, setTextFieldValue] = useState<string>("");
 
@@ -47,18 +88,23 @@ const Tags = () => {
     setTextFieldValue(event.target.value);
   };
 
+  if (authLoading || firestoreLoading) {
+    return <></>;
+  }
+
   return (
     <>
       {/* <Typography variant="caption">Tags:</Typography> */}
       <div className={classes.root}>
-        {chips.map((chip, idx) => (
-          <Chip
-            key={idx}
-            label={chip}
-            onDelete={deleteChip(chip)}
-            className={classes.chip}
-          />
-        ))}
+        {tags &&
+          tags.map((tag, idx) => (
+            <Chip
+              key={idx}
+              label={tag}
+              onDelete={deleteTag(tag)}
+              className={classes.chip}
+            />
+          ))}
         <Chip
           label={showAddTag ? <RemoveIcon /> : <AddIcon />}
           color="primary"
@@ -83,7 +129,7 @@ const Tags = () => {
                 <InputAdornment component="div" position="end">
                   <IconButton
                     onClick={() => {
-                      addChip(textFieldValue);
+                      addTag(textFieldValue);
                       setTextFieldValue("");
                     }}
                   >

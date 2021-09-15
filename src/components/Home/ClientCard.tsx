@@ -52,7 +52,8 @@ const ClientCard = ({
   phone,
   payRate,
   notes,
-  jobStatus
+  jobStatus,
+  tags
 }: Client & ExtraProps) => {
   const classes = useStyles();
   const history = useHistory();
@@ -102,7 +103,7 @@ const ClientCard = ({
       </CardContent>
 
       <CardContent>
-        <Tags />
+        <Tags id={id} tags={tags} />
       </CardContent>
 
       <CardActions>
