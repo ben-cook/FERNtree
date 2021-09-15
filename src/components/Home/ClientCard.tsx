@@ -1,4 +1,5 @@
 import { Client } from "../../types";
+import Tags from "./Tags";
 import {
   Card,
   CardContent,
@@ -51,7 +52,8 @@ const ClientCard = ({
   phone,
   payRate,
   notes,
-  jobStatus
+  jobStatus,
+  tags
 }: Client & ExtraProps) => {
   const classes = useStyles();
   const history = useHistory();
@@ -71,7 +73,7 @@ const ClientCard = ({
   };
 
   return (
-    <Card>
+    <Card style={{ height: "100%" }}>
       <CardContent className={classes.label}>
         {/*Job Status Label*/}
         <Chip label={jobStatus} clickable onClick={handleStatusFilter} />
@@ -98,6 +100,10 @@ const ClientCard = ({
         <Typography>{phone}</Typography>
         <Typography>{payRate}</Typography>
         <Typography>{notes}</Typography>
+      </CardContent>
+
+      <CardContent>
+        <Tags id={id} tags={tags} />
       </CardContent>
 
       <CardActions>
