@@ -1,4 +1,4 @@
-import { Client } from "../../types";
+import { Client, User } from "../../types";
 import ClientCard from "./ClientCard";
 import {
   Card,
@@ -18,8 +18,12 @@ import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
 import firebase from "firebase";
+import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useCollectionData } from "react-firebase-hooks/firestore";
+import {
+  useCollectionData,
+  useDocumentData
+} from "react-firebase-hooks/firestore";
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) =>
@@ -53,7 +57,7 @@ const useStyles = makeStyles((theme) =>
 const Home = () => {
   const classes = useStyles();
 
-  const [user] = useAuthState(firebase.auth());
+  const [authUser] = useAuthState(firebase.auth());
 
   const PersonAddButton = () => (
     <IconButton color="primary" size="medium" className={classes.icon}>
@@ -61,11 +65,15 @@ const Home = () => {
     </IconButton>
   );
 
-  const clientsReference = firebase
+  const userReference = firebase
     .firestore()
     .collection("users")
-    .doc(user.uid)
-    .collection("clients");
+    .doc(authUser.uid);
+
+  const [firestoreUser, firestoreLoading] =
+    useDocumentData<User>(userReference);
+
+  const clientsReference = userReference.collection("clients");
 
   const [clientsData] = useCollectionData<Client & { id: string }>(
     clientsReference,
@@ -73,6 +81,8 @@ const Home = () => {
       idField: "id"
     }
   );
+
+  const [selectedTag, setSelectedTag] = useState<string>("All");
 
   const labels = [
     {
@@ -92,6 +102,15 @@ const Home = () => {
       label: "Mentor"
     }
   ];
+
+  let tags: string[];
+  if (firestoreUser) {
+    if (firestoreUser.userTags) {
+      tags = ["All", ...firestoreUser.userTags];
+    } else {
+      tags = ["All"];
+    }
+  }
 
   return (
     <>
@@ -122,23 +141,27 @@ const Home = () => {
 
             {/* Selection and buttons */}
             <Grid item xs={12} sm={4}>
-              <TextField
-                variant="outlined"
-                className={classes.clientSearchField}
-                fullWidth
-                margin="normal"
-                size="medium"
-                InputProps={{
-                  style: { backgroundColor: "white" }
-                }}
-                select
-              >
-                {labels.map((option) => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-              </TextField>
+              {!firestoreLoading && (
+                <TextField
+                  variant="outlined"
+                  className={classes.clientSearchField}
+                  fullWidth
+                  margin="normal"
+                  size="medium"
+                  InputProps={{
+                    style: { backgroundColor: "white" }
+                  }}
+                  select
+                  value={selectedTag}
+                  onChange={(event) => setSelectedTag(event.target.value)}
+                >
+                  {tags.map((tag) => (
+                    <MenuItem key={tag} value={tag}>
+                      {tag}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              )}
             </Grid>
 
             <Grid item xs={10}>
@@ -187,6 +210,12 @@ const Home = () => {
 
         {clientsData &&
           clientsData
+            .filter((client) => {
+              if (selectedTag === "All") {
+                return true;
+              }
+              return client.tags.includes(selectedTag);
+            })
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .reverse()
             .map((client, idx) => (
