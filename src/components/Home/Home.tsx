@@ -103,7 +103,7 @@ const Home = () => {
     }
   ];
 
-  let tags: string[];
+  let tags: string[] = [];
   if (firestoreUser) {
     if (firestoreUser.userTags) {
       tags = ["All", ...firestoreUser.userTags];
