@@ -127,6 +127,7 @@ const ClientCard = ({
               className={classes.button}
               aria-label="editClient"
               onClick={handleEditClient}
+              data-cy={`${firstName}${lastName}`}
             >
               <EditIcon />
             </IconButton>

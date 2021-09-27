@@ -42,9 +42,27 @@ describe("Create a new Client", () => {
     cy.contains(lastName);
   });
 
-  // it("can delete client", () => {
-  //   cy.contains("New client created");
-  //   cy.contains(firstName);
-  //   cy.contains(lastName);
-  // });
+  it("can delete client", () => {
+    // Navigate to client page
+    cy.get(`[data-cy=${firstName}${lastName}]`).click();
+
+    // Delete client
+    cy.get("[data-cy=delete-button]").click();
+    cy.get("[data-cy=confirm-delete]").click();
+  });
+
+  it("client does not show up in main page", () => {
+    cy.contains("Client deleted");
+
+    cy.intercept(
+      "POST",
+      "https://firestore.googleapis.com/google.firestore.v1.Firestore/**"
+    ).as("getFirestoreData");
+
+    cy.wait("@getFirestoreData");
+
+    cy.contains("Client deleted");
+    cy.contains(firstName).should("not.exist");
+    cy.contains(lastName).should("not.exist");
+  });
 });
