@@ -75,24 +75,21 @@ const Home = () => {
     }
   );
 
-  const labels = [
-    {
-      value: "All",
-      label: "All"
-    },
-    {
-      value: "Technology",
-      label: "Technology"
-    },
-    {
-      value: "Journalism",
-      label: "Journalism"
-    },
-    {
-      value: "Mentor",
-      label: "Mentor"
+  const categoriesReference = firebase
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .collection("customCategories");
+
+  const [categoryData] = useCollectionData(categoriesReference);
+  console.log(categoryData);
+
+  const labels = !categoryData ? [] : categoryData.map((x:any) => {
+    return {
+      label: x.name,
+      value: x.name
     }
-  ];
+  });
 
   return (
     <>
@@ -147,8 +144,11 @@ const Home = () => {
                 <Button onClick={() => history.push("/category/new")}>
                   <AddIcon />
                 </Button>
+                <Button>All</Button>
                 {labels.map((label) => (
-                  <Button key={label.value}>{label.value}</Button>
+                  <Button key={label.value} onClick={() => history.push(`/category/${label.value}`)}>
+                    {label.value}
+                  </Button>
                 ))}
               </ButtonGroup>
             </Grid>
