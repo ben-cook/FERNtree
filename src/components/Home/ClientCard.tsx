@@ -14,6 +14,8 @@ import {
 import EditIcon from "@material-ui/icons/Edit";
 import { useHistory } from "react-router-dom";
 
+const MAX_CLIENT_NAME_LENGTH = 20;
+
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {},
@@ -73,6 +75,11 @@ const ClientCard = ({
     history.push(`/client/${id}`);
   };
 
+  let clientName = `${firstName} ${lastName}`;
+  if (clientName.length > MAX_CLIENT_NAME_LENGTH) {
+    clientName = clientName.slice(0, MAX_CLIENT_NAME_LENGTH - 2) + "...";
+  }
+
   return (
     <Card style={{ height: "100%" }}>
       <Grid
@@ -98,7 +105,7 @@ const ClientCard = ({
           <CardContent className={classes.content}>
             {/*Client Details*/}
             <Typography variant="h4" gutterBottom>
-              {firstName} {lastName}
+              {clientName}
             </Typography>
             <br />
 
