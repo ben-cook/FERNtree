@@ -41,7 +41,7 @@ describe("Register a new account", () => {
   });
 
   it("deletes created user", () => {
-    cy.get("[data-cy=delete-account]").click();
+    cy.get("[data-cy=delete-button]").click();
     cy.get("[data-cy=confirm-delete]").click();
   });
 
