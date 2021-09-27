@@ -214,6 +214,11 @@ const Home = () => {
               if (selectedTag === "All") {
                 return true;
               }
+
+              if (!client.tags) {
+                return false;
+              }
+
               return client.tags.includes(selectedTag);
             })
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
