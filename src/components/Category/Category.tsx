@@ -97,10 +97,10 @@ const Category = () => {
           ) => {
             setSubmitting(true);
 
+            
             if (isNewCategory) {
-              userReference.collection("customCategories")
-              .add(values).then(() => {
-                  enqueueSnackbar("New client created!", {
+              userReference.collection("customCategories").doc(values.name).set(values).then(() => {
+                  enqueueSnackbar("New category created!", {
                     variant: "success"
                   });
                   history.push("/");
