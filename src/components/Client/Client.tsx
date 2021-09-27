@@ -1,4 +1,5 @@
 import { Client as ClientType, User } from "../../types";
+import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
 import {
   Typography,
@@ -6,7 +7,6 @@ import {
   createStyles,
   Button,
   Grid,
-  Box,
   MenuItem
 } from "@material-ui/core";
 import firebase from "firebase/app";
@@ -337,19 +337,51 @@ const Client = () => {
                   </Grid>
                 ))}
 
-                <Box textAlign="center">
-                  <Button
-                    type={"submit"}
-                    variant={"contained"}
-                    color={"primary"}
-                    disabled={isSubmitting || !dirty}
-                    className={classes.submitButton}
-                    data-cy="submit"
-                  >
-                    {isNewClient && "Save"}
-                    {!isNewClient && "Update"}
-                  </Button>
-                </Box>
+                <Grid
+                  container
+                  justifyContent="space-around"
+                  alignItems="center"
+                >
+                  <Grid item>
+                    <Button
+                      type={"submit"}
+                      variant={"contained"}
+                      color={"primary"}
+                      disabled={isSubmitting || !dirty}
+                      className={classes.submitButton}
+                      data-cy="submit"
+                    >
+                      {isNewClient && "Save"}
+                      {!isNewClient && "Update"}
+                    </Button>
+                  </Grid>
+                  {!isNewClient && (
+                    <Grid item>
+                      <DeleteButtonWithDialog
+                        buttonText="Delete Client"
+                        dialogTitle="Delete Client?"
+                        dialogContent="Are you sure you wish to permanently delete this client? This
+            action cannot be reversed."
+                        deleteFunction={() => {
+                          existingClientReference
+                            .delete()
+                            .then(() => {
+                              enqueueSnackbar("Client deleted!", {
+                                variant: "success"
+                              });
+                              history.push("/");
+                            })
+                            .catch((err) => {
+                              console.error(err);
+                              enqueueSnackbar("Something went wrong.", {
+                                variant: "error"
+                              });
+                            });
+                        }}
+                      />
+                    </Grid>
+                  )}
+                </Grid>
               </Grid>
             </Form>
           )}

@@ -1,7 +1,7 @@
 import { User } from "../../../types";
+import DeleteButtonWithDialog from "../../DeleteButtonWithDialog";
 import ChangeUserDetailsForm from "./ChangeUserDetailsForm";
 import Dashboard from "./Dashboard";
-import DeleteAccountButton from "./DeleteAccountButton";
 import {
   Button,
   Typography,
@@ -61,7 +61,18 @@ const UserDetails = (user: firebase.User) => {
           Sign Out
         </Button>
 
-        <DeleteAccountButton />
+        <DeleteButtonWithDialog
+          buttonText="Delete Account"
+          dialogTitle="Delete Account?"
+          dialogContent="Are you sure you wish to permanently delete your account? This
+            action cannot be reversed."
+          deleteFunction={() => {
+            firebase
+              .auth()
+              .currentUser?.delete()
+              .catch((err) => console.error(err));
+          }}
+        />
 
         <ChangeUserDetailsForm {...user} />
       </Grid>
