@@ -1,4 +1,4 @@
-import { Client } from "../../types";
+import { Client, CustomCategory } from "../../types";
 import ClientCard from "./ClientCard";
 import {
   Card,
@@ -81,10 +81,14 @@ const Home = () => {
     .doc(user.uid)
     .collection("customCategories");
 
-  const [categoryData] = useCollectionData(categoriesReference);
+  const [categoryData] = useCollectionData<CustomCategory & { name: string }>(
+    categoriesReference, 
+    {
+      idField: "name"
+    });
   console.log(categoryData);
 
-  const labels = !categoryData ? [] : categoryData.map((x:any) => {
+  const labels = !categoryData ? [] : categoryData.map((x:CustomCategory & { name: string }) => {
     return {
       label: x.name,
       value: x.name

@@ -1,4 +1,4 @@
-import { User } from "../../types";
+import { CustomCategory, User } from "../../types";
 import Loading from "../Loading";
 import {
   Typography,
@@ -17,10 +17,8 @@ import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useSnackbar } from "notistack";
 
-interface FormValues {
-  name: string;
-  notes: string;
-  [customField: string]: string;
+interface FormValues extends CustomCategory{
+  name: string
 }
 
 const useStyles = makeStyles((theme) =>
@@ -58,7 +56,8 @@ const Category = () => {
 
   const newCategoryInitialValues: FormValues = {
     name: "",
-    notes: ""
+    notes: "",
+    customFields: [""]
   };
 
   const existingCategoryInitialValues: FormValues = {
@@ -67,7 +66,8 @@ const Category = () => {
       (firestoreUser?.customCategories &&
         firestoreUser?.customCategories[categoryName] &&
         firestoreUser?.customCategories[categoryName].notes) ||
-      ""
+      "",
+    customFields: [""]
   };
 
   if (authLoading || firestoreLoading) {
@@ -99,7 +99,10 @@ const Category = () => {
 
             
             if (isNewCategory) {
-              userReference.collection("customCategories").doc(values.name).set(values).then(() => {
+              userReference.collection("customCategories")
+                .doc(values.name)
+                .set({notes: values.notes, customFields: values.customFields})
+                .then(() => {
                   enqueueSnackbar("New category created!", {
                     variant: "success"
                   });
