@@ -344,6 +344,7 @@ const Client = () => {
                     color={"primary"}
                     disabled={isSubmitting || !dirty}
                     className={classes.submitButton}
+                    data-cy="submit"
                   >
                     {isNewClient && "Save"}
                     {!isNewClient && "Update"}
