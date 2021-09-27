@@ -9,12 +9,13 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
-import { Field, Form, Formik } from "formik";
+import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { useParams } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { useSnackbar } from "notistack";
 
 interface FormValues {
   name: string;
@@ -39,8 +40,13 @@ const Category = () => {
   const classes = useStyles();
   const { categoryName } = useParams<{ categoryName: string }>();
   const isNewCategory = categoryName == "new";
+  const history = useHistory();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [authUser, authLoading] = useAuthState(firebase.auth());
+
+  console.log(authUser.uid);
 
   const userReference = firebase
     .firestore()
@@ -54,8 +60,6 @@ const Category = () => {
     name: "",
     notes: ""
   };
-
-  console.log(firestoreUser);
 
   const existingCategoryInitialValues: FormValues = {
     name: categoryName,
@@ -72,7 +76,7 @@ const Category = () => {
 
   return (
     <>
-      <pre>{JSON.stringify(firestoreUser, null, 2)}</pre>
+      {/*<pre>{JSON.stringify(firestoreUser, null, 2)}</pre>*/}
       <Typography variant="h4" className={classes.title}>
         {isNewCategory && "New Category"}
         {!isNewCategory && categoryName}
@@ -87,8 +91,29 @@ const Category = () => {
           categoryName: Yup.string(),
           notes: Yup.string()
         })}
-        onSubmit={() => {
-          console.log("submit");
+        onSubmit={(
+            values: FormValues,
+            { setSubmitting }: FormikHelpers<FormValues>
+          ) => {
+            setSubmitting(true);
+
+            if (isNewCategory) {
+              userReference.collection("customCategories")
+              .add(values).then(() => {
+                  enqueueSnackbar("New client created!", {
+                    variant: "success"
+                  });
+                  history.push("/");
+                })
+                .catch((err) => {
+                  console.error(err);
+                  enqueueSnackbar("Something went wrong.", {
+                    variant: "error"
+                  });
+                })
+                .finally(() => setSubmitting(false));
+            }
+            
         }}
       >
         {({ isSubmitting, dirty }) => (
@@ -96,7 +121,7 @@ const Category = () => {
             <Field
               component={TextField}
               variant={"standard"}
-              name={"categoryName"}
+              name={"name"}
               type={"text"}
               placeholder={"Category Name"}
               fullWidth
@@ -105,7 +130,7 @@ const Category = () => {
               component={TextField}
               variant={"outlined"}
               label={"Notes"}
-              name={"Notes"}
+              name={"notes"}
               type={"text"}
               placeholder={"Notes"}
               multiline={true}
