@@ -8,7 +8,8 @@ import {
   createStyles,
   IconButton,
   makeStyles,
-  Typography
+  Typography,
+  Grid
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { useHistory } from "react-router-dom";
@@ -74,47 +75,57 @@ const ClientCard = ({
 
   return (
     <Card style={{ height: "100%" }}>
-      <CardContent className={classes.label}>
-        {/*Job Status Label*/}
-        <Chip label={jobStatus} clickable onClick={handleStatusFilter} />
+      <Grid
+        container
+        direction="column"
+        justifyContent="space-between"
+        style={{ height: "100%" }}
+      >
+        <Grid item>
+          <CardContent className={classes.label}>
+            {/*Job Status Label*/}
+            <Chip label={jobStatus} clickable onClick={handleStatusFilter} />
 
-        {/*Category Label*/}
-        <Chip
-          label={"Example Client Category"}
-          color="primary"
-          clickable
-          onClick={handleCategoryFilter}
-        />
-      </CardContent>
+            {/*Category Label*/}
+            <Chip
+              label={"Example Client Category"}
+              color="primary"
+              clickable
+              onClick={handleCategoryFilter}
+            />
+          </CardContent>
 
-      <CardContent className={classes.content}>
-        {/*Client Details*/}
-        <Typography variant="h4" gutterBottom>
-          {firstName} {lastName}
-        </Typography>
-        <br />
+          <CardContent className={classes.content}>
+            {/*Client Details*/}
+            <Typography variant="h4" gutterBottom>
+              {firstName} {lastName}
+            </Typography>
+            <br />
 
-        <Typography>{business}</Typography>
-        <Typography>{address}</Typography>
-        <Typography>{email}</Typography>
-        <Typography>{phone}</Typography>
-        <Typography>{payRate}</Typography>
-        <Typography>{notes}</Typography>
-      </CardContent>
+            <Typography>{business}</Typography>
+            <Typography>{address}</Typography>
+            <Typography>{email}</Typography>
+            <Typography>{phone}</Typography>
+            <Typography>{payRate}</Typography>
+            <Typography>{notes}</Typography>
+          </CardContent>
+        </Grid>
 
-      <CardContent>
-        <Tags id={id} tags={tags} />
-      </CardContent>
-
-      <CardActions>
-        <IconButton
-          className={classes.button}
-          aria-label="editClient"
-          onClick={handleEditClient}
-        >
-          <EditIcon />
-        </IconButton>
-      </CardActions>
+        <Grid item>
+          <CardContent>
+            <Tags id={id} tags={tags} />
+          </CardContent>
+          <CardActions>
+            <IconButton
+              className={classes.button}
+              aria-label="editClient"
+              onClick={handleEditClient}
+            >
+              <EditIcon />
+            </IconButton>
+          </CardActions>
+        </Grid>
+      </Grid>
     </Card>
   );
 };
