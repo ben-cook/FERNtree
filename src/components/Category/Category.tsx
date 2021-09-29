@@ -16,6 +16,8 @@ import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
 import { useSnackbar } from "notistack";
+import CustomItemsSelector from "./CustomItemsSelector";
+import { useState } from "react";
 
 interface FormValues extends CustomCategory{
   name: string
@@ -67,8 +69,11 @@ const Category = () => {
   const existingCategoryInitialValues: FormValues = {
     name: categoryName,
     notes: (!isNewCategory && !categoryLoading && category.notes || ""),
-    customFields: [""]
+    customFields: (!isNewCategory && ! categoryLoading && category.customFields || [])
   };
+
+  const [customFields, setCustomFields] = useState(existingCategoryInitialValues.customFields);
+  
 
   console.log(existingCategoryInitialValues);
 
@@ -161,9 +166,7 @@ const Category = () => {
             <Typography variant="h5" display="inline">
               Custom Fields
             </Typography>
-            <IconButton>
-              <AddIcon />
-            </IconButton>
+            <CustomItemsSelector/>
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
