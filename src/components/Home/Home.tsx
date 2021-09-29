@@ -25,6 +25,7 @@ import {
   useDocumentData
 } from "react-firebase-hooks/firestore";
 import { Link } from "react-router-dom";
+import { idText } from "typescript";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -87,7 +88,6 @@ const Home = () => {
   // useState is initialising the state to the string "All"
   const [selectedTag, setSelectedTag] = useState<string>("All"); 
 
-  // CHANGE: initalise searchValue
   const [searchValue, setSearchValue] = useState<string>("");
 
   // Categories in search bar
@@ -134,9 +134,8 @@ const Home = () => {
                 fullWidth
                 margin="normal"
                 size="medium"
-                // CHANGE: Set value to searchValue
                 value = {searchValue}
-                onChange={(event) => setSearchValue(event.target.value)}
+                onChange={(event) => setSearchValue(event.target.value.toLowerCase())}
                 InputProps={{
                   style: { backgroundColor: "white" },
                   endAdornment: (
@@ -222,10 +221,14 @@ const Home = () => {
 
         {clientsData &&
           clientsData
-            // Filtering which clients to show based on tags
+            // Filtering which clients to show based on search and tags
             .filter((client) => {
-              //CHANGE
-              if (client.firstName.includes(searchValue) || client.lastName.includes(searchValue)) {
+
+              // for every value (of each field), if the value is not ID AND includes search
+              // remove client id from string
+              if (Object.values(client).reduce((a, b) => a + " " + b).replace(client.id, '').toLowerCase().includes(searchValue)) {
+                
+                // NOW CHECK TAGS 
                 if (selectedTag === "All") { // If the selected tag is "All", display this client
                   return true;
                 }
@@ -235,7 +238,8 @@ const Home = () => {
                 }
 
                 return client.tags.includes(selectedTag); // If client has tag, display client
-              }
+
+              } 
             })
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .reverse()
