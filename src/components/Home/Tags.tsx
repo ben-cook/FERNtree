@@ -71,6 +71,7 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
     }
   };
 
+  // delete tag from user collection
   const deleteTag = (tagToDelete: string) => () =>
     userReference
       .collection("clients")
@@ -80,12 +81,13 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
         { merge: true }
       );
 
+  // initialise textFieldValue to "", update using setTFV...
   const [textFieldValue, setTextFieldValue] = useState<string>("");
 
   const handleTextFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement>
+    event: React.ChangeEvent<HTMLInputElement> // event = input of element is changed 
   ) => {
-    setTextFieldValue(event.target.value);
+    setTextFieldValue(event.target.value); // set to that value
   };
 
   if (authLoading || firestoreLoading) {
@@ -106,7 +108,7 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
             />
           ))}
         <Chip
-          label={showAddTag ? <RemoveIcon /> : <AddIcon />}
+          label={showAddTag ? <RemoveIcon /> : <AddIcon />} // Changing the icon for adding tags
           color="primary"
           onClick={() =>
             showAddTag ? setShowAddTag(false) : setShowAddTag(true)
@@ -114,21 +116,21 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
           className={classes.chip}
         />
 
-        {showAddTag && (
+        {showAddTag && ( //if adding tags is shown
           <TextField
             variant="outlined"
             label="Add Tag"
             fullWidth
             margin="normal"
             size="small"
-            value={textFieldValue}
-            onChange={handleTextFieldChange}
+            value={textFieldValue} 
+            onChange={handleTextFieldChange} //when changed, update textFieldValue
             InputProps={{
               style: { backgroundColor: "white" },
               endAdornment: (
                 <InputAdornment component="div" position="end">
                   <IconButton
-                    onClick={() => {
+                    onClick={() => { //When clicked, add the tag and reset textFieldValue
                       addTag(textFieldValue);
                       setTextFieldValue("");
                     }}

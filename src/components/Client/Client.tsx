@@ -111,7 +111,7 @@ const Client = () => {
     lastName: clientData?.lastName,
     business: clientData?.business,
     address: clientData?.address,
-    category: "not implemented",
+    category: "",
     email: clientData?.email,
     phone: clientData?.phone,
     payRate: clientData?.payRate,

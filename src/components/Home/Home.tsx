@@ -82,8 +82,14 @@ const Home = () => {
     }
   );
 
+  // declaring a state variable called selectedTag
+  // setSelectedTag updates selectedTag when called
+  // useState is initialising the state to the string "All"
   const [selectedTag, setSelectedTag] = useState<string>("All");
 
+  const [searchValue, setSearchValue] = useState<string>("");
+
+  // Categories in search bar
   const labels = [
     {
       value: "All",
@@ -103,6 +109,7 @@ const Home = () => {
     }
   ];
 
+  // Defining tags for dropdown
   let tags: string[] = [];
   if (firestoreUser) {
     if (firestoreUser.userTags) {
@@ -126,6 +133,10 @@ const Home = () => {
                 fullWidth
                 margin="normal"
                 size="medium"
+                value={searchValue}
+                onChange={(event) =>
+                  setSearchValue(event.target.value.toLowerCase())
+                }
                 InputProps={{
                   style: { backgroundColor: "white" },
                   endAdornment: (
@@ -142,7 +153,7 @@ const Home = () => {
             {/* Selection and buttons */}
             <Grid item xs={12} sm={4}>
               {!firestoreLoading && (
-                <TextField
+                <TextField // Dropdown menu
                   variant="outlined"
                   className={classes.clientSearchField}
                   fullWidth
@@ -153,8 +164,9 @@ const Home = () => {
                   }}
                   select
                   value={selectedTag}
-                  onChange={(event) => setSelectedTag(event.target.value)}
+                  onChange={(event) => setSelectedTag(event.target.value)} // When dropdown is changed, update selectedTag
                 >
+                  {/* tags = dropdownTags, tag = each tag inside tags */}
                   {tags.map((tag) => (
                     <MenuItem key={tag} value={tag}>
                       {tag}
@@ -210,16 +222,30 @@ const Home = () => {
 
         {clientsData &&
           clientsData
+            // Filtering which clients to show based on search and tags
             .filter((client) => {
-              if (selectedTag === "All") {
-                return true;
-              }
+              // for every value (of each field), if the value is not ID AND includes search
+              // remove client id from string
+              if (
+                Object.values(client)
+                  .reduce((a, b) => a + " " + b)
+                  .replace(client.id, "")
+                  .toLowerCase()
+                  .includes(searchValue)
+              ) {
+                // NOW CHECK TAGS
+                if (selectedTag === "All") {
+                  // If the selected tag is "All", display this client
+                  return true;
+                }
 
-              if (!client.tags) {
-                return false;
-              }
+                if (!client.tags) {
+                  // If the client has no tags, don't display
+                  return false;
+                }
 
-              return client.tags.includes(selectedTag);
+                return client.tags.includes(selectedTag); // If client has tag, display client
+              }
             })
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .reverse()
