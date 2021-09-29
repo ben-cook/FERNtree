@@ -1,4 +1,4 @@
-import { Client, User } from "../../types";
+import { Client, User, CustomCategory } from "../../types";
 import ClientCard from "./ClientCard";
 import {
   Card,
@@ -24,7 +24,7 @@ import {
   useCollectionData,
   useDocumentData
 } from "react-firebase-hooks/firestore";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -56,6 +56,7 @@ const useStyles = makeStyles((theme) =>
 
 const Home = () => {
   const classes = useStyles();
+  const history = useHistory();
 
   const [authUser] = useAuthState(firebase.auth());
 
@@ -82,6 +83,7 @@ const Home = () => {
     }
   );
 
+
   // declaring a state variable called selectedTag
   // setSelectedTag updates selectedTag when called
   // useState is initialising the state to the string "All"
@@ -89,25 +91,25 @@ const Home = () => {
 
   const [searchValue, setSearchValue] = useState<string>("");
 
-  // Categories in search bar
-  const labels = [
+  const categoriesReference = firebase
+    .firestore()
+    .collection("users")
+    .doc(authUser.uid)
+    .collection("customCategories");
+
+  const [categoryData] = useCollectionData<CustomCategory & { name: string }>(
+    categoriesReference, 
     {
-      value: "All",
-      label: "All"
-    },
-    {
-      value: "Technology",
-      label: "Technology"
-    },
-    {
-      value: "Journalism",
-      label: "Journalism"
-    },
-    {
-      value: "Mentor",
-      label: "Mentor"
+      idField: "name"
+    });
+  console.log(categoryData);
+
+  const labels = !categoryData ? [] : categoryData.map((x:CustomCategory & { name: string }) => {
+    return {
+      label: x.name,
+      value: x.name
     }
-  ];
+  });
 
   // Defining tags for dropdown
   let tags: string[] = [];
@@ -178,11 +180,16 @@ const Home = () => {
 
             <Grid item xs={10}>
               <ButtonGroup className={classes.categoryButtonGroup}>
-                <Button onClick={() => console.log("add new category")}>
+                <Button onClick={() => history.push("/category/new")}>
                   <AddIcon />
                 </Button>
+                <Button>All</Button>
                 {labels.map((label) => (
-                  <Button key={label.value}>{label.value}</Button>
+                  <Button key={label.value} 
+                  // TODO: Make this filter the home page instead
+                    onClick={() => history.push(`/category/${label.value}`)}>
+                    {label.value}
+                  </Button>
                 ))}
               </ButtonGroup>
             </Grid>
