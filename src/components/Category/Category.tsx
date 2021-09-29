@@ -44,15 +44,10 @@ const Category = () => {
 
   const [authUser, authLoading] = useAuthState(firebase.auth());
 
-  console.log(authUser.uid);
-
   const userReference = firebase
     .firestore()
     .collection("users")
     .doc(authUser.uid);
-
-  const [firestoreUser, firestoreLoading] =
-    useDocumentData<User>(userReference);
 
   const newCategoryInitialValues: FormValues = {
     name: "",
@@ -60,17 +55,24 @@ const Category = () => {
     customFields: [""]
   };
 
+  const categoryReference =  userReference
+    .collection("customCategories")
+    .doc(categoryName);
+
+  const [category, categoryLoading] = isNewCategory ? [null, null] : 
+    useDocumentData<CustomCategory>(categoryReference);
+
+  console.log("Category ", category, categoryLoading);
+
   const existingCategoryInitialValues: FormValues = {
     name: categoryName,
-    notes:
-      (firestoreUser?.customCategories &&
-        firestoreUser?.customCategories[categoryName] &&
-        firestoreUser?.customCategories[categoryName].notes) ||
-      "",
+    notes: (!isNewCategory && !categoryLoading && category.notes || ""),
     customFields: [""]
   };
 
-  if (authLoading || firestoreLoading) {
+  console.log(existingCategoryInitialValues);
+
+  if (authLoading || categoryLoading) {
     return <Loading />;
   }
 

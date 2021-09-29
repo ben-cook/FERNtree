@@ -150,7 +150,9 @@ const Home = () => {
                 </Button>
                 <Button>All</Button>
                 {labels.map((label) => (
-                  <Button key={label.value} onClick={() => history.push(`/category/${label.value}`)}>
+                  <Button key={label.value} 
+                  // TODO: Make this filter the home page instead
+                    onClick={() => history.push(`/category/${label.value}`)}>
                     {label.value}
                   </Button>
                 ))}
