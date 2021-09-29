@@ -117,6 +117,21 @@ const Category = () => {
                   });
                 })
                 .finally(() => setSubmitting(false));
+            } else {
+              categoryReference
+                .set({notes: values.notes, customFields: values.customFields})
+                .then(() => {
+                  enqueueSnackbar("Category Updated!", {
+                    variant: "success"
+                  });
+                })
+                .catch((err) => {
+                  console.error(err);
+                  enqueueSnackbar("Something went wrong.", {
+                    variant: "error"
+                  });
+                })
+                .finally(() => setSubmitting(false));
             }
             
         }}
