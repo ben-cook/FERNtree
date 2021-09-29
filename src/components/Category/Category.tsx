@@ -1,13 +1,11 @@
-import { CustomCategory, User } from "../../types";
+import { CustomCategory } from "../../types";
 import Loading from "../Loading";
 import {
   Typography,
   makeStyles,
   createStyles,
   Button,
-  IconButton
 } from "@material-ui/core";
-import AddIcon from "@material-ui/icons/Add";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
@@ -166,7 +164,7 @@ const Category = () => {
             <Typography variant="h5" display="inline">
               Custom Fields
             </Typography>
-            <CustomItemsSelector/>
+            <CustomItemsSelector customFields = {customFields} setCustomFields = {setCustomFields} />
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
