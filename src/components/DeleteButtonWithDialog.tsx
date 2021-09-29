@@ -1,36 +1,40 @@
 import {
-  DialogTitle,
-  DialogContentText,
-  DialogContent,
-  DialogActions,
-  Dialog,
   Button,
   createStyles,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
   makeStyles
 } from "@material-ui/core";
-import firebase from "firebase/app";
 import { useState } from "react";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
     red: {
-      marginLeft: theme.spacing(2),
       backgroundColor: theme.palette.error.light,
       color: theme.palette.error.contrastText
     }
   })
 );
 
-const DeleteAccountButton = () => {
+interface Props {
+  buttonText: string;
+  dialogTitle: string;
+  dialogContent: string;
+  deleteFunction: () => void | Promise<void>;
+}
+
+const DeleteButtonWithDialog = ({
+  buttonText,
+  dialogContent,
+  dialogTitle,
+  deleteFunction
+}: Props) => {
   const classes = useStyles();
 
   const [open, setOpen] = useState(false);
-
-  const deleteAccount = () =>
-    firebase
-      .auth()
-      .currentUser?.delete()
-      .catch((err) => console.error(err));
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -46,9 +50,9 @@ const DeleteAccountButton = () => {
         variant="contained"
         className={classes.red}
         onClick={handleClickOpen}
-        data-cy="delete-account"
+        data-cy="delete-button"
       >
-        Delete Account
+        {buttonText}
       </Button>
 
       <Dialog
@@ -57,11 +61,10 @@ const DeleteAccountButton = () => {
         aria-labelledby="Delete Account"
         aria-describedby="Delete Account"
       >
-        <DialogTitle id="Delete Account">Delete Account?</DialogTitle>
+        <DialogTitle id="Delete Account">{dialogTitle}</DialogTitle>
         <DialogContent>
-          <DialogContentText id="Are you sure you wish to permanently delete your account?">
-            Are you sure you wish to permanently delete your account? This
-            action cannot be reversed.
+          <DialogContentText id={dialogContent}>
+            {dialogContent}
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -69,7 +72,7 @@ const DeleteAccountButton = () => {
             No
           </Button>
           <Button
-            onClick={deleteAccount}
+            onClick={deleteFunction}
             className={classes.red}
             autoFocus
             data-cy="confirm-delete"
@@ -82,4 +85,4 @@ const DeleteAccountButton = () => {
   );
 };
 
-export default DeleteAccountButton;
+export default DeleteButtonWithDialog;

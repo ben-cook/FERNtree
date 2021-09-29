@@ -1839,6 +1839,17 @@
   dependencies:
     "@babel/runtime" "^7.4.4"
 
+"@material-ui/lab@^4.0.0-alpha.60":
+  version "4.0.0-alpha.60"
+  resolved "https://registry.yarnpkg.com/@material-ui/lab/-/lab-4.0.0-alpha.60.tgz#5ad203aed5a8569b0f1753945a21a05efa2234d2"
+  integrity sha512-fadlYsPJF+0fx2lRuyqAuJj7hAS1tLDdIEEdov5jlrpb5pp4b+mRDUqQTUxi4inRZHS1bEXpU8QWUhO6xX88aA==
+  dependencies:
+    "@babel/runtime" "^7.4.4"
+    "@material-ui/utils" "^4.11.2"
+    clsx "^1.0.4"
+    prop-types "^15.7.2"
+    react-is "^16.8.0 || ^17.0.0"
+
 "@material-ui/styles@^4.11.4":
   version "4.11.4"
   resolved "https://registry.npmjs.org/@material-ui/styles/-/styles-4.11.4.tgz"
@@ -4541,10 +4552,10 @@ cyclist@^1.0.1:
   resolved "https://registry.npmjs.org/cyclist/-/cyclist-1.0.1.tgz"
   integrity sha1-WW6WmP0MgOEgOMK4LW6xs1tiJNk=
 
-cypress@8.3.1:
-  version "8.3.1"
-  resolved "https://registry.yarnpkg.com/cypress/-/cypress-8.3.1.tgz#c6760dbb907df2570b0e1ac235fa31c30f9260a6"
-  integrity sha512-1v6pfx+/5cXhaT5T6QKOvnkawmEHWHLiVzm3MYMoQN1fkX2Ma1C32STd3jBStE9qT5qPSTILjGzypVRxCBi40g==
+cypress@8.4.1:
+  version "8.4.1"
+  resolved "https://registry.yarnpkg.com/cypress/-/cypress-8.4.1.tgz#8b5898bf49359cadc28f02ba05d51f63b8e3a717"
+  integrity sha512-itJXq0Vx3sXCUrDyBi2IUrkxVu/gTTp1VhjB5tzGgkeCR8Ae+/T8WV63rsZ7fS8Tpq7LPPXiyoM/sEdOX7cR6A==
   dependencies:
     "@cypress/request" "^2.88.6"
     "@cypress/xvfb" "^1.2.4"

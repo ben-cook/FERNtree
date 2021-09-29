@@ -16,23 +16,11 @@ describe("Register a new account", () => {
   const password = "examplePassword1234";
 
   it("signs up a new user", () => {
-    //
-
     cy.intercept("POST", "https://www.googleapis.com/identitytoolkit/**").as(
       "createAccount"
     );
 
-    cy.intercept(
-      "POST",
-      "https://firestore.googleapis.com/google.firestore.v1.Firestore/**"
-    ).as("writeAccountDetails");
-
-    cy.intercept(
-      "GET",
-      "https://firestore.googleapis.com/google.firestore.v1.Firestore/**"
-    ).as("getAccountDetails");
-
-    https: cy.visit("/account");
+    cy.visit("/account");
     cy.get("[data-cy=signup-link]").click();
     cy.url().should("eq", "http://localhost:3000/signup");
     cy.get("[data-cy=firstname]").type(firstName);
@@ -40,8 +28,10 @@ describe("Register a new account", () => {
     cy.get("[data-cy=email]").type(email);
     cy.get("[data-cy=password]").type(password);
     cy.get("[data-cy=submit]").click();
+
     cy.wait("@createAccount");
     cy.wait("@createAccount");
+
     cy.get("[data-cy=profile-button]").click();
     cy.url().should("eq", "http://localhost:3000/account");
     cy.contains("Account Details");
@@ -51,7 +41,7 @@ describe("Register a new account", () => {
   });
 
   it("deletes created user", () => {
-    cy.get("[data-cy=delete-account]").click();
+    cy.get("[data-cy=delete-button]").click();
     cy.get("[data-cy=confirm-delete]").click();
   });
 

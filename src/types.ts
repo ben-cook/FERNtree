@@ -2,6 +2,7 @@ export interface User {
   firstName: string;
   lastName: string;
   customCategories: { categoryName: CustomCategory }[];
+  userTags: string[];
 }
 
 export interface CustomCategory {
@@ -19,4 +20,5 @@ export interface Client {
   payRate: string;
   jobStatus: string;
   notes: string;
+  tags: string[];
 }
