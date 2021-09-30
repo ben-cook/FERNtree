@@ -51,6 +51,7 @@ const ClientCard = ({
   lastName,
   business,
   address,
+  category,
   email,
   phone,
   payRate,
@@ -64,11 +65,6 @@ const ClientCard = ({
   const handleCategoryFilter = () => {
     console.info("You clicked the category button.");
     // To replace with showing all results with clicked category functionality
-  };
-
-  const handleStatusFilter = () => {
-    console.info("You clicked the job status button.");
-    // To replace with showing all results with clicked status functionality
   };
 
   const handleEditClient = () => {
@@ -90,16 +86,15 @@ const ClientCard = ({
       >
         <Grid item>
           <CardContent className={classes.label}>
-            {/*Job Status Label*/}
-            <Chip label={jobStatus} clickable onClick={handleStatusFilter} />
 
             {/*Category Label*/}
             <Chip
-              label={"Example Client Category"}
+              label={category}
               color="primary"
               clickable
               onClick={handleCategoryFilter}
             />
+
           </CardContent>
 
           <CardContent className={classes.content}>
@@ -114,6 +109,7 @@ const ClientCard = ({
             <Typography>{email}</Typography>
             <Typography>{phone}</Typography>
             <Typography>{payRate}</Typography>
+            <Typography>{jobStatus}</Typography>
             <Typography>{notes}</Typography>
           </CardContent>
         </Grid>
