@@ -15,6 +15,7 @@ export interface Client {
   lastName: string;
   business: string;
   address: string;
+  category: string;
   email: string;
   phone: string;
   payRate: string;

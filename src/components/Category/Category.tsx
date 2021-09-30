@@ -55,6 +55,7 @@ const Category = () => {
     customFields: [""]
   };
 
+  // Load category data from the datavase
   const categoryReference =  userReference
     .collection("customCategories")
     .doc(categoryName);
