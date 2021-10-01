@@ -1,6 +1,5 @@
 import { MenuItem, TextField } from "@material-ui/core";
 import { Field } from "formik";
-import { CustomCategory } from "../../types";
 
 
 export function CategorySelector(props: {
@@ -20,9 +19,7 @@ export function CategorySelector(props: {
         fullWidth
         select
         value={props.selectedCategory}
-        // onClick={(event: { target: { value: string; }; }) =>
-        //   // When dropdown is changed, update selectedCategory
-        //   handleCategoryChange(event.target.value)
+        
         onChange={(event) => props.handleChange(event.target.value)}
         
     >

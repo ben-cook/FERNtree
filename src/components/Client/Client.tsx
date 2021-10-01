@@ -18,7 +18,6 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { SetStateAction, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useCollectionData,
@@ -50,15 +49,6 @@ const Client = () => {
   const { enqueueSnackbar } = useSnackbar();
   const isNewClient = clientId == "new";
   const [authUser, authLoading] = useAuthState(firebase.auth());
-
-  const handleCategoryChange = (event) => {
-    try {
-      console.log("Category changed to:", event.target.value);
-      
-    }catch (error){
-      console.log("category change error", error);
-    }
-  };
 
   const userReference = firebase
     .firestore()
