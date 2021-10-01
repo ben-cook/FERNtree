@@ -22,11 +22,13 @@ export function CustomItemsSelector(props: {
                     variant={"outlined"}
                     key={props.customFields[i]}
                     type={"text"}
-                    value={props.customFields[i]}
+                    defaultValue={props.customFields[i]}
                     fullWidth
                     onChange={(e: any) => {
                         props.customFields[i] = e.target.value;
-                        props.handleChange(props.customFields)
+                    }}
+                    onBlur={(e: any) => {
+                        props.handleChange(props.customFields);
                     }}
                 />
             )
