@@ -79,13 +79,13 @@ const Client = () => {
   );
 
   // Loading
-  if (authLoading || categoriesLoading || (!isNewClient && clientLoading)) {
+  if (authLoading || categoriesLoading || clientLoading) {
     return <Loading />;
   }
 
   // Set initial category value
   if (selectedCategory == null) {
-    if (!isNewClient && clientData.category) {
+    if (!isNewClient && clientData && clientData.category) {
       // If this existing client has a category set already, set the selected category to that
       setSelectedCategory(clientData.category);
     }
