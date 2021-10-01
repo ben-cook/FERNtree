@@ -69,6 +69,7 @@ const Client = () => {
     idField: "id"
   });
 
+
   // Load specific client data from the database
   const existingClientReference = userReference
     .collection("clients")
@@ -96,7 +97,7 @@ const Client = () => {
 
   categoriesData.forEach((category) => {
     if (category.id == selectedCategory) {
-      if (category.customFields[0] === "") {
+      if (!category || category.customFields[0] === "") {
         // Ignore if no custom fields
         console.log("Fields are empty");
       } else {
