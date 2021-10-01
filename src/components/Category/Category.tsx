@@ -73,10 +73,6 @@ const Category = () => {
       (!isNewCategory && !categoryLoading && category.customFields) || []
   };
 
-  const [customFields, setCustomFields] = useState(
-    existingCategoryInitialValues.customFields
-  );
-
   console.log(existingCategoryInitialValues);
 
   if (authLoading || categoryLoading) {
@@ -170,7 +166,7 @@ const Category = () => {
               Custom Fields
             </Typography>
 
-            {/* I guess this is where custom field adding will go @ivy */}
+            
             <CustomItemsSelectorInput
               name={"customFields"}
 
@@ -202,7 +198,7 @@ const Category = () => {
               type={"submit"}
               variant={"contained"}
               color={"primary"}
-              disabled={isSubmitting || !dirty}
+              disabled={(isSubmitting || !dirty)}
               className={classes.submitButton}
             >
               {isNewCategory && "Save"}

@@ -17,13 +17,17 @@ export function CustomItemsSelector(props: {
             fullWidth
         />
         {
-            props.customFields.map((field: string) => 
+            Array.from(props.customFields.keys()).map((i:number) => 
                 <TextField
                     variant={"outlined"}
-                    key={field}
+                    key={props.customFields[i]}
                     type={"text"}
-                    value={field}
+                    value={props.customFields[i]}
                     fullWidth
+                    onChange={(e: any) => {
+                        props.customFields[i] = e.target.value;
+                        props.handleChange(props.customFields)
+                    }}
                 />
             )
         }
