@@ -85,7 +85,7 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
   const [textFieldValue, setTextFieldValue] = useState<string>("");
 
   const handleTextFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement> // event = input of element is changed 
+    event: React.ChangeEvent<HTMLInputElement> // event = input of element is changed
   ) => {
     setTextFieldValue(event.target.value); // set to that value
   };
@@ -123,14 +123,15 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
             fullWidth
             margin="normal"
             size="small"
-            value={textFieldValue} 
+            value={textFieldValue}
             onChange={handleTextFieldChange} //when changed, update textFieldValue
             InputProps={{
               style: { backgroundColor: "white" },
               endAdornment: (
                 <InputAdornment component="div" position="end">
                   <IconButton
-                    onClick={() => { //When clicked, add the tag and reset textFieldValue
+                    onClick={() => {
+                      //When clicked, add the tag and reset textFieldValue
                       addTag(textFieldValue);
                       setTextFieldValue("");
                     }}

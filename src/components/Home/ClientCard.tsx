@@ -1,4 +1,4 @@
-import { Client } from "../../types";
+import { ClientConcreteValues, ClientCustomFields } from "../../types";
 import Tags from "./Tags";
 import {
   Card,
@@ -18,7 +18,9 @@ const MAX_CLIENT_NAME_LENGTH = 20;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {},
+    root: {
+      height: "100%"
+    },
 
     content: {
       marginLeft: 30,
@@ -41,24 +43,29 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-type ExtraProps = {
+type Props = {
   id: string;
+  concreteValues: ClientConcreteValues;
+  tags: string[];
+  customFields: ClientCustomFields;
 };
 
 const ClientCard = ({
   id,
-  firstName,
-  lastName,
-  business,
-  address,
-  category,
-  email,
-  phone,
-  payRate,
-  notes,
-  jobStatus,
+  concreteValues: {
+    firstName,
+    lastName,
+    business,
+    address,
+    category,
+    email,
+    phone,
+    payRate,
+    jobStatus,
+    notes
+  },
   tags
-}: Client & ExtraProps) => {
+}: Props) => {
   const classes = useStyles();
   const history = useHistory();
 
@@ -77,7 +84,7 @@ const ClientCard = ({
   }
 
   return (
-    <Card style={{ height: "100%" }}>
+    <Card className={classes.root}>
       <Grid
         container
         direction="column"
@@ -86,7 +93,6 @@ const ClientCard = ({
       >
         <Grid item>
           <CardContent className={classes.label}>
-
             {/*Category Label*/}
             <Chip
               label={category}
@@ -94,7 +100,6 @@ const ClientCard = ({
               clickable
               onClick={handleCategoryFilter}
             />
-
           </CardContent>
 
           <CardContent className={classes.content}>

@@ -1,4 +1,8 @@
-import { Client as ClientType, User } from "../../types";
+import {
+  Client as ClientType,
+  ClientConcreteValues,
+  ClientCustomFields
+} from "../../types";
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
@@ -14,34 +18,16 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
+import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useCollectionData,
   useDocumentData
 } from "react-firebase-hooks/firestore";
-import { useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
 
-interface FormValues {
-  firstName: string;
-  lastName: string;
-  business: string;
-  address: string;
-
-  category: string; // add category
-
-  email: string;
-  phone: string;
-
-  payRate: string;
-  //jobStatus: "Not Started" | "In Progress" | "Completed";
-  jobStatus: string;
-
-  notes: string;
-
-  [customField: string]: string | number;
-}
+type FormValues = ClientConcreteValues & ClientCustomFields;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -63,30 +49,22 @@ const Client = () => {
   const { enqueueSnackbar } = useSnackbar();
   const isNewClient = clientId == "new";
   const [authUser, authLoading] = useAuthState(firebase.auth());
-  const [selectedCategory, setSelectedCategory] = useState(null);
-
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const userReference = firebase
     .firestore()
     .collection("users")
     .doc(authUser.uid);
 
-  // const [firestoreUser, firestoreLoading] =
-  //   useDocumentData<User>(userReference);
-  
   // Load all category data from the database
-  const categoriesReference =  userReference
-    .collection("customCategories")
+  const categoriesReference = userReference.collection("customCategories");
 
-  const [categoriesData, categoriesLoading] = useCollectionData<CustomCategory & { id: string }>(
-    categoriesReference,
-    {
-      idField: "id"
-    }
-  );
+  const [categoriesData, categoriesLoading] = useCollectionData<
+    CustomCategory & { id: string }
+  >(categoriesReference, {
+    idField: "id"
+  });
 
-  console.log("Categories Data:", categoriesData);
-  
   // Load specific client data from the database
   const existingClientReference = userReference
     .collection("clients")
@@ -96,58 +74,59 @@ const Client = () => {
     existingClientReference
   );
 
-
   // Loading
   if (authLoading || categoriesLoading || (!isNewClient && clientLoading)) {
     return <Loading />;
   }
 
   // Set initial category value
-  if (selectedCategory == null){
-    if (!isNewClient){
-      console.log("Set initial category value");
-      setSelectedCategory(clientData.category); // set category
-    }else{
-      setSelectedCategory(""); // new client, empty category
+  if (selectedCategory == null) {
+    if (!isNewClient && clientData.category) {
+      // If this existing client has a category set already, set the selected category to that
+      setSelectedCategory(clientData.category);
     }
   }
 
   // Get relevant category fields when user selects a new category
-  
   let categoryFields = [];
 
   const handleCategoryChange = (value) => {
-
-    console.log("Changed category to: ", value);
     setSelectedCategory(value);
-
   };
 
-  categoriesData.forEach(category => {
-       
-    if (category.id == selectedCategory){
-
-      if (category.customFields[0] == ""){ // Ignore if no custom fields
+  categoriesData.forEach((category) => {
+    if (category.id == selectedCategory) {
+      if (category.customFields[0] === "") {
+        // Ignore if no custom fields
         console.log("Fields are empty");
-      }else{
+      } else {
         categoryFields = category.customFields;
         console.log("Category Fields changed:" + categoryFields);
       }
     }
-     
   });
 
   console.log("Category Fields:" + categoryFields);
 
   // Here we generate initialValues object for the custom categories to satisfy the
-  // react uncontrolled to controlled input error, using a bit of functional programming magic :D  
-  const categoryInitialValues = categoryFields.reduce((acc, cur) => {
+  // react uncontrolled to controlled input error, using a bit of functional programming magic :D
+  const existingClientCategoryInitialValues = categoryFields.reduce(
+    (acc, cur) => {
+      acc[cur] = clientData[cur];
+      return acc;
+    },
+    {}
+  );
+
+  const newClientCategoryInitialValues = categoryFields.reduce((acc, cur) => {
     acc[cur] = "";
     return acc;
   }, {});
 
-  console.log("categoryinitialvalues: " + categoryInitialValues);
-
+  console.log(
+    "categoryinitialvalues: " +
+      JSON.stringify(existingClientCategoryInitialValues)
+  );
 
   const newClientInitialValues: FormValues = {
     firstName: "",
@@ -160,7 +139,7 @@ const Client = () => {
     payRate: "",
     jobStatus: "Not Started",
     notes: "",
-    ...categoryInitialValues
+    ...newClientCategoryInitialValues
   };
 
   const existingClientInitialValues: FormValues = {
@@ -174,7 +153,7 @@ const Client = () => {
     payRate: clientData?.payRate,
     jobStatus: clientData?.jobStatus || "Not Started",
     notes: clientData?.notes,
-    ...categoryInitialValues
+    ...existingClientCategoryInitialValues
   };
 
   return (
@@ -228,20 +207,15 @@ const Client = () => {
                 })
                 .finally(() => setSubmitting(false));
             } else {
-
-              // Editing an EXISTING client
-              console.log("Testing category fields: ", values);
-
-              // We're using set() to update an existing document
+              // We're using set() to update an existing document / client
               userReference
                 .collection("clients")
                 .doc(clientId)
                 .set(values, { merge: true })
                 .then(() => {
-                  
                   console.log("Testing category changed:", values.category);
                   console.log("Testing category fields changed: ", values);
-                  
+
                   enqueueSnackbar("Updated client details.", {
                     variant: "success"
                   });
@@ -314,17 +288,18 @@ const Client = () => {
                     fullWidth
                     select
                     value={selectedCategory}
-                    onClick={(event) => handleCategoryChange(event.target.value)} // When dropdown is changed, update selectedCategory
+                    onClick={(event) =>
+                      // When dropdown is changed, update selectedCategory
+                      handleCategoryChange(event.target.value)
+                    }
                   >
-
-                    {/*Allow user to select a category to apply to the client*/}
-                    {/*Map the names of each category into a dropdown menu*/}
+                    {/* Allow user to select a category to apply to the client */}
+                    {/* Map the names of each category into a dropdown menu */}
                     {categoriesData.map((category) => (
                       <MenuItem value={category.id} key={category.id}>
                         {category.id}
                       </MenuItem>
                     ))}
-
                   </Field>
                 </Grid>
 
