@@ -71,10 +71,8 @@ const Client = () => {
     .collection("users")
     .doc(authUser.uid);
 
-  const [firestoreUser, firestoreLoading] =
-    useDocumentData<User>(userReference);
-
-  //const customCategories = firestoreUser?.customCategories || {};
+  // const [firestoreUser, firestoreLoading] =
+  //   useDocumentData<User>(userReference);
   
   // Load all category data from the database
   const categoriesReference =  userReference
@@ -88,22 +86,6 @@ const Client = () => {
   );
 
   console.log("Categories Data:", categoriesData);
-
-  // Load category data from the datavase
-  // const categoryReference = !isNewCategory ? null : userReference
-  //   .collection("customCategories")
-  //   .doc(selectedCategory);
-
-  //console.log("Passed");
-
-  // if (isNewCategory){
-  //   console.log("isNewCategory true, selectedCategory ", selectedCategory);
-  // }
-
-  // const [category, categoryLoading] = isNewCategory ? [null, null] : 
-  //   useDocumentData<CustomCategory>(categoryReference);
-
-  // console.log("Passed x2");
   
   // Load specific client data from the database
   const existingClientReference = userReference
@@ -116,7 +98,7 @@ const Client = () => {
 
 
   // Loading
-  if (authLoading || firestoreLoading || categoriesLoading || (!isNewClient && clientLoading)) {
+  if (authLoading || categoriesLoading || (!isNewClient && clientLoading)) {
     return <Loading />;
   }
 
@@ -328,7 +310,7 @@ const Client = () => {
                     fullWidth
                     select
                     value={selectedCategory}
-                    onChange={(event) => handleCategoryChange(event.target.value)} // When dropdown is changed, update selectedCategory
+                    onClick={(event) => handleCategoryChange(event.target.value)} // When dropdown is changed, update selectedCategory
                   >
 
                     {/*Allow user to select a category to apply to the client*/}
@@ -341,6 +323,22 @@ const Client = () => {
 
                   </Field>
                 </Grid>
+
+                {/* dynamic form fields occurs here - done by mapping category fields */}
+                {categoryFields.map((attb, idx) => (
+                  <Grid item key={idx} xs={12}>
+                    <Field
+                      component={TextField}
+                      variant={"outlined"}
+                      label={attb}
+                      name={attb}
+                      type="text"
+                      placeholder={attb}
+                      fullWidth
+                    />
+                  </Grid>
+                ))}
+
                 <Grid item xs={12}>
                   <Typography variant="h5">Contact Information</Typography>
                 </Grid>
@@ -410,21 +408,6 @@ const Client = () => {
                     fullWidth
                   />
                 </Grid>
-
-                {/* dynamic form fields occurs here - done by mapping category fields */}
-                {categoryFields.map((attb, idx) => (
-                  <Grid item key={idx} xs={12}>
-                    <Field
-                      component={TextField}
-                      variant={"outlined"}
-                      label={attb}
-                      name={attb}
-                      type="text"
-                      placeholder={attb}
-                      fullWidth
-                    />
-                  </Grid>
-                ))}
 
                 <Grid
                   container
