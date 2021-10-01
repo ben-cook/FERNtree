@@ -6,6 +6,7 @@ import {
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
+import { CategorySelectorInput } from "./CategorySelector";
 import {
   Typography,
   makeStyles,
@@ -25,7 +26,6 @@ import {
 } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { CategorySelectorInput } from "./CategorySelector";
 
 type FormValues = ClientConcreteValues & ClientCustomFields;
 
@@ -64,7 +64,6 @@ const Client = () => {
     idField: "id"
   });
 
-
   // Load specific client data from the database
   const existingClientReference = userReference
     .collection("clients")
@@ -79,26 +78,22 @@ const Client = () => {
     return <Loading />;
   }
 
-  const categories = categoriesData.map((category) => category.id)
+  const categories = categoriesData.map((category) => category.id);
 
   // Get relevant category fields when user selects a new category
   let categoryFields = [];
 
-  console.log("Data ", categoriesData)
+  console.log("Data ", categoriesData);
 
   categoriesData.forEach((category) => {
-    
-      if (!category.customFields || category.customFields[0] === "") {
-        // Ignore if no custom fields
-        console.log("Fields are empty");
-      } else {
-        categoryFields = category.customFields;
-        console.log("Category Fields changed:" + categoryFields);
-      }
-    
+    if (!category.customFields || category.customFields[0] === "") {
+      // Ignore if no custom fields
+      console.log("Fields are empty");
+    } else {
+      categoryFields = category.customFields;
+      console.log("Category Fields changed:" + categoryFields);
+    }
   });
-
-
 
   console.log("Category Fields:" + categoryFields);
 
@@ -106,29 +101,25 @@ const Client = () => {
   // react uncontrolled to controlled input error, using a bit of functional programming magic :D
 
   // Check if category fields exist
-  const existingClientCategoryInitialValues = categoryFields ? (categoryFields.reduce(
-    (acc, cur) => {
+  const existingClientCategoryInitialValues = categoryFields
+    ? categoryFields.reduce((acc, cur) => {
+        if (clientData && clientData[cur]) {
+          // Existing data for category
+          //console.log("clientData[cur] defined:", clientData[cur]);
+          acc[cur] = clientData[cur];
+        } else {
+          // New category, no client data (undefined) yet so initialise to empty
+          //console.log("clientData[cur] undefined:", clientData[cur]);
+          acc[cur] = "";
+        }
 
-      if (clientData && clientData[cur]){
-        // Existing data for category
-        //console.log("clientData[cur] defined:", clientData[cur]);
-        acc[cur] = clientData[cur];
-      }else{
-        // New category, no client data (undefined) yet so initialise to empty
-        //console.log("clientData[cur] undefined:", clientData[cur]);
+        return acc;
+      }, {})
+    : // empty if no category fields
+      categoryFields.reduce((acc, cur) => {
         acc[cur] = "";
-      }
-      
-      return acc;
-    },
-    {}
-  )) :
-    // empty if no category fields
-    categoryFields.reduce((acc, cur) => {
-      acc[cur] = "";
-      return acc;
-  }, {});
-
+        return acc;
+      }, {});
 
   // Initialise category values for a new client
   const newClientCategoryInitialValues = categoryFields.reduce((acc, cur) => {
