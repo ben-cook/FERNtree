@@ -82,9 +82,8 @@ const Client = () => {
   const categories = categoriesData.map((category) => category.id);
 
   // Get relevant category fields when user selects a new category
-  
-  //let categoryFields = [];
 
+  // Function which returns category fields of a given category Id
   function getCategoryFields(categoryId){
     let categoryFields = [];
 
@@ -105,22 +104,11 @@ const Client = () => {
 
     return categoryFields;
   }
-  //console.log("Data ", categoriesData);
-
-  // categoriesData.forEach((category) => {
-  //   if (!category.customFields || category.customFields[0] === "") {
-  //     // Ignore if no custom fields
-  //     console.log("Fields are empty");
-  //   } else {
-  //     categoryFields = category.customFields;
-  //     console.log("Category Fields changed:" + categoryFields);
-  //   }
-  // });
 
   // Here we generate initialValues object for the custom categories to satisfy the
   // react uncontrolled to controlled input error, using a bit of functional programming magic :D
 
-  const categoryFields = getCategoryFields(clientData?.category);
+  const categoryFields = getCategoryFields(clientData?.category); // initialise existing client
 
   // Initialise category values for an existing client
   const existingClientCategoryInitialValues = categoryFields
