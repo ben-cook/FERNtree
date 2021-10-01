@@ -1,5 +1,6 @@
-import { Field, Form, Formik } from "formik";
-import { TextField } from "formik-material-ui";
+import { TextField } from "@material-ui/core";
+import { Field } from "formik";
+
 
 export function CustomItemsSelector(props: {
   customFields: string[];
@@ -9,37 +10,23 @@ export function CustomItemsSelector(props: {
   
   return (
     <div>
-        <Formik
-            initialValues={props.customFields}
-            onSubmit={props.handleChange}
-        >
-            <Form>
-                <Field 
-                    component={TextField}
+        <TextField
+            variant={"outlined"}
+            type={"text"}
+            placeholder={"New Field"}
+            fullWidth
+        />
+        {
+            props.customFields.map((field: string) => 
+                <TextField
                     variant={"outlined"}
+                    key={field}
                     type={"text"}
-                    placeholder={"New Field"}
-                    multiline={true}
-                    maxRows={5}
-                    rows={3}
+                    value={field}
                     fullWidth
                 />
-                {
-                    props.customFields.map((field: string) => {
-                        <Field 
-                            component={TextField}
-                            variant={"outlined"}
-                            type={"text"}
-                            value={field}
-                            multiline={true}
-                            maxRows={5}
-                            rows={3}
-                            fullWidth
-                        />
-                    })
-                }
-            </Form>
-        </Formik>
+            )
+        }
     </div>
   );
 }
@@ -50,17 +37,14 @@ export function CustomItemsSelectorInput(props: {name: string}) {
         <Field name={props.name} id={props.name}>
             {
                 
-                ({field: { value }, form: { setFieldValue }}) => {
-                    return (
-                        <div>
-                            <CustomItemsSelector
-                                customFields = {value}
-                                handleChange = {(fields: string[]) => setFieldValue(props.name, fields)}
+                ({field: { value }, form: { setFieldValue }}) => 
+                    <div>
+                        <CustomItemsSelector
+                            customFields = {value}
+                            handleChange = {(fields: string[]) => setFieldValue(props.name, fields)}
 
-                            />
-                        </div>
-                    );
-                }
+                        />
+                    </div>
 
             }
         </Field> 
