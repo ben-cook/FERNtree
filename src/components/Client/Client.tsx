@@ -146,6 +146,8 @@ const Client = () => {
     return acc;
   }, {});
 
+  console.log("categoryinitialvalues: " + categoryInitialValues);
+
 
   const newClientInitialValues: FormValues = {
     firstName: "",
@@ -212,6 +214,7 @@ const Client = () => {
                 .collection("clients")
                 .add(values)
                 .then(() => {
+                  console.log("Testing new category fields : ", values);
                   enqueueSnackbar("New client created!", {
                     variant: "success"
                   });
@@ -227,7 +230,7 @@ const Client = () => {
             } else {
 
               // Editing an EXISTING client
-              console.log("Update Category:" + values.category);
+              console.log("Testing category fields: ", values);
 
               // We're using set() to update an existing document
               userReference
@@ -237,6 +240,7 @@ const Client = () => {
                 .then(() => {
                   
                   console.log("Testing category changed:", values.category);
+                  console.log("Testing category fields changed: ", values);
                   
                   enqueueSnackbar("Updated client details.", {
                     variant: "success"
