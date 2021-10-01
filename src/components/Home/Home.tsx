@@ -237,6 +237,7 @@ const Home = () => {
             .filter((client) => {
               // for every value (of each field), if the value is not ID AND includes search
               // remove client id from string
+              // eslint-disable-next-line
               const { tags, ...rest } = client;
 
               const reduction: string = Object.values(rest).reduce(
