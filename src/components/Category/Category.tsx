@@ -1,6 +1,6 @@
 import { CustomCategory } from "../../types";
 import Loading from "../Loading";
-import CustomItemsSelector from "./CustomItemsSelector";
+import { CustomItemsSelectorInput } from "./CustomItemsSelector";
 import {
   Typography,
   makeStyles,
@@ -171,9 +171,9 @@ const Category = () => {
             </Typography>
 
             {/* I guess this is where custom field adding will go @ivy */}
-            <CustomItemsSelector
-              customFields={customFields}
-              setCustomFields={setCustomFields}
+            <CustomItemsSelectorInput
+              name={"customFields"}
+
             />
             <br />
             {isNewCategory && (
