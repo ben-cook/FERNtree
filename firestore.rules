@@ -1,9 +1,22 @@
-rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    match /{document=**} {
-      allow read, write: if
-          request.time < timestamp.date(2021, 8, 28);
+  
+    // match statemets take paths relative to the path specified in the statement it resides under
+    // The below statement pertains to documents in the user collection at the top level of the database.
+    match /users/{userId} {
+      // RUD operations can only be executed by authenticated users, and on their own documents
+      allow read, update, delete: if (request.auth != null) && (request.auth.uid == userId);
+      // Create operations can be made by only authenticated users, further changes to the document
+      // is then governed by the above rule
+      allow create: if request.auth != null;
+      
+      // as all data pertaining to users (e.g. their clients, categories, tags) is contained in sub-collections
+      // within the user document, any operation is allowed once the above rules are satisfied.
+      // This must be explicitly declared as otherwise the operation will be default blocked by firestore. 
+      match /{documents=**} {
+      	allow read, write: if true;
+      }
     }
   }
 }
+

@@ -3,11 +3,13 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@firebase/testing": "^0.20.11",
     "@fontsource/roboto": "^4.5.0",
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "firebase": "^8.8.0",
+    "firebase-tools": "^9.18.0",
     "formik": "^2.2.9",
     "formik-material-ui": "^4.0.0-alpha.1",
     "notistack": "^1.0.10",
