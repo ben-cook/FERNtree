@@ -1,7 +1,6 @@
 export interface User {
   firstName: string;
   lastName: string;
-  customCategories: { categoryName: CustomCategory }[];
   userTags: string[];
 }
 
@@ -10,15 +9,25 @@ export interface CustomCategory {
   customFields: string[];
 }
 
-export interface Client {
+export type ClientConcreteValues = {
   firstName: string;
   lastName: string;
   business: string;
   address: string;
+  category: string;
   email: string;
   phone: string;
   payRate: string;
-  jobStatus: string;
+  jobStatus: "Not Started" | "In Progress" | "Completed";
+
   notes: string;
+};
+
+export type ClientTags = {
   tags: string[];
-}
+};
+
+// This means that it's a dictionary with string keys and string
+export type ClientCustomFields = Record<string, string>;
+
+export type Client = ClientConcreteValues & ClientTags & ClientCustomFields;

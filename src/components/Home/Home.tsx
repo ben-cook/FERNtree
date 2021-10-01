@@ -83,7 +83,6 @@ const Home = () => {
     }
   );
 
-
   // declaring a state variable called selectedTag
   // setSelectedTag updates selectedTag when called
   // useState is initialising the state to the string "All"
@@ -98,18 +97,21 @@ const Home = () => {
     .collection("customCategories");
 
   const [categoryData] = useCollectionData<CustomCategory & { name: string }>(
-    categoriesReference, 
+    categoriesReference,
     {
       idField: "name"
-    });
+    }
+  );
   console.log(categoryData);
 
-  const labels = !categoryData ? [] : categoryData.map((x:CustomCategory & { name: string }) => {
-    return {
-      label: x.name,
-      value: x.name
-    }
-  });
+  const labels = !categoryData
+    ? []
+    : categoryData.map((x: CustomCategory & { name: string }) => {
+        return {
+          label: x.name,
+          value: x.name
+        };
+      });
 
   // Defining tags for dropdown
   let tags: string[] = [];
@@ -185,9 +187,11 @@ const Home = () => {
                 </Button>
                 <Button>All</Button>
                 {labels.map((label) => (
-                  <Button key={label.value} 
-                  // TODO: Make this filter the home page instead
-                    onClick={() => history.push(`/category/${label.value}`)}>
+                  <Button
+                    key={label.value}
+                    // TODO: Make this filter the home page instead
+                    onClick={() => history.push(`/category/${label.value}`)}
+                  >
                     {label.value}
                   </Button>
                 ))}
@@ -233,9 +237,16 @@ const Home = () => {
             .filter((client) => {
               // for every value (of each field), if the value is not ID AND includes search
               // remove client id from string
+              // eslint-disable-next-line
+              const { tags, ...rest } = client;
+
+              const reduction: string = Object.values(rest).reduce(
+                (a, b) => `${JSON.stringify(a)} ${JSON.stringify(b)}`,
+                ""
+              );
+
               if (
-                Object.values(client)
-                  .reduce((a, b) => a + " " + b)
+                reduction
                   .replace(client.id, "")
                   .toLowerCase()
                   .includes(searchValue)
@@ -256,11 +267,45 @@ const Home = () => {
             })
             .sort((a, b) => a.firstName.localeCompare(b.firstName))
             .reverse()
-            .map((client, idx) => (
-              <Grid item key={idx} xs={12} sm={6} md={4}>
-                <ClientCard {...client} />
-              </Grid>
-            ))}
+            .map((client, idx) => {
+              const {
+                id,
+                firstName,
+                lastName,
+                business,
+                address,
+                category,
+                email,
+                phone,
+                payRate,
+                jobStatus,
+                notes,
+                tags,
+                ...rest
+              } = client;
+
+              return (
+                <Grid item key={idx} xs={12} sm={6} md={4}>
+                  <ClientCard
+                    id={id}
+                    concreteValues={{
+                      firstName,
+                      lastName,
+                      business,
+                      address,
+                      category,
+                      email,
+                      phone,
+                      payRate,
+                      jobStatus,
+                      notes
+                    }}
+                    tags={tags}
+                    customFields={rest}
+                  />
+                </Grid>
+              );
+            })}
       </Grid>
     </>
   );

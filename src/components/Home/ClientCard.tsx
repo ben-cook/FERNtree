@@ -1,4 +1,4 @@
-import { Client } from "../../types";
+import { ClientConcreteValues, ClientCustomFields } from "../../types";
 import Tags from "./Tags";
 import {
   Card,
@@ -18,7 +18,9 @@ const MAX_CLIENT_NAME_LENGTH = 20;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    root: {},
+    root: {
+      height: "100%"
+    },
 
     content: {
       marginLeft: 30,
@@ -41,34 +43,35 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-type ExtraProps = {
+type Props = {
   id: string;
+  concreteValues: ClientConcreteValues;
+  tags: string[];
+  customFields: ClientCustomFields;
 };
 
 const ClientCard = ({
   id,
-  firstName,
-  lastName,
-  business,
-  address,
-  email,
-  phone,
-  payRate,
-  notes,
-  jobStatus,
+  concreteValues: {
+    firstName,
+    lastName,
+    business,
+    address,
+    category,
+    email,
+    phone,
+    payRate,
+    jobStatus,
+    notes
+  },
   tags
-}: Client & ExtraProps) => {
+}: Props) => {
   const classes = useStyles();
   const history = useHistory();
 
   const handleCategoryFilter = () => {
     console.info("You clicked the category button.");
     // To replace with showing all results with clicked category functionality
-  };
-
-  const handleStatusFilter = () => {
-    console.info("You clicked the job status button.");
-    // To replace with showing all results with clicked status functionality
   };
 
   const handleEditClient = () => {
@@ -81,7 +84,7 @@ const ClientCard = ({
   }
 
   return (
-    <Card style={{ height: "100%" }}>
+    <Card className={classes.root}>
       <Grid
         container
         direction="column"
@@ -90,12 +93,9 @@ const ClientCard = ({
       >
         <Grid item>
           <CardContent className={classes.label}>
-            {/*Job Status Label*/}
-            <Chip label={jobStatus} clickable onClick={handleStatusFilter} />
-
             {/*Category Label*/}
             <Chip
-              label={"Example Client Category"}
+              label={category}
               color="primary"
               clickable
               onClick={handleCategoryFilter}
@@ -114,6 +114,7 @@ const ClientCard = ({
             <Typography>{email}</Typography>
             <Typography>{phone}</Typography>
             <Typography>{payRate}</Typography>
+            <Typography>{jobStatus}</Typography>
             <Typography>{notes}</Typography>
           </CardContent>
         </Grid>
