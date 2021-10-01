@@ -6,6 +6,7 @@ import {
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
+import { CategorySelectorInput } from "./CategorySelector";
 import {
   Typography,
   makeStyles,
@@ -18,7 +19,6 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useCollectionData,
@@ -49,11 +49,6 @@ const Client = () => {
   const { enqueueSnackbar } = useSnackbar();
   const isNewClient = clientId == "new";
   const [authUser, authLoading] = useAuthState(firebase.auth());
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-
-  const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
-  };
 
   const userReference = firebase
     .firestore()
@@ -69,7 +64,6 @@ const Client = () => {
     idField: "id"
   });
 
-
   // Load specific client data from the database
   const existingClientReference = userReference
     .collection("clients")
@@ -84,26 +78,20 @@ const Client = () => {
     return <Loading />;
   }
 
-  // Set initial category value
-  if (selectedCategory == null) {
-    if (!isNewClient && clientData && clientData.category) {
-      // If this existing client has a category set already, set the selected category to that
-      setSelectedCategory(clientData.category);
-    }
-  }
+  const categories = categoriesData.map((category) => category.id);
 
   // Get relevant category fields when user selects a new category
   let categoryFields = [];
 
+  console.log("Data ", categoriesData);
+
   categoriesData.forEach((category) => {
-    if (category.id == selectedCategory) {
-      if (!category.customFields || category.customFields[0] === "") {
-        // Ignore if no custom fields
-        console.log("Fields are empty");
-      } else {
-        categoryFields = category.customFields;
-        console.log("Category Fields changed:" + categoryFields);
-      }
+    if (!category.customFields || category.customFields[0] === "") {
+      // Ignore if no custom fields
+      console.log("Fields are empty");
+    } else {
+      categoryFields = category.customFields;
+      console.log("Category Fields changed:" + categoryFields);
     }
   });
 
@@ -111,22 +99,42 @@ const Client = () => {
 
   // Here we generate initialValues object for the custom categories to satisfy the
   // react uncontrolled to controlled input error, using a bit of functional programming magic :D
-  const existingClientCategoryInitialValues = categoryFields.reduce(
-    (acc, cur) => {
-      acc[cur] = clientData[cur];
-      return acc;
-    },
-    {}
-  );
 
+  // Check if category fields exist
+  const existingClientCategoryInitialValues = categoryFields
+    ? categoryFields.reduce((acc, cur) => {
+        if (clientData && clientData[cur]) {
+          // Existing data for category
+          //console.log("clientData[cur] defined:", clientData[cur]);
+          acc[cur] = clientData[cur];
+        } else {
+          // New category, no client data (undefined) yet so initialise to empty
+          //console.log("clientData[cur] undefined:", clientData[cur]);
+          acc[cur] = "";
+        }
+
+        return acc;
+      }, {})
+    : // empty if no category fields
+      categoryFields.reduce((acc, cur) => {
+        acc[cur] = "";
+        return acc;
+      }, {});
+
+  // Initialise category values for a new client
   const newClientCategoryInitialValues = categoryFields.reduce((acc, cur) => {
     acc[cur] = "";
     return acc;
   }, {});
 
   console.log(
-    "categoryinitialvalues: " +
+    "existingcategoryinitialvalues: " +
       JSON.stringify(existingClientCategoryInitialValues)
+  );
+
+  console.log(
+    "newclientcategoryinitialvalues: " +
+      JSON.stringify(newClientCategoryInitialValues)
   );
 
   const newClientInitialValues: FormValues = {
@@ -280,29 +288,10 @@ const Client = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field // Dropdown menu
-                    component={TextField}
-                    variant={"outlined"}
-                    label={"Category"}
+                  <CategorySelectorInput
                     name={"category"}
-                    type={"text"}
-                    placeholder={"Category"}
-                    fullWidth
-                    select
-                    value={selectedCategory}
-                    onClick={(event) =>
-                      // When dropdown is changed, update selectedCategory
-                      handleCategoryChange(event.target.value)
-                    }
-                  >
-                    {/* Allow user to select a category to apply to the client */}
-                    {/* Map the names of each category into a dropdown menu */}
-                    {categoriesData.map((category) => (
-                      <MenuItem value={category.id} key={category.id}>
-                        {category.id}
-                      </MenuItem>
-                    ))}
-                  </Field>
+                    categories={categories}
+                  />
                 </Grid>
 
                 {/* dynamic form fields occurs here - done by mapping category fields */}
