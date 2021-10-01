@@ -169,10 +169,12 @@ const Category = () => {
             <Typography variant="h5" display="inline">
               Custom Fields
             </Typography>
-            {/* <CustomItemsSelector
+
+            {/* I guess this is where custom field adding will go @ivy */}
+            <CustomItemsSelector
               customFields={customFields}
               setCustomFields={setCustomFields}
-            /> */}
+            />
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
