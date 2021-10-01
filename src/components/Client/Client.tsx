@@ -97,7 +97,7 @@ const Client = () => {
 
   categoriesData.forEach((category) => {
     if (category.id == selectedCategory) {
-      if (!category || category.customFields[0] === "") {
+      if (!category.customFields || category.customFields[0] === "") {
         // Ignore if no custom fields
         console.log("Fields are empty");
       } else {
