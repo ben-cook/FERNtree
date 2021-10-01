@@ -78,51 +78,78 @@ const Client = () => {
     return <Loading />;
   }
 
+  // Get all category names
   const categories = categoriesData.map((category) => category.id);
 
   // Get relevant category fields when user selects a new category
-  let categoryFields = [];
+  
+  //let categoryFields = [];
 
-  console.log("Data ", categoriesData);
+  function getCategoryFields(categoryId){
+    let categoryFields = [];
 
-  categoriesData.forEach((category) => {
-    if (!category.customFields || category.customFields[0] === "") {
-      // Ignore if no custom fields
-      console.log("Fields are empty");
-    } else {
-      categoryFields = category.customFields;
-      console.log("Category Fields changed:" + categoryFields);
-    }
-  });
+    categoriesData.forEach((category) => {
 
-  console.log("Category Fields:" + categoryFields);
+      if (!category.customFields || category.customFields[0] === "") {
+        // Ignore if no custom fields
+        console.log("Fields are empty");
+
+      } else if (category.id == categoryId){
+        categoryFields = category.customFields;
+
+        console.log("Category changed:" + categoryId);
+        console.log("Category Fields changed:" + categoryFields);
+      }
+
+    });
+
+    return categoryFields;
+  }
+  //console.log("Data ", categoriesData);
+
+  // categoriesData.forEach((category) => {
+  //   if (!category.customFields || category.customFields[0] === "") {
+  //     // Ignore if no custom fields
+  //     console.log("Fields are empty");
+  //   } else {
+  //     categoryFields = category.customFields;
+  //     console.log("Category Fields changed:" + categoryFields);
+  //   }
+  // });
 
   // Here we generate initialValues object for the custom categories to satisfy the
   // react uncontrolled to controlled input error, using a bit of functional programming magic :D
 
-  // Check if category fields exist
+  const categoryFields = getCategoryFields(clientData?.category);
+
+  // Initialise category values for an existing client
   const existingClientCategoryInitialValues = categoryFields
     ? categoryFields.reduce((acc, cur) => {
         if (clientData && clientData[cur]) {
+
           // Existing data for category
           //console.log("clientData[cur] defined:", clientData[cur]);
           acc[cur] = clientData[cur];
+
         } else {
+
           // New category, no client data (undefined) yet so initialise to empty
           //console.log("clientData[cur] undefined:", clientData[cur]);
           acc[cur] = "";
-        }
 
+        }
         return acc;
       }, {})
+
     : // empty if no category fields
       categoryFields.reduce((acc, cur) => {
         acc[cur] = "";
         return acc;
       }, {});
 
-  // Initialise category values for a new client
-  const newClientCategoryInitialValues = categoryFields.reduce((acc, cur) => {
+
+  //Initialise category values to empty for a new client
+  const newClientCategoryInitialValues = [].reduce((acc, cur) => {
     acc[cur] = "";
     return acc;
   }, {});
@@ -142,7 +169,7 @@ const Client = () => {
     lastName: "",
     business: "",
     address: "",
-    category: "",
+    category: "", // no category selected yet
     email: "",
     phone: "",
     payRate: "",
@@ -189,6 +216,7 @@ const Client = () => {
             jobStatus: Yup.string(),
             notes: Yup.string()
           })}
+          
           onSubmit={(
             values: FormValues,
             { setSubmitting }: FormikHelpers<FormValues>
@@ -240,7 +268,7 @@ const Client = () => {
             }
           }}
         >
-          {({ isSubmitting, dirty }) => (
+          {({ isSubmitting, dirty, values }) => (
             <Form>
               <Grid container direction={"row"} spacing={2}>
                 <Grid item xs={12} sm={6}>
@@ -295,7 +323,7 @@ const Client = () => {
                 </Grid>
 
                 {/* dynamic form fields occurs here - done by mapping category fields */}
-                {categoryFields.map((attb, idx) => (
+                {getCategoryFields(values.category).map((attb, idx) => (
                   <Grid item key={idx} xs={12}>
                     <Field
                       component={TextField}
@@ -385,6 +413,7 @@ const Client = () => {
                   alignItems="center"
                 >
                   <Grid item>
+                    {/*Save/Update Button*/}
                     <Button
                       type={"submit"}
                       variant={"contained"}
@@ -397,6 +426,7 @@ const Client = () => {
                       {!isNewClient && "Update"}
                     </Button>
                   </Grid>
+                  {/*Delete Button*/}
                   {!isNewClient && (
                     <Grid item>
                       <DeleteButtonWithDialog
