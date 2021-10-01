@@ -144,14 +144,16 @@ const Category = () => {
       >
         {({ isSubmitting, dirty }) => (
           <Form>
-            <Field
-              component={TextField}
-              variant={"standard"}
-              name={"name"}
-              type={"text"}
-              placeholder={"Category Name"}
-              fullWidth
-            />
+            {isNewCategory && (
+              <Field
+                component={TextField}
+                variant={"standard"}
+                name={"name"}
+                type={"text"}
+                placeholder={"Category Name"}
+                fullWidth
+              />
+            )}
             <Field
               component={TextField}
               variant={"outlined"}
@@ -167,10 +169,10 @@ const Category = () => {
             <Typography variant="h5" display="inline">
               Custom Fields
             </Typography>
-            <CustomItemsSelector
+            {/* <CustomItemsSelector
               customFields={customFields}
               setCustomFields={setCustomFields}
-            />
+            /> */}
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
