@@ -106,7 +106,7 @@ const Client = () => {
   const existingClientCategoryInitialValues = categoryFields ? (categoryFields.reduce(
     (acc, cur) => {
 
-      if (clientData[cur]){
+      if (clientData && clientData[cur]){
         // Existing data for category
         //console.log("clientData[cur] defined:", clientData[cur]);
         acc[cur] = clientData[cur];
