@@ -1,24 +1,24 @@
 import { CustomCategory } from "../../types";
 import Loading from "../Loading";
+import CustomItemsSelector from "./CustomItemsSelector";
 import {
   Typography,
   makeStyles,
   createStyles,
-  Button,
+  Button
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
+import { useSnackbar } from "notistack";
+import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { useSnackbar } from "notistack";
-import CustomItemsSelector from "./CustomItemsSelector";
-import { useState } from "react";
 
-interface FormValues extends CustomCategory{
-  name: string
+interface FormValues extends CustomCategory {
+  name: string;
 }
 
 const useStyles = makeStyles((theme) =>
@@ -55,24 +55,27 @@ const Category = () => {
     customFields: [""]
   };
 
-  // Load category data from the datavase
-  const categoryReference =  userReference
+  // Load category data from the database
+  const categoryReference = userReference
     .collection("customCategories")
     .doc(categoryName);
 
-  const [category, categoryLoading] = isNewCategory ? [null, null] : 
-    useDocumentData<CustomCategory>(categoryReference);
+  const [category, categoryLoading] = isNewCategory
+    ? [null, null]
+    : useDocumentData<CustomCategory>(categoryReference);
 
   console.log("Category ", category, categoryLoading);
 
   const existingCategoryInitialValues: FormValues = {
     name: categoryName,
-    notes: (!isNewCategory && !categoryLoading && category.notes || ""),
-    customFields: (!isNewCategory && ! categoryLoading && category.customFields || [])
+    notes: (!isNewCategory && !categoryLoading && category.notes) || "",
+    customFields:
+      (!isNewCategory && !categoryLoading && category.customFields) || []
   };
 
-  const [customFields, setCustomFields] = useState(existingCategoryInitialValues.customFields);
-  
+  const [customFields, setCustomFields] = useState(
+    existingCategoryInitialValues.customFields
+  );
 
   console.log(existingCategoryInitialValues);
 
@@ -98,46 +101,45 @@ const Category = () => {
           notes: Yup.string()
         })}
         onSubmit={(
-            values: FormValues,
-            { setSubmitting }: FormikHelpers<FormValues>
-          ) => {
-            setSubmitting(true);
+          values: FormValues,
+          { setSubmitting }: FormikHelpers<FormValues>
+        ) => {
+          setSubmitting(true);
 
-            
-            if (isNewCategory) {
-              userReference.collection("customCategories")
-                .doc(values.name)
-                .set({notes: values.notes, customFields: values.customFields})
-                .then(() => {
-                  enqueueSnackbar("New category created!", {
-                    variant: "success"
-                  });
-                  history.push("/");
-                })
-                .catch((err) => {
-                  console.error(err);
-                  enqueueSnackbar("Something went wrong.", {
-                    variant: "error"
-                  });
-                })
-                .finally(() => setSubmitting(false));
-            } else {
-              categoryReference
-                .set({notes: values.notes, customFields: values.customFields})
-                .then(() => {
-                  enqueueSnackbar("Category Updated!", {
-                    variant: "success"
-                  });
-                })
-                .catch((err) => {
-                  console.error(err);
-                  enqueueSnackbar("Something went wrong.", {
-                    variant: "error"
-                  });
-                })
-                .finally(() => setSubmitting(false));
-            }
-            
+          if (isNewCategory) {
+            userReference
+              .collection("customCategories")
+              .doc(values.name)
+              .set({ notes: values.notes, customFields: values.customFields })
+              .then(() => {
+                enqueueSnackbar("New category created!", {
+                  variant: "success"
+                });
+                history.push("/");
+              })
+              .catch((err) => {
+                console.error(err);
+                enqueueSnackbar("Something went wrong.", {
+                  variant: "error"
+                });
+              })
+              .finally(() => setSubmitting(false));
+          } else {
+            categoryReference
+              .set({ notes: values.notes, customFields: values.customFields })
+              .then(() => {
+                enqueueSnackbar("Category Updated!", {
+                  variant: "success"
+                });
+              })
+              .catch((err) => {
+                console.error(err);
+                enqueueSnackbar("Something went wrong.", {
+                  variant: "error"
+                });
+              })
+              .finally(() => setSubmitting(false));
+          }
         }}
       >
         {({ isSubmitting, dirty }) => (
@@ -165,7 +167,10 @@ const Category = () => {
             <Typography variant="h5" display="inline">
               Custom Fields
             </Typography>
-            <CustomItemsSelector customFields = {customFields} setCustomFields = {setCustomFields} />
+            <CustomItemsSelector
+              customFields={customFields}
+              setCustomFields={setCustomFields}
+            />
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
