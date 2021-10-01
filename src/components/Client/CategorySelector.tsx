@@ -1,6 +1,11 @@
 import { MenuItem, TextField } from "@material-ui/core";
 import { Field } from "formik";
 
+interface CategorySelectorProps {
+  selectedCategory: string;
+  handleChange: (s: string) => void;
+  categoryFields: string[];
+}
 
 export function CategorySelector(props: {
   selectedCategory: string,
@@ -10,30 +15,31 @@ export function CategorySelector(props: {
 }) {
   
   return (
-    <TextField 
-        variant={"outlined"}
-        label={"Category"}
-        name={"category"}
-        type={"text"}
-        placeholder={"Category"}
-        fullWidth
-        select
-        value={props.selectedCategory}
-        
-        onChange={(event) => props.handleChange(event.target.value)}
-        
+    <TextField
+      variant={"outlined"}
+      label={"Category"}
+      name={"category"}
+      type={"text"}
+      placeholder={"Category"}
+      fullWidth
+      select
+      value={props.selectedCategory}
+      onChange={(event) => props.handleChange(event.target.value)}
     >
         {/* Allow user to select a category to apply to the client */}
         {/* Map the names of each category into a dropdown menu */}
         {props.categories && props.categories.map((category) => (
             <MenuItem value={category} key={category}>
             {category}
-            </MenuItem>
+          </MenuItem>
         ))}
     </TextField>
-    
-    
   );
+}
+
+interface CategorySelectorInputProps {
+  name: string;
+  categoryFields: string[];
 }
 
 // Formik-aware wrapper
