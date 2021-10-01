@@ -5,7 +5,7 @@ import { Field } from "formik";
 export function CategorySelector(props: {
   selectedCategory: string,
   handleChange: (s: string) => void,
-  categoryFields: string[]
+  categories: string[]
 
 }) {
   
@@ -25,7 +25,7 @@ export function CategorySelector(props: {
     >
         {/* Allow user to select a category to apply to the client */}
         {/* Map the names of each category into a dropdown menu */}
-        {props.categoryFields && props.categoryFields.map((category) => (
+        {props.categories && props.categories.map((category) => (
             <MenuItem value={category} key={category}>
             {category}
             </MenuItem>
@@ -39,7 +39,7 @@ export function CategorySelector(props: {
 // Formik-aware wrapper
 export function CategorySelectorInput(props: {
         name: string, 
-        categoryFields: string[]}) {
+        categories: string[]}) {
     return (
         <Field name={props.name} id={props.name}>
             {
@@ -49,7 +49,7 @@ export function CategorySelectorInput(props: {
                         <CategorySelector
                             selectedCategory = {value}
                             handleChange = {(category) => setFieldValue(props.name, category)}
-                            categoryFields={props.categoryFields}
+                            categories={props.categories}
 
                         />
                     </div>

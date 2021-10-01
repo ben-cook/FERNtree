@@ -79,9 +79,12 @@ const Client = () => {
     return <Loading />;
   }
 
+  const categories = categoriesData.map((category) => category.id)
 
   // Get relevant category fields when user selects a new category
   let categoryFields = [];
+
+  console.log("Data ", categoriesData)
 
   categoriesData.forEach((category) => {
     
@@ -296,7 +299,7 @@ const Client = () => {
                 <Grid item xs={12}>
                   <CategorySelectorInput
                     name={"category"}
-                    categoryFields={categoryFields}
+                    categories={categories}
                   />
                 </Grid>
 
