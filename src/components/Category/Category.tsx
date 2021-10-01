@@ -16,6 +16,7 @@ import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { structuredClone, zipWith } from "../../util";
 
 interface FormValues extends CustomCategory {
   name: string;
@@ -89,8 +90,8 @@ const Category = () => {
       <Formik
         initialValues={
           isNewCategory
-            ? newCategoryInitialValues
-            : existingCategoryInitialValues
+            ? structuredClone(newCategoryInitialValues)
+            : structuredClone(existingCategoryInitialValues)
         }
         validationSchema={Yup.object().shape({
           categoryName: Yup.string(),
@@ -138,7 +139,7 @@ const Category = () => {
           }
         }}
       >
-        {({ isSubmitting, dirty }) => (
+        {({ isSubmitting, dirty, values}) => (
           <Form>
             {isNewCategory && (
               <Field
@@ -194,11 +195,14 @@ const Category = () => {
             )}
             <br />
 
+            
             <Button
               type={"submit"}
               variant={"contained"}
               color={"primary"}
-              disabled={(isSubmitting || !dirty)}
+              disabled={isSubmitting || !dirty 
+                && zipWith((x:string, y:string) => x === y, values.customFields, existingCategoryInitialValues.customFields)
+                .every((x:boolean) => x)}
               className={classes.submitButton}
             >
               {isNewCategory && "Save"}

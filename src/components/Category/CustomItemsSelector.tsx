@@ -6,7 +6,6 @@ export function CustomItemsSelector(props: {
   customFields: string[];
   handleChange: (s: string[]) => void;
 }) {
-  console.log(props.customFields);
   
   return (
     <div>
