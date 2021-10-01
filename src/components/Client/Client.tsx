@@ -51,6 +51,10 @@ const Client = () => {
   const [authUser, authLoading] = useAuthState(firebase.auth());
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
+  const handleCategoryChange = (value) => {
+    setSelectedCategory(value);
+  };
+
   const userReference = firebase
     .firestore()
     .collection("users")
@@ -89,10 +93,6 @@ const Client = () => {
 
   // Get relevant category fields when user selects a new category
   let categoryFields = [];
-
-  const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
-  };
 
   categoriesData.forEach((category) => {
     if (category.id == selectedCategory) {
@@ -167,6 +167,7 @@ const Client = () => {
           initialValues={
             isNewClient ? newClientInitialValues : existingClientInitialValues
           }
+          enableReinitialize
           validationSchema={Yup.object().shape({
             firstName: Yup.string(),
             lastName: Yup.string(),
