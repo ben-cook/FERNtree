@@ -18,7 +18,7 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import {
   useCollectionData,
@@ -26,6 +26,7 @@ import {
 } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
+import { cursorTo } from "readline";
 
 type FormValues = ClientConcreteValues & ClientCustomFields;
 
@@ -51,8 +52,13 @@ const Client = () => {
   const [authUser, authLoading] = useAuthState(firebase.auth());
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  const handleCategoryChange = (value) => {
-    setSelectedCategory(value);
+  const handleCategoryChange = (event) => {
+    try {
+      console.log("Category changed to:", event.target.value);
+      setSelectedCategory(event.target.value);
+    }catch (error){
+      console.log("category change error", error);
+    }
   };
 
   const userReference = firebase
@@ -111,22 +117,46 @@ const Client = () => {
 
   // Here we generate initialValues object for the custom categories to satisfy the
   // react uncontrolled to controlled input error, using a bit of functional programming magic :D
-  const existingClientCategoryInitialValues = categoryFields.reduce(
+
+  // Check if category fields exist
+  const existingClientCategoryInitialValues = categoryFields ? (categoryFields.reduce(
     (acc, cur) => {
-      acc[cur] = clientData[cur];
+
+      if (clientData[cur]){
+        // Existing data for category
+        //console.log("clientData[cur] defined:", clientData[cur]);
+        acc[cur] = clientData[cur];
+      }else{
+        // New category, no client data (undefined) yet so initialise to empty
+        //console.log("clientData[cur] undefined:", clientData[cur]);
+        acc[cur] = "";
+      }
+      
       return acc;
     },
     {}
-  );
+  )) :
+    // empty if no category fields
+    categoryFields.reduce((acc, cur) => {
+      acc[cur] = "";
+      return acc;
+  }, {});
 
+
+  // Initialise category values for a new client
   const newClientCategoryInitialValues = categoryFields.reduce((acc, cur) => {
     acc[cur] = "";
     return acc;
   }, {});
 
   console.log(
-    "categoryinitialvalues: " +
+    "existingcategoryinitialvalues: " +
       JSON.stringify(existingClientCategoryInitialValues)
+  );
+
+  console.log(
+    "newclientcategoryinitialvalues: " +
+      JSON.stringify(newClientCategoryInitialValues)
   );
 
   const newClientInitialValues: FormValues = {
@@ -290,10 +320,10 @@ const Client = () => {
                     fullWidth
                     select
                     value={selectedCategory}
-                    onClick={(event) =>
-                      // When dropdown is changed, update selectedCategory
-                      handleCategoryChange(event.target.value)
-                    }
+                    // onClick={(event: { target: { value: string; }; }) =>
+                    //   // When dropdown is changed, update selectedCategory
+                    //   handleCategoryChange(event.target.value)
+                    onChange={(event) => handleCategoryChange(event)}
                   >
                     {/* Allow user to select a category to apply to the client */}
                     {/* Map the names of each category into a dropdown menu */}
