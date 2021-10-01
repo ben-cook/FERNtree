@@ -1,11 +1,7 @@
 import { MenuItem, TextField } from "@material-ui/core";
 import { Field } from "formik";
 
-interface CategorySelectorProps {
-  selectedCategory: string;
-  handleChange: (s: string) => void;
-  categoryFields: string[];
-}
+
 
 export function CategorySelector(props: {
   selectedCategory: string,
@@ -35,11 +31,6 @@ export function CategorySelector(props: {
         ))}
     </TextField>
   );
-}
-
-interface CategorySelectorInputProps {
-  name: string;
-  categoryFields: string[];
 }
 
 // Formik-aware wrapper
