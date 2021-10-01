@@ -26,7 +26,7 @@ import {
 } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { cursorTo } from "readline";
+import { CategorySelectorInput } from "./CategorySelector";
 
 type FormValues = ClientConcreteValues & ClientCustomFields;
 
@@ -50,12 +50,11 @@ const Client = () => {
   const { enqueueSnackbar } = useSnackbar();
   const isNewClient = clientId == "new";
   const [authUser, authLoading] = useAuthState(firebase.auth());
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
   const handleCategoryChange = (event) => {
     try {
       console.log("Category changed to:", event.target.value);
-      setSelectedCategory(event.target.value);
+      
     }catch (error){
       console.log("category change error", error);
     }
@@ -90,19 +89,12 @@ const Client = () => {
     return <Loading />;
   }
 
-  // Set initial category value
-  if (selectedCategory == null) {
-    if (!isNewClient && clientData && clientData.category) {
-      // If this existing client has a category set already, set the selected category to that
-      setSelectedCategory(clientData.category);
-    }
-  }
 
   // Get relevant category fields when user selects a new category
   let categoryFields = [];
 
   categoriesData.forEach((category) => {
-    if (category.id == selectedCategory) {
+    
       if (!category.customFields || category.customFields[0] === "") {
         // Ignore if no custom fields
         console.log("Fields are empty");
@@ -110,8 +102,10 @@ const Client = () => {
         categoryFields = category.customFields;
         console.log("Category Fields changed:" + categoryFields);
       }
-    }
+    
   });
+
+
 
   console.log("Category Fields:" + categoryFields);
 
@@ -310,29 +304,10 @@ const Client = () => {
                   />
                 </Grid>
                 <Grid item xs={12}>
-                  <Field // Dropdown menu
-                    component={TextField}
-                    variant={"outlined"}
-                    label={"Category"}
+                  <CategorySelectorInput
                     name={"category"}
-                    type={"text"}
-                    placeholder={"Category"}
-                    fullWidth
-                    select
-                    value={selectedCategory}
-                    // onClick={(event: { target: { value: string; }; }) =>
-                    //   // When dropdown is changed, update selectedCategory
-                    //   handleCategoryChange(event.target.value)
-                    onChange={(event) => handleCategoryChange(event)}
-                  >
-                    {/* Allow user to select a category to apply to the client */}
-                    {/* Map the names of each category into a dropdown menu */}
-                    {categoriesData.map((category) => (
-                      <MenuItem value={category.id} key={category.id}>
-                        {category.id}
-                      </MenuItem>
-                    ))}
-                  </Field>
+                    categoryFields={categoryFields}
+                  />
                 </Grid>
 
                 {/* dynamic form fields occurs here - done by mapping category fields */}
