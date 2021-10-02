@@ -84,22 +84,19 @@ const Client = () => {
   // Get relevant category fields when user selects a new category
 
   // Function which returns category fields of a given category Id
-  function getCategoryFields(categoryId){
+  function getCategoryFields(categoryId: string): string[] {
     let categoryFields = [];
 
     categoriesData.forEach((category) => {
-
       if (!category.customFields || category.customFields[0] === "") {
         // Ignore if no custom fields
         console.log("Fields are empty");
-
-      } else if (category.id == categoryId){
+      } else if (category.id == categoryId) {
         categoryFields = category.customFields;
 
         console.log("Category changed:" + categoryId);
         console.log("Category Fields changed:" + categoryFields);
       }
-
     });
 
     return categoryFields;
@@ -114,27 +111,21 @@ const Client = () => {
   const existingClientCategoryInitialValues = categoryFields
     ? categoryFields.reduce((acc, cur) => {
         if (clientData && clientData[cur]) {
-
           // Existing data for category
           //console.log("clientData[cur] defined:", clientData[cur]);
           acc[cur] = clientData[cur];
-
         } else {
-
           // New category, no client data (undefined) yet so initialise to empty
           //console.log("clientData[cur] undefined:", clientData[cur]);
           acc[cur] = "";
-
         }
         return acc;
       }, {})
-
     : // empty if no category fields
       categoryFields.reduce((acc, cur) => {
         acc[cur] = "";
         return acc;
       }, {});
-
 
   //Initialise category values to empty for a new client
   const newClientCategoryInitialValues = [].reduce((acc, cur) => {
@@ -204,7 +195,6 @@ const Client = () => {
             jobStatus: Yup.string(),
             notes: Yup.string()
           })}
-          
           onSubmit={(
             values: FormValues,
             { setSubmitting }: FormikHelpers<FormValues>
@@ -311,8 +301,8 @@ const Client = () => {
                 </Grid>
 
                 {/* dynamic form fields occurs here - done by mapping category fields */}
-                {getCategoryFields(values.category).map((attb, idx) => (
-                  <Grid item key={idx} xs={12}>
+                {getCategoryFields(values.category).map((attb) => (
+                  <Grid item key={attb} xs={12}>
                     <Field
                       component={TextField}
                       variant={"outlined"}
