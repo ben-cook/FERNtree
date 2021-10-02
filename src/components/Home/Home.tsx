@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme) =>
     },
     categoryButtonGroup: {
       backgroundColor: "white"
+    },
+    resetButton: {
+      backgroundColor: "white",
     }
   })
 );
@@ -87,9 +90,18 @@ const Home = () => {
   // setSelectedTag updates selectedTag when called
   // useState is initialising the state to the string "All"
   const [selectedTag, setSelectedTag] = useState<string>("All");
+  
+  // declaring a state variable called selectedCategory
+  // setSelectedCategory updates selectedCategory when called
+  // useState is initialising the state to the string "All"
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
+  // declaring a state variable called searchValue
+  // to be used in search bar to filter results
   const [searchValue, setSearchValue] = useState<string>("");
 
+
+  // Getting Category Values
   const categoriesReference = firebase
     .firestore()
     .collection("users")
@@ -102,6 +114,7 @@ const Home = () => {
       idField: "name"
     }
   );
+
   console.log(categoryData);
 
   const labels = !categoryData
@@ -113,6 +126,7 @@ const Home = () => {
         };
       });
 
+      
   // Defining tags for dropdown
   let tags: string[] = [];
   if (firestoreUser) {
@@ -121,7 +135,16 @@ const Home = () => {
     } else {
       tags = ["All"];
     }
-  }
+  } 
+
+
+  // Reset all search filters to default values
+  const handleResetSearch = () => {
+    console.info("You clicked the reset search button.");
+    setSelectedCategory("All");
+    setSelectedTag("All");
+    setSearchValue("");
+  };
 
   return (
     <>
@@ -157,6 +180,7 @@ const Home = () => {
             {/* Selection and buttons */}
             <Grid item xs={12} sm={4}>
               {!firestoreLoading && (
+                // Tags dropdown menu to filter tags
                 <TextField // Dropdown menu
                   variant="outlined"
                   className={classes.clientSearchField}
@@ -179,18 +203,37 @@ const Home = () => {
                 </TextField>
               )}
             </Grid>
-
+            
+            {/*Category Filtering Buttons*/}
             <Grid item xs={10}>
               <ButtonGroup className={classes.categoryButtonGroup}>
+                {/*Add Category Button*/}
                 <Button onClick={() => history.push("/category/new")}>
                   <AddIcon />
                 </Button>
-                <Button>All</Button>
+
+                {/*Filtering Category Buttons*/}
+                {/*All Categories Button*/}
+                <Button
+                  // Selected button is coloured
+                  color={selectedCategory === "All" ? "primary" : "default"}
+                  variant={selectedCategory === "All" ? "contained" : "outlined"}
+                  // Show clients in all categories
+                  onClick={() => setSelectedCategory("All")}
+                > 
+                  All
+                </Button>
+                {/*Category Buttons*/}
                 {labels.map((label) => (
                   <Button
                     key={label.value}
-                    // TODO: Make this filter the home page instead
-                    onClick={() => history.push(`/category/${label.value}`)}
+                    // Selected button is coloured
+                    color={label.value === selectedCategory ? "primary" : "default"}
+                    variant={label.value === selectedCategory ? "contained" : "outlined"}
+
+                    //onClick={() => history.push(`/category/${label.value}`)}
+                    // Filter the home page by category 
+                    onClick={() => setSelectedCategory(label.value)}
                   >
                     {label.value}
                   </Button>
@@ -199,11 +242,24 @@ const Home = () => {
             </Grid>
 
             <Grid item xs={2}>
-              <div style={{ display: "flex", justifyContent: "flex-end" }}>
+
+              <div style={{ flexDirection: "row", justifyContent: "flex-end"}}>
+                <ButtonGroup
+                    className={classes.resetButton}
+                  >
+                    {/*RESET SEARCH BUTTON*/}
+                    <Button
+                      onClick={() => handleResetSearch()}
+                    >
+                      Reset Search
+                    </Button>
+                </ButtonGroup>
+                {/*CATEGORY SETTINGS BUTTON*/}
                 <IconButton>
                   <SettingsIcon style={{ color: "black", fontSize: 28 }} />
                 </IconButton>
               </div>
+
             </Grid>
           </Grid>
         </CardContent>
@@ -233,7 +289,7 @@ const Home = () => {
 
         {clientsData &&
           clientsData
-            // Filtering which clients to show based on search and tags
+            // Filtering which clients to show based on search, category filter and tags
             .filter((client) => {
               // for every value (of each field), if the value is not ID AND includes search
               // remove client id from string
@@ -251,18 +307,23 @@ const Home = () => {
                   .toLowerCase()
                   .includes(searchValue)
               ) {
-                // NOW CHECK TAGS
-                if (selectedTag === "All") {
-                  // If the selected tag is "All", display this client
+                // NOW CHECK TAGS and CATEGORY
+                if (selectedTag === "All" && selectedCategory === "All") {
+                  // If the selected tag AND category is "All", display this client
                   return true;
                 }
-
-                if (!client.tags) {
-                  // If the client has no tags, don't display
+                
+                if (!client.tags && !client.category) {
+                  // If the client has no tags or no category, don't display
                   return false;
                 }
-
-                return client.tags.includes(selectedTag); // If client has tag, display client
+                
+                // If client has tag or selected category, display client
+                // Fancy logic here:
+                  // If client has the selected category and tags is set to All, return that client
+                  // If client has the selected tag and category is set to All, return that client
+                  // If client has selected tag AND selected category, return that client
+                return (selectedCategory === "All" ? true : client.category == selectedCategory) && (selectedTag === "All" ? true : client.tags?.includes(selectedTag)); 
               }
             })
             .sort((a, b) => a.firstName.localeCompare(b.firstName))

@@ -69,10 +69,10 @@ const ClientCard = ({
   const classes = useStyles();
   const history = useHistory();
 
-  const handleCategoryFilter = () => {
-    console.info("You clicked the category button.");
-    // To replace with showing all results with clicked category functionality
-  };
+  // const handleCategoryFilter = () => {
+  //   console.info("You clicked the category button.");
+  //   // To replace with showing all results with clicked category functionality
+  // };
 
   const handleEditClient = () => {
     history.push(`/client/${id}`);
@@ -98,7 +98,7 @@ const ClientCard = ({
               label={category}
               color="primary"
               clickable
-              onClick={handleCategoryFilter}
+              onClick={() => history.push(`/category/${category}`)} // Go to edit category page when clicked.
             />
           </CardContent>
 
@@ -121,8 +121,10 @@ const ClientCard = ({
 
         <Grid item>
           <CardContent>
+            {/*ADD TAGS*/}
             <Tags id={id} tags={tags} />
           </CardContent>
+          {/*EDIT CLIENT BUTTON*/}
           <CardActions>
             <IconButton
               className={classes.button}
