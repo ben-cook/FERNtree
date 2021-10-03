@@ -94,7 +94,8 @@ const Dashboard = (user: firebase.User) => {
           </Typography>
         {!categoryLoading && (
           <Typography variant="h6" display={"inline"} color="primary">
-            {`${userData?.userTags?.length}`}
+            {/* Checking tags isn't undefined */}
+            {`${userData?.userTags ? userData?.userTags.length : 0}`}
           </Typography>
          )}
           <Typography variant="h6" display={"inline"}>
