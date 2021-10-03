@@ -2,6 +2,7 @@ import { Typography, createStyles, makeStyles } from "@material-ui/core";
 import firebase from "firebase/app";
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
 import { User, Client, CustomCategory } from "../../../types";
+import Loading from "../../Loading";
  
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -33,7 +34,7 @@ const Dashboard = (user: firebase.User) => {
   const clientsReference = userDocumentReference.collection("clients");
 
   //if you want data from client, look in how it is defined in Home.tsx
-  const [clientsData] = useCollectionData<Client>(clientsReference);
+  const [clientsData, clientsLoading] = useCollectionData<Client>(clientsReference);
 
   // Getting Category Values
   const categoriesReference = firebase
@@ -46,6 +47,11 @@ const Dashboard = (user: firebase.User) => {
   
   // Get today's date
   const date = new Date().toDateString();
+
+  // Loading
+  if (loading || categoryLoading || clientsLoading) {
+    return <Loading />;
+  }
 
   return (
     <>
