@@ -49,9 +49,9 @@ const Dashboard = (user: firebase.User) => {
   const date = new Date().toDateString();
 
   // Loading
-  if (loading || categoryLoading || clientsLoading) {
-    return <Loading />;
-  }
+  // if (loading || categoryLoading || clientsLoading) {
+  //   return <Loading />;
+  // }
 
   return (
     <>
@@ -75,7 +75,7 @@ const Dashboard = (user: firebase.User) => {
         <Typography variant="h6" display={"inline"}>
           {`Currently, you have `}
         </Typography>
-        {!loading && (
+        {!loading && !clientsLoading && (
         <Typography variant="h6" display={"inline"} color="primary">
           {`${clientsData?.length}`}
         </Typography>
