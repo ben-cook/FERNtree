@@ -2,7 +2,7 @@ import { Typography, createStyles, makeStyles } from "@material-ui/core";
 import firebase from "firebase/app";
 import { useDocumentData, useCollectionData } from "react-firebase-hooks/firestore";
 import { User, Client, CustomCategory } from "../../../types";
-import Loading from "../../Loading";
+//import Loading from "../../Loading";
  
 const useStyles = makeStyles((theme) =>
   createStyles({
