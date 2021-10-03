@@ -90,6 +90,16 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
     setTextFieldValue(event.target.value); // set to that value
   };
 
+  // Add the tag if enter is pressed on the keyboard
+  const handleEnterTag = (event) => {
+
+    if ((event.which || event.charCode || event.keyCode) == 13){
+      addTag(textFieldValue); // Add tag
+      setTextFieldValue(""); // Reset field value
+    }
+  };
+
+
   if (authLoading || firestoreLoading) {
     return <></>;
   }
@@ -125,6 +135,7 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
             size="small"
             value={textFieldValue}
             onChange={handleTextFieldChange} //when changed, update textFieldValue
+            onKeyPress={handleEnterTag}
             InputProps={{
               style: { backgroundColor: "white" },
               endAdornment: (
