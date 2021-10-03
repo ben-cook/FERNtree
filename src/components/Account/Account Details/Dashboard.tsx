@@ -44,11 +44,7 @@ const Dashboard = (user: firebase.User) => {
 
   const [categoryData, categoryLoading] = useCollectionData<CustomCategory>(categoriesReference);
   
-  /*if (!loading && !(typeof categoryData == 'undefined')) {
-    console.log("Categories: " + categoryData);
-    //console.log("CategoriesValues: " + categoryData);
-    console.log("Length: " + categoryData.length);
-  }*/
+  // Get today's date
   const date = new Date().toDateString();
 
   return (
