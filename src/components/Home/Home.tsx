@@ -162,7 +162,7 @@ const Home = () => {
                 size="medium"
                 value={searchValue}
                 onChange={(event) =>
-                  setSearchValue(event.target.value.toLowerCase())
+                  setSearchValue(event.target.value)
                 }
                 InputProps={{
                   style: { backgroundColor: "white" },
@@ -305,7 +305,7 @@ const Home = () => {
                 reduction
                   .replace(client.id, "")
                   .toLowerCase()
-                  .includes(searchValue)
+                  .includes(searchValue.toLowerCase())
               ) {
                 // NOW CHECK TAGS and CATEGORY
                 if (selectedTag === "All" && selectedCategory === "All") {
