@@ -77,6 +77,7 @@ const Home = () => {
   const [firestoreUser, firestoreLoading] =
     useDocumentData<User>(userReference);
 
+  // Getting client values
   const clientsReference = userReference.collection("clients");
 
   const [clientsData] = useCollectionData<Client & { id: string }>(
