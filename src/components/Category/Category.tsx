@@ -2,6 +2,7 @@ import { CustomCategory } from "../../types";
 import { structuredClone, zipWith } from "../../util";
 import Loading from "../Loading";
 import { CustomItemsSelectorInput } from "./CustomItemsSelector";
+import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import {
   Typography,
   makeStyles,
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme) =>
     },
     submitButton: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
+      marginRight: theme.spacing(2)
     }
   })
 );
@@ -52,7 +54,7 @@ const Category = () => {
   const newCategoryInitialValues: FormValues = {
     name: "",
     notes: "",
-    customFields: [""]
+    customFields: [] // Empty list
   };
 
   // Load category data from the database
@@ -66,18 +68,22 @@ const Category = () => {
 
   console.log("Category ", category, categoryLoading);
 
-  const existingCategoryInitialValues: FormValues = {
-    name: categoryName,
-    notes: (!isNewCategory && !categoryLoading && category.notes) || "",
-    customFields:
-      (!isNewCategory && !categoryLoading && category.customFields) || []
-  };
 
-  console.log(existingCategoryInitialValues);
-
+  // Loading
   if (authLoading || categoryLoading) {
     return <Loading />;
   }
+
+
+  // Set initial field values
+  const existingCategoryInitialValues: FormValues = {
+    name: categoryName,
+    notes: (!isNewCategory && !categoryLoading && category?.notes) || "",
+    customFields:
+      (!isNewCategory && !categoryLoading && category?.customFields) || []
+  };
+
+  console.log(existingCategoryInitialValues);
 
   return (
     <>
@@ -208,6 +214,32 @@ const Category = () => {
               {isNewCategory && "Save"}
               {!isNewCategory && "Update"}
             </Button>
+
+            {!isNewCategory &&
+                <DeleteButtonWithDialog
+                buttonText="Delete Category"
+                dialogTitle="Delete Category?"
+                dialogContent="Are you sure you wish to permanently delete this category and all its associated data? This
+                action cannot be reversed."
+                deleteFunction={() => {
+                  categoryReference
+                    .delete()
+                    .then(() => {
+                      enqueueSnackbar("Category deleted!", {
+                        variant: "success"
+                      });
+                      history.push("/");
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                      enqueueSnackbar("Something went wrong.", {
+                        variant: "error"
+                      });
+                    });
+                }}
+              />
+            }
+            
           </Form>
         )}
       </Formik>
