@@ -1,6 +1,7 @@
 import { CustomCategory } from "../../types";
+import { structuredClone, zipWith } from "../../util";
 import Loading from "../Loading";
-import CustomItemsSelector from "./CustomItemsSelector";
+import { CustomItemsSelectorInput } from "./CustomItemsSelector";
 import {
   Typography,
   makeStyles,
@@ -11,7 +12,6 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
@@ -73,10 +73,6 @@ const Category = () => {
       (!isNewCategory && !categoryLoading && category.customFields) || []
   };
 
-  const [customFields, setCustomFields] = useState(
-    existingCategoryInitialValues.customFields
-  );
-
   console.log(existingCategoryInitialValues);
 
   if (authLoading || categoryLoading) {
@@ -93,8 +89,8 @@ const Category = () => {
       <Formik
         initialValues={
           isNewCategory
-            ? newCategoryInitialValues
-            : existingCategoryInitialValues
+            ? structuredClone(newCategoryInitialValues)
+            : structuredClone(existingCategoryInitialValues)
         }
         validationSchema={Yup.object().shape({
           categoryName: Yup.string(),
@@ -142,7 +138,7 @@ const Category = () => {
           }
         }}
       >
-        {({ isSubmitting, dirty }) => (
+        {({ isSubmitting, dirty, values }) => (
           <Form>
             {isNewCategory && (
               <Field
@@ -170,11 +166,7 @@ const Category = () => {
               Custom Fields
             </Typography>
 
-            {/* I guess this is where custom field adding will go @ivy */}
-            <CustomItemsSelector
-              customFields={customFields}
-              setCustomFields={setCustomFields}
-            />
+            <CustomItemsSelectorInput name={"customFields"} />
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
@@ -202,7 +194,15 @@ const Category = () => {
               type={"submit"}
               variant={"contained"}
               color={"primary"}
-              disabled={isSubmitting || !dirty}
+              disabled={
+                isSubmitting ||
+                (!dirty &&
+                  zipWith(
+                    (x: string, y: string) => x === y,
+                    values.customFields,
+                    existingCategoryInitialValues.customFields
+                  ).every((x: boolean) => x))
+              }
               className={classes.submitButton}
             >
               {isNewCategory && "Save"}
