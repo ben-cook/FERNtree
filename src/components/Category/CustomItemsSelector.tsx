@@ -35,19 +35,29 @@ export function CustomItemsSelector(props: {
         Add
       </Button>
       {Array.from(props.customFields.keys()).map((i: number) => (
-        <TextField
-          variant={"outlined"}
-          key={props.customFields[i]}
-          type={"text"}
-          defaultValue={props.customFields[i]}
-          fullWidth
-          onChange={(e: any) => {
-            props.customFields[i] = e.target.value;
-          }}
-          onBlur={(e: any) => {
-            props.handleChange(props.customFields);
-          }}
-        />
+        <div key={i}>
+          <TextField
+            variant={"outlined"}
+            type={"text"}
+            defaultValue={props.customFields[i]}
+            onChange={(e: any) => {
+              props.customFields[i] = e.target.value;
+            }}
+            onBlur={(e: any) => {
+              props.handleChange(props.customFields);
+            }}
+          />
+          <Button
+            variant={"contained"}
+            color={"primary"}
+            onClick={(e) => {
+              props.customFields.splice(i, 1);
+              props.handleChange(props.customFields);
+            }}
+          >
+            Remove
+          </Button>
+        </div>
       ))}
     </div>
   );
