@@ -1,3 +1,4 @@
+import logo from "./logo.svg";
 import {
   IconButton,
   Button,
@@ -8,7 +9,6 @@ import {
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
-import EcoIcon from "@material-ui/icons/Eco";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
 import firebase from "firebase/app";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -40,12 +40,6 @@ const Header = () => {
   const location = useLocation();
   const [user] = useAuthState(firebase.auth());
 
-  const LogoIcon = () => (
-    <IconButton color="inherit" size="medium" className={classes.logoIcon}>
-      <EcoIcon fontSize="large" />
-    </IconButton>
-  );
-
   const ProfileButton = () => (
     <IconButton color="inherit" size="medium" className={classes.profileButton}>
       <AccountCircleIcon fontSize="large" />
@@ -67,10 +61,10 @@ const Header = () => {
     <AppBar position="static">
       <Toolbar>
         <Container>
-          <Grid container justifyContent={"space-between"}>
+          <Grid container justifyContent={"space-between"} alignItems="center">
             <Grid item>
               <Link to="/" className={classes.noTextDecoration}>
-                <LogoIcon />
+                <img src={logo} style={{ width: "3rem", height: "3rem" }} />
               </Link>
             </Grid>
             <Grid item>
