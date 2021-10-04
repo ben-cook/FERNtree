@@ -24,7 +24,7 @@ export function CustomItemsSelector(props: {
         variant={"contained"}
         color={"primary"}
         disabled={!adding}
-        onClick={(e) => {
+        onClick={() => {
           props.customFields.push(toAdd);
           props.handleChange(props.customFields);
 
@@ -40,17 +40,17 @@ export function CustomItemsSelector(props: {
             variant={"outlined"}
             type={"text"}
             defaultValue={props.customFields[i]}
-            onChange={(e: any) => {
+            onChange={(e) => {
               props.customFields[i] = e.target.value;
             }}
-            onBlur={(e: any) => {
+            onBlur={() => {
               props.handleChange(props.customFields);
             }}
           />
           <Button
             variant={"contained"}
             color={"primary"}
-            onClick={(e) => {
+            onClick={() => {
               props.customFields.splice(i, 1);
               props.handleChange(props.customFields);
             }}

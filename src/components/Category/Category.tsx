@@ -1,4 +1,5 @@
 import { CustomCategory } from "../../types";
+import { structuredClone, zipWith } from "../../util";
 import Loading from "../Loading";
 import { CustomItemsSelectorInput } from "./CustomItemsSelector";
 import {
@@ -11,12 +12,10 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
 import * as Yup from "yup";
-import { structuredClone, zipWith } from "../../util";
 
 interface FormValues extends CustomCategory {
   name: string;
@@ -139,7 +138,7 @@ const Category = () => {
           }
         }}
       >
-        {({ isSubmitting, dirty, values}) => (
+        {({ isSubmitting, dirty, values }) => (
           <Form>
             {isNewCategory && (
               <Field
@@ -167,11 +166,7 @@ const Category = () => {
               Custom Fields
             </Typography>
 
-            
-            <CustomItemsSelectorInput
-              name={"customFields"}
-
-            />
+            <CustomItemsSelectorInput name={"customFields"} />
             <br />
             {isNewCategory && (
               <Typography variant="body1" display={"inline"}>
@@ -195,14 +190,19 @@ const Category = () => {
             )}
             <br />
 
-            
             <Button
               type={"submit"}
               variant={"contained"}
               color={"primary"}
-              disabled={isSubmitting || !dirty 
-                && zipWith((x:string, y:string) => x === y, values.customFields, existingCategoryInitialValues.customFields)
-                .every((x:boolean) => x)}
+              disabled={
+                isSubmitting ||
+                (!dirty &&
+                  zipWith(
+                    (x: string, y: string) => x === y,
+                    values.customFields,
+                    existingCategoryInitialValues.customFields
+                  ).every((x: boolean) => x))
+              }
               className={classes.submitButton}
             >
               {isNewCategory && "Save"}
