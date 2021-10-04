@@ -1,58 +1,72 @@
-import { TextField } from "@material-ui/core";
+import { Button, TextField } from "@material-ui/core";
 import { Field } from "formik";
-
+import { useState } from "react";
 
 export function CustomItemsSelector(props: {
   customFields: string[];
   handleChange: (s: string[]) => void;
 }) {
-  
+  const [adding, setAdding] = useState(false);
+  const [toAdd, setToAdd] = useState("");
   return (
     <div>
+      <TextField
+        variant={"outlined"}
+        type={"text"}
+        placeholder={"New Field"}
+        value={toAdd}
+        onChange={(e) => {
+          setAdding(true);
+          setToAdd(e.target.value);
+        }}
+      />
+      <Button
+        variant={"contained"}
+        color={"primary"}
+        disabled={!adding}
+        onClick={(e) => {
+          props.customFields.push(toAdd);
+          props.handleChange(props.customFields);
+
+          setToAdd("");
+          setAdding(false);
+        }}
+      >
+        Add
+      </Button>
+      {Array.from(props.customFields.keys()).map((i: number) => (
         <TextField
-            variant={"outlined"}
-            type={"text"}
-            placeholder={"New Field"}
-            fullWidth
+          variant={"outlined"}
+          key={props.customFields[i]}
+          type={"text"}
+          defaultValue={props.customFields[i]}
+          fullWidth
+          onChange={(e: any) => {
+            props.customFields[i] = e.target.value;
+          }}
+          onBlur={(e: any) => {
+            props.handleChange(props.customFields);
+          }}
         />
-        {
-            Array.from(props.customFields.keys()).map((i:number) => 
-                <TextField
-                    variant={"outlined"}
-                    key={props.customFields[i]}
-                    type={"text"}
-                    defaultValue={props.customFields[i]}
-                    fullWidth
-                    onChange={(e: any) => {
-                        props.customFields[i] = e.target.value;
-                    }}
-                    onBlur={(e: any) => {
-                        props.handleChange(props.customFields);
-                    }}
-                />
-            )
-        }
+      ))}
     </div>
   );
 }
 
 // Formik-aware wrapper
-export function CustomItemsSelectorInput(props: {name: string}) {
-    return (
-        <Field name={props.name} id={props.name}>
-            {
-                
-                ({field: { value }, form: { setFieldValue }}) => 
-                    <div>
-                        <CustomItemsSelector
-                            customFields = {value}
-                            handleChange = {(fields: string[]) => setFieldValue(props.name, fields)}
-
-                        />
-                    </div>
-
+export function CustomItemsSelectorInput(props: { name: string }) {
+  return (
+    <Field name={props.name} id={props.name}>
+      {({ field: { value }, form: { setFieldValue } }) => (
+        <div>
+          <CustomItemsSelector
+            customFields={value}
+            handleChange={(fields: string[]) =>
+              setFieldValue(props.name, fields)
             }
-        </Field> 
-    );
-
+          />
+        </div>
+      )}
+    </Field>
+  );
 }
