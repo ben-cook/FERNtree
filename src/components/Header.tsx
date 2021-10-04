@@ -1,5 +1,4 @@
-// import { ReactComponent as Logo } from "./5.svg";
-import logo from "./1a.svg";
+import logo from "./logo.svg";
 import {
   IconButton,
   Button,
