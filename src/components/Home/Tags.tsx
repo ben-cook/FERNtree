@@ -141,7 +141,9 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
             fullWidth
             clearOnBlur
             clearOnEscape
-            options={firestoreUser.userTags.map((tag) => tag)} // show all existing tags as autofill
+            // show all existing tags as autofill
+            options={firestoreUser.userTags ?
+                      firestoreUser.userTags.map((tag) => tag) : []} // if user has no tags, return empty array
             onInputChange={handleAutoFillFieldChange} // When changed, update textfieldvalue
             onKeyPress={handleEnterTag} // Add tag when Enter key is pressed
             inputValue={textFieldValue}
