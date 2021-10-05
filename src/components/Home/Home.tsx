@@ -13,10 +13,13 @@ import {
   ButtonGroup,
   Button
 } from "@material-ui/core";
+// Import icons
 import AddIcon from "@material-ui/icons/Add";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
 import SettingsIcon from "@material-ui/icons/Settings";
+import EditIcon from "@material-ui/icons/Edit";
+// Import firebase and react
 import firebase from "firebase";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -126,7 +129,17 @@ const Home = () => {
           value: x.name
         };
       });
+  
 
+  // List of category names to be passed into client cards for category verification
+  let categoryNames: string[] = [];
+  categoryNames = !categoryData
+  ? [] // return empty array if no category data
+  : categoryData.map((value) => {
+      return (value.name);
+    });
+  
+  console.log("Category Names:", categoryNames);
       
   // Defining tags for dropdown
   let tags: string[] = [];
@@ -232,11 +245,20 @@ const Home = () => {
                     color={label.value === selectedCategory ? "primary" : "default"}
                     variant={label.value === selectedCategory ? "contained" : "outlined"}
 
-                    //onClick={() => history.push(`/category/${label.value}`)}
                     // Filter the home page by category 
                     onClick={() => setSelectedCategory(label.value)}
                   >
                     {label.value}
+
+                    {/*Edit category icon appears when category is selected*/}
+                    {(selectedCategory == label.value) &&
+                      <Button size="small"
+                        // Redirect to Category Settings page of selected category
+                        onClick={() => history.push(`/category/${label.value}`)}
+                      >
+                        <EditIcon fontSize="small"/>
+                      </Button>}
+
                   </Button>
                 ))}
               </ButtonGroup>
@@ -360,8 +382,9 @@ const Home = () => {
                       phone,
                       payRate,
                       jobStatus,
-                      notes
+                      notes,
                     }}
+                    categoryNames={categoryNames}
                     tags={tags}
                     customFields={rest}
                   />

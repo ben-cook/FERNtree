@@ -47,6 +47,7 @@ type Props = {
   id: string;
   concreteValues: ClientConcreteValues;
   tags: string[];
+  categoryNames: string[];
   customFields: ClientCustomFields;
 };
 
@@ -64,20 +65,18 @@ const ClientCard = ({
     jobStatus,
     notes
   },
+  categoryNames,
   tags
 }: Props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  // const handleCategoryFilter = () => {
-  //   console.info("You clicked the category button.");
-  //   // To replace with showing all results with clicked category functionality
-  // };
-
+  // If edit button is clicked
   const handleEditClient = () => {
     history.push(`/client/${id}`);
   };
 
+  // Format client's name
   let clientName = `${firstName} ${lastName}`;
   if (clientName.length > MAX_CLIENT_NAME_LENGTH) {
     clientName = clientName.slice(0, MAX_CLIENT_NAME_LENGTH - 2) + "...";
@@ -94,12 +93,23 @@ const ClientCard = ({
         <Grid item>
           <CardContent className={classes.label}>
             {/*Category Label*/}
-            <Chip
-              label={category}
-              color="primary"
-              clickable
-              onClick={() => history.push(`/category/${category}`)} // Go to edit category page when clicked.
-            />
+
+            {categoryNames.includes(category) ? 
+              // Only categories which exist are displayed
+              <Chip
+                label={category}
+                color="primary"
+                clickable
+                onClick={() => history.push(`/category/${category}`)} // Go to edit category page when clicked.
+              />
+              :
+              <Chip
+                color="primary"
+              />
+            }
+
+            
+
           </CardContent>
 
           <CardContent className={classes.content}>
