@@ -14,6 +14,7 @@ import firebase from "firebase/app";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
+import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -84,10 +85,16 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
   // initialise textFieldValue to "", update using setTFV...
   const [textFieldValue, setTextFieldValue] = useState<string>("");
 
-  const handleTextFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement> // event = input of element is changed
-  ) => {
-    setTextFieldValue(event.target.value); // set to that value
+  // const handleTextFieldChange = (
+  //   event: React.ChangeEvent<HTMLInputElement> // event = input of element is changed
+  // ) => {
+  //   console.log("Text field set to", event.target.value );
+  //   setTextFieldValue(event.target.value); // set to that value
+  // };
+
+  const handleAutoFillFieldChange = (
+    event: React.ChangeEvent<HTMLInputElement> , value: string) => {
+    setTextFieldValue(value); // set to that value
   };
 
   // Add the tag if enter is pressed on the keyboard
@@ -127,32 +134,52 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
         />
 
         {showAddTag && ( //if adding tags is shown
-          <TextField
-            variant="outlined"
-            label="Add Tag"
+
+          // Autofill already existing tags
+          <Autocomplete
+            freeSolo
             fullWidth
-            margin="normal"
-            size="small"
-            value={textFieldValue}
-            onChange={handleTextFieldChange} //when changed, update textFieldValue
-            onKeyPress={handleEnterTag}
-            InputProps={{
-              style: { backgroundColor: "white" },
-              endAdornment: (
-                <InputAdornment component="div" position="end">
-                  <IconButton
-                    onClick={() => {
-                      //When clicked, add the tag and reset textFieldValue
-                      addTag(textFieldValue);
-                      setTextFieldValue("");
-                    }}
-                  >
-                    <AddIcon />
-                  </IconButton>
-                </InputAdornment>
-              )
-            }}
+            clearOnBlur
+            clearOnEscape
+            // show all existing tags as autofill
+            options={firestoreUser.userTags ?
+                      firestoreUser.userTags.map((tag) => tag) : []} // if user has no tags, return empty array
+            onInputChange={handleAutoFillFieldChange} // When changed, update textfieldvalue
+            onKeyPress={handleEnterTag} // Add tag when Enter key is pressed
+            inputValue={textFieldValue}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                variant="outlined"
+                label="Add Tag"
+                margin="normal"
+                size="small"
+                // onChange={handleTextFieldChange} //when changed, update textFieldValue
+                // onKeyPress={handleEnterTag}
+                InputProps={{
+                  ...params.InputProps,
+                  style: { backgroundColor: "white" },
+                  endAdornment: (
+                    <>
+                    {/*Add tag button*/}
+                    <InputAdornment component="div" position="end">
+                      <IconButton
+                        onClick={() => {
+                          //When clicked, add the tag and reset textFieldValue
+                          addTag(textFieldValue);
+                          setTextFieldValue("");
+                        }}
+                      >
+                        <AddIcon />
+                      </IconButton>
+                  </InputAdornment>
+                  </>
+                  )
+                }}
+              />
+            )}
           />
+          
         )}
       </div>
     </>
