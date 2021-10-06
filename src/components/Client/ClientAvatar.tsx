@@ -1,0 +1,33 @@
+import { ClientConcreteValues } from "../../types";
+import { Avatar, makeStyles } from "@material-ui/core";
+import md5 from "md5";
+
+export default function ClientAvatar(props: {
+  client: ClientConcreteValues;
+  size: number;
+}) {
+  const useStyles = makeStyles({
+    sized: {
+      width: props.size,
+      height: props.size,
+      margin: "1rem"
+    }
+  });
+
+  const classes = useStyles();
+
+  const nameImg = `https://ui-avatars.com/api/${
+    props.client.firstName[0] + props.client.lastName[0]
+  }/${props.size}/318335/ffffff`;
+
+  const gravatar = `https://www.gravatar.com/avatar/${md5(
+    props.client.email.trim()
+  )}?s=${props.size}&d=${encodeURI(nameImg)}`;
+  return (
+    <Avatar
+      alt={`${props.client.firstName} ${props.client.lastName}`}
+      src={gravatar}
+      className={classes.sized}
+    />
+  );
+}

@@ -6,16 +6,15 @@ import {
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
-import { avatarSrc } from "./Avatar";
 import { CategorySelectorInput } from "./CategorySelector";
+import ClientAvatar from "./ClientAvatar";
 import {
   Typography,
   makeStyles,
   createStyles,
   Button,
   Grid,
-  MenuItem,
-  Avatar
+  MenuItem
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -35,7 +34,11 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     title: {
       marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+      position: "relative",
+      top: "45%",
+      "-ms-transform": "translateY(-45%)",
+      transform: "translateY(-45%)"
     },
     submitButton: {
       marginTop: theme.spacing(3),
@@ -175,19 +178,19 @@ const Client = () => {
 
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={12} sm={8} md={6}>
-        <Grid item>
+      <Grid container direction={"row"} spacing={2} justifyContent="center">
+        <Grid item xs={6} sm={4} md={3}>
           <Typography variant="h4" className={classes.title}>
             {isNewClient && "New Client Profile"}
             {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
           </Typography>
-          {!isNewClient && (
-            <Avatar
-              alt={`${clientData?.firstName} ${clientData?.lastName}`}
-              src={avatarSrc(clientData)}
-            />
-          )}
         </Grid>
+        <Grid item xs={6} sm={4} md={3}>
+          {!isNewClient && <ClientAvatar client={clientData} size={256} />}
+        </Grid>
+      </Grid>
+
+      <Grid item xs={12} sm={8} md={6}>
         <Formik
           initialValues={
             isNewClient ? newClientInitialValues : existingClientInitialValues
@@ -259,7 +262,7 @@ const Client = () => {
           {({ isSubmitting, dirty, values }) => (
             <Form>
               <Grid container direction={"row"} spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     component={TextField}
                     variant={"outlined"}
