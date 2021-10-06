@@ -184,8 +184,8 @@ const Client = () => {
           }
           enableReinitialize
           validationSchema={Yup.object().shape({
-            firstName: Yup.string(),
-            lastName: Yup.string(),
+            firstName: Yup.string().required(),
+            lastName: Yup.string().required(),
             business: Yup.string(),
             address: Yup.string(),
             category: Yup.string(), //adding category in
