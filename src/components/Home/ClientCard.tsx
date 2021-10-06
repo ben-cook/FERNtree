@@ -109,9 +109,11 @@ const ClientCard = ({ id, concreteValues, categoryNames, tags }: Props) => {
               <Chip color="primary" />
             )}
 
-            <div className={classes.avatar}>
-              <ClientAvatar client={concreteValues} size={55} />
-            </div>
+            {concreteValues && concreteValues.firstName && (
+              <div className={classes.avatar}>
+                <ClientAvatar client={concreteValues} size={55} />
+              </div>
+            )}
           </CardContent>
 
           <CardContent className={classes.content}>

@@ -14,6 +14,8 @@ export default function ClientAvatar(props: {
     }
   });
 
+  if (!(props.client && props.client.firstName)) return <div></div>;
+
   const classes = useStyles();
 
   // The url for the backup name image from ui-avatars
