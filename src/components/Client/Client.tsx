@@ -7,6 +7,7 @@ import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
 import { CategorySelectorInput } from "./CategorySelector";
+import Tags from "../Home/Tags"
 import {
   Typography,
   makeStyles,
@@ -69,9 +70,15 @@ const Client = () => {
     .collection("clients")
     .doc(clientId);
 
-  const [clientData, clientLoading] = useDocumentData<ClientType>(
-    existingClientReference
-  );
+  const [clientData, clientLoading] = 
+    useDocumentData<ClientType>(existingClientReference);
+
+  // getting the client's tags
+  let tags: string[] = [];
+
+  if (clientData && clientData.tags) {
+    tags = clientData.tags;
+  } 
 
   // Loading
   if (authLoading || categoriesLoading || clientLoading) {
@@ -174,10 +181,12 @@ const Client = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} sm={8} md={6}>
+
         <Typography variant="h4" className={classes.title}>
           {isNewClient && "New Client Profile"}
           {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
         </Typography>
+
         <Formik
           initialValues={
             isNewClient ? newClientInitialValues : existingClientInitialValues
@@ -270,7 +279,7 @@ const Client = () => {
                     placeholder={"Last Name"}
                     fullWidth
                   />
-                </Grid>
+                </Grid>         
                 <Grid item xs={12} sm={6}>
                   <Field
                     component={TextField}
@@ -383,7 +392,7 @@ const Client = () => {
                     placeholder={"Notes"}
                     fullWidth
                   />
-                </Grid>
+                </Grid>         
 
                 <Grid
                   container
@@ -410,8 +419,8 @@ const Client = () => {
                       <DeleteButtonWithDialog
                         buttonText="Delete Client"
                         dialogTitle="Delete Client?"
-                        dialogContent="Are you sure you wish to permanently delete this client? This
-            action cannot be reversed."
+                        dialogContent="Are you sure you wish to permanently delete this client? 
+                                      This action cannot be reversed."
                         deleteFunction={() => {
                           existingClientReference
                             .delete()
@@ -436,6 +445,22 @@ const Client = () => {
             </Form>
           )}
         </Formik>
+
+        {/*Tags section*/}
+        <Grid
+          container
+          //direction={'column'}
+          spacing = {10}
+          justifyContent="space-around"
+          alignItems="center"
+        >
+          <Grid item>
+            {clientData && 
+              (<Tags id={clientId} tags={tags} />
+              )}
+          </Grid>
+        </Grid>
+
       </Grid>
     </Grid>
   );
