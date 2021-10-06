@@ -75,13 +75,10 @@ const Client = () => {
 
   // getting the client's tags
   let tags: string[] = [];
-  if (clientData) {
-    if (clientData.tags) {
-      tags = clientData.tags;
-    } else {
-      tags = [];
-    }
-  }
+
+  if (clientData && clientData.tags) {
+    tags = clientData.tags;
+  } 
 
   // Loading
   if (authLoading || categoriesLoading || clientLoading) {
@@ -460,7 +457,7 @@ const Client = () => {
           <Grid item>
             {clientData && 
               (<Tags id={clientId} tags={tags} />
-            )}
+              )}
           </Grid>
         </Grid>
 
