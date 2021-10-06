@@ -6,6 +6,7 @@ import {
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
+import { avatarSrc } from "./Avatar";
 import { CategorySelectorInput } from "./CategorySelector";
 import {
   Typography,
@@ -13,7 +14,8 @@ import {
   createStyles,
   Button,
   Grid,
-  MenuItem
+  MenuItem,
+  Avatar
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -174,10 +176,18 @@ const Client = () => {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} sm={8} md={6}>
-        <Typography variant="h4" className={classes.title}>
-          {isNewClient && "New Client Profile"}
-          {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
-        </Typography>
+        <Grid item>
+          <Typography variant="h4" className={classes.title}>
+            {isNewClient && "New Client Profile"}
+            {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
+          </Typography>
+          {!isNewClient && (
+            <Avatar
+              alt={`${clientData?.firstName} ${clientData?.lastName}`}
+              src={avatarSrc(clientData)}
+            />
+          )}
+        </Grid>
         <Formik
           initialValues={
             isNewClient ? newClientInitialValues : existingClientInitialValues
