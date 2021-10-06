@@ -1,4 +1,5 @@
 import { ClientConcreteValues, ClientCustomFields } from "../../types";
+import ClientAvatar from "../Client/ClientAvatar";
 import Tags from "./Tags";
 import {
   Card,
@@ -39,6 +40,11 @@ const useStyles = makeStyles((theme) =>
     button: {
       marginLeft: "auto",
       marginRight: 5
+    },
+
+    avatar: {
+      marginRight: 15,
+      marginLeft: "auto"
     }
   })
 );
@@ -51,9 +57,11 @@ type Props = {
   customFields: ClientCustomFields;
 };
 
-const ClientCard = ({
-  id,
-  concreteValues: {
+const ClientCard = ({ id, concreteValues, categoryNames, tags }: Props) => {
+  const classes = useStyles();
+  const history = useHistory();
+
+  const {
     firstName,
     lastName,
     business,
@@ -64,12 +72,7 @@ const ClientCard = ({
     payRate,
     jobStatus,
     notes
-  },
-  categoryNames,
-  tags
-}: Props) => {
-  const classes = useStyles();
-  const history = useHistory();
+  } = concreteValues;
 
   // If edit button is clicked
   const handleEditClient = () => {
@@ -94,7 +97,7 @@ const ClientCard = ({
           <CardContent className={classes.label}>
             {/*Category Label*/}
 
-            {categoryNames.includes(category) ? 
+            {categoryNames.includes(category) ? (
               // Only categories which exist are displayed
               <Chip
                 label={category}
@@ -102,14 +105,13 @@ const ClientCard = ({
                 clickable
                 onClick={() => history.push(`/category/${category}`)} // Go to edit category page when clicked.
               />
-              :
-              <Chip
-                color="primary"
-              />
-            }
+            ) : (
+              <Chip color="primary" />
+            )}
 
-            
-
+            <div className={classes.avatar}>
+              <ClientAvatar client={concreteValues} size={55} />
+            </div>
           </CardContent>
 
           <CardContent className={classes.content}>
@@ -117,6 +119,7 @@ const ClientCard = ({
             <Typography variant="h4" gutterBottom>
               {clientName}
             </Typography>
+
             <br />
 
             <Typography>{business}</Typography>
