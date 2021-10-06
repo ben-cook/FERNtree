@@ -16,13 +16,17 @@ export default function ClientAvatar(props: {
 
   const classes = useStyles();
 
+  // The url for the backup name image from ui-avatars
   const nameImg = `https://ui-avatars.com/api/${
     props.client.firstName[0] + props.client.lastName[0]
   }/${props.size}/318335/ffffff`;
 
+  // The gravatar url, with ui-avatars image encoded as backup
   const gravatar = `https://www.gravatar.com/avatar/${md5(
     props.client.email.trim()
   )}?s=${props.size}&d=${encodeURI(nameImg)}`;
+
+  // Return mui avatar component
   return (
     <Avatar
       alt={`${props.client.firstName} ${props.client.lastName}`}
