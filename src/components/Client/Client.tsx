@@ -7,6 +7,7 @@ import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
 import { CategorySelectorInput } from "./CategorySelector";
+import ClientAvatar from "./ClientAvatar";
 import Tags from "../Home/Tags"
 import {
   Typography,
@@ -32,9 +33,17 @@ type FormValues = ClientConcreteValues & ClientCustomFields;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    title: {
+    newClientTitle: {
       marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(2),
+    },
+    existingClientTitle: {
+      marginTop: theme.spacing(5),
+      marginBottom: theme.spacing(2),
+      position: "relative",
+      top: "45%",
+      "-ms-transform": "translateY(-45%)",
+      transform: "translateY(-45%)"
     },
     submitButton: {
       marginTop: theme.spacing(3),
@@ -180,12 +189,37 @@ const Client = () => {
 
   return (
     <Grid container justifyContent="center">
-      <Grid item xs={12} sm={8} md={6}>
+      {/* HEADER: NAME + AVATAR */}
+      {isNewClient && (
+        <Grid container direction={"row"} spacing={2} justifyContent="center">
+        
+          <Grid item>
+            <Typography variant="h4" className={classes.newClientTitle}>
+              New Client Profile
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
+        
+      {!isNewClient && (
+        <Grid container direction={"row"} spacing={2} justifyContent="center">
+          <Grid item xs={6} sm={4} md={3}>
+              <Typography variant="h4" className={classes.existingClientTitle}>
+                {`${clientData?.firstName} ${clientData?.lastName}`}
+              </Typography>
+          </Grid>
+        
+          <Grid item xs={6} sm={4} md={3}>
+              <ClientAvatar client={clientData} size={256} />
+          </Grid>
+        </Grid>
 
-        <Typography variant="h4" className={classes.title}>
-          {isNewClient && "New Client Profile"}
-          {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
-        </Typography>
+      )}
+
+      
+      
+      {/* FORM */}
+      <Grid item xs={12} sm={8} md={6}>
 
         <Formik
           initialValues={
@@ -258,7 +292,7 @@ const Client = () => {
           {({ isSubmitting, dirty, values }) => (
             <Form>
               <Grid container direction={"row"} spacing={2}>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     component={TextField}
                     variant={"outlined"}

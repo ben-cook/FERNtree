@@ -12,6 +12,7 @@
     "firebase-tools": "^9.18.0",
     "formik": "^2.2.9",
     "formik-material-ui": "^4.0.0-alpha.1",
+    "md5": "^2.3.0",
     "notistack": "^1.0.10",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
