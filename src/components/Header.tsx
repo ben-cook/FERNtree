@@ -5,11 +5,15 @@ import {
   Toolbar,
   AppBar,
   Container,
-  Grid
+  Grid,
+  Typography
 } from "@material-ui/core";
 import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
 import AccountCircleIcon from "@material-ui/icons/AccountCircle";
+import Brightness4Icon from "@material-ui/icons/Brightness4";
+import Brightness7Icon from "@material-ui/icons/Brightness7";
 import PersonAddOutlinedIcon from "@material-ui/icons/PersonAddOutlined";
+import { useTheme } from "@material-ui/styles";
 import firebase from "firebase/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useLocation, Link } from "react-router-dom";
@@ -30,15 +34,16 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     noTextDecoration: {
       textDecoration: "none",
-      color: "black"
+      color: theme.palette.primary.contrastText
     }
   })
 );
 
-const Header = () => {
+const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
   const classes = useStyles();
   const location = useLocation();
   const [user] = useAuthState(firebase.auth());
+  const theme: Theme = useTheme();
 
   const ProfileButton = () => (
     <IconButton color="inherit" size="medium" className={classes.profileButton}>
@@ -68,6 +73,23 @@ const Header = () => {
               </Link>
             </Grid>
             <Grid item>
+              <IconButton
+                onClick={toggleTheme}
+                className={classes.noTextDecoration}
+              >
+                {theme.palette.type === "light" ? (
+                  <>
+                    <Typography variant="body1">light mode</Typography>
+                    <Brightness4Icon />
+                  </>
+                ) : (
+                  <>
+                    <Typography>dark mode</Typography>
+                    <Brightness7Icon />
+                  </>
+                )}
+              </IconButton>
+
               {/* My Clients Button visible when logged in and not on home page. */}
               <Link to="/" className={classes.noTextDecoration}>
                 <Button

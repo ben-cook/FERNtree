@@ -2,9 +2,8 @@ import App from "./App";
 import { config } from "./firebaseConfig";
 import "./index.css";
 import reportWebVitals from "./reportWebVitals";
-import theme from "./theme";
 import "@fontsource/roboto";
-import { ThemeProvider, Slide } from "@material-ui/core";
+import { Slide } from "@material-ui/core";
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
@@ -16,27 +15,24 @@ import { BrowserRouter as Router } from "react-router-dom";
 firebase.initializeApp(config);
 
 ReactDOM.render(
-  <React.StrictMode>
-    {/* ThemeProvider allows us to use a custom theme with Material UI */}
-    <ThemeProvider theme={theme}>
-      {/* SnackbarProvider allows components to access snackbar actions */}
-      <SnackbarProvider
-        maxSnack={2}
-        anchorOrigin={{
-          vertical: "top",
-          horizontal: "center"
-        }}
-        TransitionComponent={Slide}
-        autoHideDuration={2500}
-      >
-        {/* The router is responsible for handling react-router-dom stuff */}
-        <Router>
-          {/* Render our App :) */}
-          <App />
-        </Router>
-      </SnackbarProvider>
-    </ThemeProvider>
-  </React.StrictMode>,
+  <>
+    {/* SnackbarProvider allows components to access snackbar actions */}
+    <SnackbarProvider
+      maxSnack={2}
+      anchorOrigin={{
+        vertical: "top",
+        horizontal: "center"
+      }}
+      TransitionComponent={Slide}
+      autoHideDuration={2500}
+    >
+      {/* The router is responsible for handling react-router-dom stuff */}
+      <Router>
+        {/* Render our App :) */}
+        <App />
+      </Router>
+    </SnackbarProvider>
+  </>,
   document.getElementById("root")
 );
 
