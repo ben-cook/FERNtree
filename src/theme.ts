@@ -3,7 +3,7 @@ import { createTheme } from "@material-ui/core/styles";
 export type ThemeValue = "light" | "dark";
 
 export const ferntreeColor = {
-  light: "#6abf69",
+  light: "#49b34e",
   main: "#388e3c",
   dark: "#00600f"
 };

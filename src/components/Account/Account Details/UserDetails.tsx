@@ -59,7 +59,9 @@ const UserDetails = (user: firebase.User) => {
           onClick={() => firebase.auth().signOut()}
           data-cy="logout"
         >
-          Sign Out
+          <Typography style={{ color: "#fff" }} variant="button">
+            Sign Out
+          </Typography>
         </Button>
 
         <DeleteButtonWithDialog
