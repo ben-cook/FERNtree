@@ -85,7 +85,7 @@ const ClientCard = (props: {
   // Load category data from the database
   const categoryReference = userReference
     .collection("customCategories")
-    .doc(props.concreteValues.category);
+    .doc(props.concreteValues.category || "No Category");
 
   const [category, categoryLoading] =
     useDocumentData<CustomCategory>(categoryReference); // get data for client's category
