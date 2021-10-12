@@ -1,4 +1,4 @@
-import { CustomCategory } from "../../types";
+import { CustomCategory } from "../../../functions/src/types";
 import { structuredClone, zipWith } from "../../util";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";

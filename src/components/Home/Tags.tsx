@@ -1,4 +1,9 @@
-import { User } from "../../types";
+import {
+  IAddTagData,
+  IDeleteTagData,
+  User
+} from "../../../functions/src/types";
+import { TypedHttpsCallable } from "../../types";
 import {
   Chip,
   createStyles,
@@ -58,52 +63,18 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
 
   const [showAddTag, setShowAddTag] = useState<boolean>(false);
 
-  const addTag = (tagToAdd: string) => {
-    // Add tag to client collection
-    if (!tags) {
-      userReference
-        .collection("clients")
-        .doc(clientID)
-        .set({ tags: [tagToAdd] }, { merge: true });
-    } else if (!tags.includes(tagToAdd)) {
-      userReference
-        .collection("clients")
-        .doc(clientID)
-        .set({ tags: [...tags, tagToAdd] }, { merge: true });
-    }
+  const addTag: TypedHttpsCallable<IAddTagData> = firebase
+    .app()
+    .functions("australia-southeast1")
+    .httpsCallable("addTag");
 
-    // Add tag to user collection
-    if (firestoreUser) {
-      if (!firestoreUser.userTags) {
-        userReference.set({ userTags: [tagToAdd] }, { merge: true });
-      } else if (!firestoreUser.userTags.includes(tagToAdd)) {
-        userReference.set(
-          { userTags: [...firestoreUser.userTags, tagToAdd] },
-          { merge: true }
-        );
-      }
-    }
-  };
-
-  // delete tag from user collection
-  const deleteTag = (tagToDelete: string) => () =>
-    userReference
-      .collection("clients")
-      .doc(clientID)
-      .set(
-        { tags: tags.filter((tag) => tag !== tagToDelete) },
-        { merge: true }
-      );
+  const deleteTag: TypedHttpsCallable<IDeleteTagData> = firebase
+    .app()
+    .functions("australia-southeast1")
+    .httpsCallable("deleteTag");
 
   // initialise textFieldValue to "", update using setTFV...
   const [textFieldValue, setTextFieldValue] = useState<string>("");
-
-  // const handleTextFieldChange = (
-  //   event: React.ChangeEvent<HTMLInputElement> // event = input of element is changed
-  // ) => {
-  //   console.log("Text field set to", event.target.value );
-  //   setTextFieldValue(event.target.value); // set to that value
-  // };
 
   const handleAutoFillFieldChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -115,7 +86,7 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
   // Add the tag if enter is pressed on the keyboard
   const handleEnterTag = (event) => {
     if ((event.which || event.charCode || event.keyCode) == 13) {
-      addTag(textFieldValue); // Add tag
+      addTag({ clientID, tag: textFieldValue }); // Add tag
       setTextFieldValue(""); // Reset field value
     }
   };
@@ -134,7 +105,10 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
               <Chip
                 key={idx}
                 label={tag}
-                onDelete={deleteTag(tag)}
+                onDelete={() => {
+                  deleteTag({ clientID, tag });
+                  setTextFieldValue("");
+                }}
                 className={classes.chip}
               />
             ))}
@@ -189,7 +163,7 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
                         <IconButton
                           onClick={() => {
                             //When clicked, add the tag and reset textFieldValue
-                            addTag(textFieldValue);
+                            addTag({ clientID, tag: textFieldValue });
                             setTextFieldValue("");
                           }}
                         >

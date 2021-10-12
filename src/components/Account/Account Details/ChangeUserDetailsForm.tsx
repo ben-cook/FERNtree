@@ -1,4 +1,4 @@
-import { User } from "../../../types";
+import { User } from "../../../../functions/src/types";
 import Loading from "../../Loading";
 import {
   Button,

@@ -1,4 +1,7 @@
-import { ClientConcreteValues, ClientCustomFields } from "../../types";
+import {
+  ClientConcreteValues,
+  ClientCustomFields
+} from "../../../functions/src/types";
 import ClientAvatar from "../Client/ClientAvatar";
 import Tags from "./Tags";
 import {
@@ -62,18 +65,8 @@ const ClientCard = ({ id, concreteValues, categoryNames, tags }: Props) => {
   const classes = useStyles();
   const history = useHistory();
 
-  const {
-    firstName,
-    lastName,
-    business,
-    address,
-    category,
-    email,
-    phone,
-    payRate,
-    jobStatus,
-    notes
-  } = concreteValues;
+  const { firstName, lastName, address, category, email, phone, notes } =
+    concreteValues;
 
   // If edit button is clicked
   const handleEditClient = () => {
@@ -130,12 +123,9 @@ const ClientCard = ({ id, concreteValues, categoryNames, tags }: Props) => {
 
             <br />
 
-            <Typography>{business}</Typography>
             <Typography>{address}</Typography>
             <Typography>{email}</Typography>
             <Typography>{phone}</Typography>
-            <Typography>{payRate}</Typography>
-            <Typography>{jobStatus}</Typography>
             <Typography>{notes}</Typography>
           </CardContent>
         </Grid>

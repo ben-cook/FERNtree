@@ -1,9 +1,9 @@
 import {
   Client as ClientType,
   ClientConcreteValues,
-  ClientCustomFields
-} from "../../types";
-import { CustomCategory } from "../../types";
+  ClientCustomFields,
+  CustomCategory
+} from "../../../functions/src/types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Tags from "../Home/Tags";
 import Loading from "../Loading";
@@ -156,13 +156,10 @@ const Client = () => {
   const newClientInitialValues: FormValues = {
     firstName: "",
     lastName: "",
-    business: "",
     address: "",
     category: "", // no category selected yet
     email: "",
     phone: "",
-    payRate: "",
-    jobStatus: "Not Started",
     notes: "",
     ...newClientCategoryInitialValues
   };
@@ -170,13 +167,10 @@ const Client = () => {
   const existingClientInitialValues: FormValues = {
     firstName: clientData?.firstName,
     lastName: clientData?.lastName,
-    business: clientData?.business,
     address: clientData?.address,
     category: clientData?.category, // Set initial category
     email: clientData?.email,
     phone: clientData?.phone,
-    payRate: clientData?.payRate,
-    jobStatus: clientData?.jobStatus || "Not Started",
     notes: clientData?.notes,
     ...existingClientCategoryInitialValues
   };

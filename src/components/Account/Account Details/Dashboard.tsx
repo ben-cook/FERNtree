@@ -1,5 +1,4 @@
-import { User, Client, CustomCategory } from "../../../types";
-import Testing from "./Testing";
+import { User, Client, CustomCategory } from "../../../../functions/src/types";
 import { Typography, createStyles, makeStyles } from "@material-ui/core";
 import firebase from "firebase/app";
 import {
@@ -118,8 +117,6 @@ const Dashboard = (user: firebase.User) => {
 
       {/*<pre>{JSON.stringify(user.email, null, 2)}</pre>
       <pre>{JSON.stringify(user.uid, null, 2)}</pre>*/}
-
-      <Testing />
     </>
   );
 };
