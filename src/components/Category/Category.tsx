@@ -7,7 +7,8 @@ import {
   Typography,
   makeStyles,
   createStyles,
-  Button
+  Button,
+  Grid
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -85,11 +86,15 @@ const Category = () => {
 
   return (
     <>
+    
       {/*<pre>{JSON.stringify(firestoreUser, null, 2)}</pre>*/}
-      <Typography variant="h4" className={classes.title}>
-        {isNewCategory && "New Category"}
-        {!isNewCategory && categoryName}
-      </Typography>
+      <Grid container>
+        <Typography variant="h4" className={classes.title}>
+          {isNewCategory && "New Category"}
+          {!isNewCategory && categoryName}
+        </Typography>
+      </Grid>
+
       <Formik
         initialValues={
           isNewCategory
@@ -155,90 +160,112 @@ const Category = () => {
                 style={{ marginBottom: "1rem" }}
               />
             )}
-            <Field
-              component={TextField}
-              variant={"outlined"}
-              label={"Notes"}
-              name={"notes"}
-              type={"text"}
-              placeholder={"Notes"}
-              multiline={true}
-              maxRows={5}
-              rows={3}
-              fullWidth
-              style={{ marginBottom: "1rem" }}
-            />
-            <Typography variant="h5" display="inline">
-              Custom Fields
-            </Typography>
-
-            <CustomItemsSelectorInput name={"customFields"} />
-
-            <Button
-              type={"submit"}
-              variant={"contained"}
-              color={"primary"}
-              disabled={
-                isSubmitting ||
-                (!dirty &&
-                  zipWith(
-                    (x: string, y: string) => x === y,
-                    values.customFields,
-                    existingCategoryInitialValues.customFields
-                  ).every((x: boolean) => x))
-              }
-              className={classes.submitButton}
+            <Grid
+            container 
+            spacing={2}
+            direction="column"
             >
-              {isNewCategory && "Save"}
-              {!isNewCategory && "Update"}
-            </Button>
 
-            {!isNewCategory && (
-              <DeleteButtonWithDialog
-                buttonText="Delete Category"
-                dialogTitle="Delete Category?"
-                dialogContent="Are you sure you wish to permanently delete this category and all its associated data? This
-                action cannot be reversed."
-                deleteFunction={() => {
-                  categoryReference
-                    .delete()
-                    .then(() => {
-                      enqueueSnackbar("Category deleted!", {
-                        variant: "success"
-                      });
-                      history.push("/");
-                    })
-                    .catch((err) => {
-                      console.error(err);
-                      enqueueSnackbar("Something went wrong.", {
-                        variant: "error"
-                      });
-                    });
-                }}
-              />
-            )}
+              <Grid item xs={6} sm={4} md={3} >
+                <Typography variant="h5" display="inline">
+                  Custom Fields
+                </Typography>
+              </Grid>
+
+              {isNewCategory && (
+                <Grid item xs={12} >
+                  <Typography variant="body1" display={"inline"}>
+                    Custom fields will be applied to all clients in your new category.
+                  </Typography>
+                </Grid>
+              )}
+
+              {!isNewCategory && (
+                <Grid item xs={12} >
+                  <Typography variant="body1" display={"inline"}>
+                    Custom fields are applied to all clients in the{" "}
+                  </Typography>
+                  <Typography variant="body1" display={"inline"} color="primary">
+                    {categoryName}
+                  </Typography>
+                  <Typography variant="body1" display={"inline"}>
+                    {" "}
+                    category.
+                  </Typography>
+                </Grid>
+              )}
+
+              {/*Dynamic custom fields*/}
+              <Grid item xs={12}>
+                <CustomItemsSelectorInput name={"customFields"} />
+              </Grid>
+
+              {/*Notes Field*/}
+              <Grid item xs={12}>
+                <Field
+                  component={TextField}
+                  variant={"outlined"}
+                  label={"Additional Notes"}
+                  name={"notes"}
+                  type={"text"}
+                  placeholder={"Notes"}
+                  multiline={true}
+                  maxRows={5}
+                  rows={3}
+                  fullWidth
+                />
+              </Grid>
+
+              <Grid item>
+                <Button
+                  type={"submit"}
+                  variant={"contained"}
+                  color={"primary"}
+                  disabled={
+                    isSubmitting ||
+                    (!dirty &&
+                      zipWith(
+                        (x: string, y: string) => x === y,
+                        values.customFields,
+                        existingCategoryInitialValues.customFields
+                      ).every((x: boolean) => x))
+                  }
+                  className={classes.submitButton}
+                >
+                  {isNewCategory && "Save"}
+                  {!isNewCategory && "Update"}
+                </Button>
+
+                {!isNewCategory && (
+                  <DeleteButtonWithDialog
+                    buttonText="Delete Category"
+                    dialogTitle="Delete Category?"
+                    dialogContent="Are you sure you wish to permanently delete this category and all its associated data? This
+                    action cannot be reversed."
+                    deleteFunction={() => {
+                      categoryReference
+                        .delete()
+                        .then(() => {
+                          enqueueSnackbar("Category deleted!", {
+                            variant: "success"
+                          });
+                          history.push("/");
+                        })
+                        .catch((err) => {
+                          console.error(err);
+                          enqueueSnackbar("Something went wrong.", {
+                            variant: "error"
+                          });
+                        });
+                    }}
+                  />
+                )}
+
+              </Grid>
+            </Grid>
           </Form>
         )}
-      </Formik>
-      {isNewCategory && (
-        <Typography variant="body1" display={"inline"}>
-          Custom fields will be applied to all clients in your new category.
-        </Typography>
-      )}
-      {!isNewCategory && (
-        <>
-          <Typography variant="body1" display={"inline"}>
-            Custom fields are applied to all clients in the{" "}
-          </Typography>
-          <Typography variant="body1" display={"inline"} color="primary">
-            {categoryName}
-          </Typography>
-          <Typography variant="body1" display={"inline"}>
-            {" "}
-            category.
-          </Typography>
-        </>
-      )}
+      </Formik> 
     </>
   );
 };

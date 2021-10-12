@@ -121,7 +121,7 @@ const Login = () => {
                 </Button>
               </Grid>
               <Grid item xs={7}>
-                <Button
+                {/* <Button
                   variant={"text"}
                   color={"default"}
                   className={classes.input}
@@ -129,7 +129,7 @@ const Login = () => {
                   disabled={true}
                 >
                   Forgot password?
-                </Button>
+                </Button> */}
               </Grid>
             </Grid>
           </Form>
