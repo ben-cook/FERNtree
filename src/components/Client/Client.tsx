@@ -5,15 +5,16 @@ import {
 } from "../../types";
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
+import Tags from "../Home/Tags";
 import Loading from "../Loading";
 import { CategorySelectorInput } from "./CategorySelector";
+import ClientAvatar from "./ClientAvatar";
 import {
   Typography,
   makeStyles,
   createStyles,
   Button,
-  Grid,
-  MenuItem
+  Grid
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -31,13 +32,15 @@ type FormValues = ClientConcreteValues & ClientCustomFields;
 
 const useStyles = makeStyles((theme) =>
   createStyles({
-    title: {
+    newClientTitle: {
       marginTop: theme.spacing(5),
       marginBottom: theme.spacing(2)
     },
+
     submitButton: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
+      color: "#ffffff"
     }
   })
 );
@@ -72,6 +75,13 @@ const Client = () => {
   const [clientData, clientLoading] = useDocumentData<ClientType>(
     existingClientReference
   );
+
+  // getting the client's tags
+  let tags: string[] = [];
+
+  if (clientData && clientData.tags) {
+    tags = clientData.tags;
+  }
 
   // Loading
   if (authLoading || categoriesLoading || clientLoading) {
@@ -173,19 +183,70 @@ const Client = () => {
 
   return (
     <Grid container justifyContent="center">
+      {/* HEADER: NAME + AVATAR */}
+      {isNewClient && (
+        <Grid container direction={"row"} spacing={2} justifyContent="center">
+          <Grid item>
+            <Typography variant="h4" className={classes.newClientTitle}>
+              New Client Profile
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
+
+      {!isNewClient && (
+        <Grid
+          container
+          direction={"row"}
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+          style={{ marginTop: "1rem" }}
+        >
+          <Grid item xs={6} sm={4} md={3}>
+            <Typography variant="h4" align="center">
+              {`${clientData?.firstName} ${clientData?.lastName}`}
+            </Typography>
+          </Grid>
+
+          <Grid
+            container
+            item
+            xs={6}
+            sm={4}
+            md={3}
+            justifyContent="center"
+            alignItems="center"
+            alignContent="center"
+          >
+            <Grid item>
+              <ClientAvatar client={clientData} size={200} />
+            </Grid>
+          </Grid>
+        </Grid>
+      )}
+
+      {/*Tags section*/}
+      <Grid
+        container
+        //direction={'column'}
+        spacing={10}
+        justifyContent="space-around"
+        alignItems="center"
+      >
+        <Grid item>{clientData && <Tags id={clientId} tags={tags} />}</Grid>
+      </Grid>
+
+      {/* FORM */}
       <Grid item xs={12} sm={8} md={6}>
-        <Typography variant="h4" className={classes.title}>
-          {isNewClient && "New Client Profile"}
-          {!isNewClient && `${clientData?.firstName} ${clientData?.lastName}`}
-        </Typography>
         <Formik
           initialValues={
             isNewClient ? newClientInitialValues : existingClientInitialValues
           }
           enableReinitialize
           validationSchema={Yup.object().shape({
-            firstName: Yup.string(),
-            lastName: Yup.string(),
+            firstName: Yup.string().required(),
+            lastName: Yup.string().required(),
             business: Yup.string(),
             address: Yup.string(),
             category: Yup.string(), //adding category in
@@ -247,8 +308,11 @@ const Client = () => {
           }}
         >
           {({ isSubmitting, dirty, values }) => (
-            <Form>
+            <Form style={{ marginTop: "2rem" }}>
               <Grid container direction={"row"} spacing={2}>
+                <Grid item xs={12}>
+                  <Typography variant="h5">Contact Information</Typography>
+                </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
                     component={TextField}
@@ -271,18 +335,7 @@ const Client = () => {
                     fullWidth
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    component={TextField}
-                    variant={"outlined"}
-                    label={"Business"}
-                    name={"business"}
-                    type={"text"}
-                    placeholder={"Business"}
-                    fullWidth
-                  />
-                </Grid>
-                <Grid item xs={12} sm={6}>
+                <Grid item xs={12}>
                   <Field
                     component={TextField}
                     variant={"outlined"}
@@ -292,31 +345,6 @@ const Client = () => {
                     placeholder={"Address"}
                     fullWidth
                   />
-                </Grid>
-                <Grid item xs={12}>
-                  <CategorySelectorInput
-                    name={"category"}
-                    categories={categories}
-                  />
-                </Grid>
-
-                {/* dynamic form fields occurs here - done by mapping category fields */}
-                {getCategoryFields(values.category).map((attb) => (
-                  <Grid item key={attb} xs={12}>
-                    <Field
-                      component={TextField}
-                      variant={"outlined"}
-                      label={attb}
-                      name={attb}
-                      type="text"
-                      placeholder={attb}
-                      fullWidth
-                    />
-                  </Grid>
-                ))}
-
-                <Grid item xs={12}>
-                  <Typography variant="h5">Contact Information</Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
@@ -340,36 +368,33 @@ const Client = () => {
                     fullWidth
                   />
                 </Grid>
+
                 <Grid item xs={12}>
-                  <Typography variant="h5">Job Information</Typography>
+                  <Typography variant="h5">Category Details</Typography>
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    component={TextField}
-                    variant={"outlined"}
-                    label={"Pay Rate"}
-                    name={"payRate"}
-                    type={"text"}
-                    placeholder={"Pay Rate"}
-                    fullWidth
+
+                <Grid item xs={12}>
+                  <CategorySelectorInput
+                    name={"category"}
+                    categories={categories}
                   />
                 </Grid>
-                <Grid item xs={12} sm={6}>
-                  <Field
-                    component={TextField}
-                    variant={"outlined"}
-                    label={"Job Status"}
-                    name={"jobStatus"}
-                    type={"text"}
-                    placeholder={"Job Status"}
-                    fullWidth
-                    select
-                  >
-                    <MenuItem value="Not Started">Not Started</MenuItem>
-                    <MenuItem value="In Progress">In Progress</MenuItem>
-                    <MenuItem value="Completed">Completed</MenuItem>
-                  </Field>
-                </Grid>
+
+                {/* dynamic form fields occurs here - done by mapping category fields */}
+                {getCategoryFields(values.category).map((attb) => (
+                  <Grid item key={attb} xs={12}>
+                    <Field
+                      component={TextField}
+                      variant={"outlined"}
+                      label={attb}
+                      name={attb}
+                      type="text"
+                      placeholder={attb}
+                      fullWidth
+                    />
+                  </Grid>
+                ))}
+
                 <Grid item xs={12}>
                   <Typography variant="h5">Additional Information</Typography>
                 </Grid>
@@ -410,8 +435,8 @@ const Client = () => {
                       <DeleteButtonWithDialog
                         buttonText="Delete Client"
                         dialogTitle="Delete Client?"
-                        dialogContent="Are you sure you wish to permanently delete this client? This
-            action cannot be reversed."
+                        dialogContent="Are you sure you wish to permanently delete this client? 
+                                      This action cannot be reversed."
                         deleteFunction={() => {
                           existingClientReference
                             .delete()

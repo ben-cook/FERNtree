@@ -1,6 +1,8 @@
 import { CustomCategory } from "../../types";
+import { structuredClone, zipWith } from "../../util";
+import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
-import CustomItemsSelector from "./CustomItemsSelector";
+import { CustomItemsSelectorInput } from "./CustomItemsSelector";
 import {
   Typography,
   makeStyles,
@@ -11,7 +13,6 @@ import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
 import { useSnackbar } from "notistack";
-import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
 import { useHistory, useParams } from "react-router-dom";
@@ -29,7 +30,8 @@ const useStyles = makeStyles((theme) =>
     },
     submitButton: {
       marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
+      marginRight: theme.spacing(2)
     }
   })
 );
@@ -52,7 +54,7 @@ const Category = () => {
   const newCategoryInitialValues: FormValues = {
     name: "",
     notes: "",
-    customFields: [""]
+    customFields: [] // Empty list
   };
 
   // Load category data from the database
@@ -66,22 +68,20 @@ const Category = () => {
 
   console.log("Category ", category, categoryLoading);
 
-  const existingCategoryInitialValues: FormValues = {
-    name: categoryName,
-    notes: (!isNewCategory && !categoryLoading && category.notes) || "",
-    customFields:
-      (!isNewCategory && !categoryLoading && category.customFields) || []
-  };
-
-  const [customFields, setCustomFields] = useState(
-    existingCategoryInitialValues.customFields
-  );
-
-  console.log(existingCategoryInitialValues);
-
+  // Loading
   if (authLoading || categoryLoading) {
     return <Loading />;
   }
+
+  // Set initial field values
+  const existingCategoryInitialValues: FormValues = {
+    name: categoryName,
+    notes: (!isNewCategory && !categoryLoading && category?.notes) || "",
+    customFields:
+      (!isNewCategory && !categoryLoading && category?.customFields) || []
+  };
+
+  console.log(existingCategoryInitialValues);
 
   return (
     <>
@@ -93,8 +93,8 @@ const Category = () => {
       <Formik
         initialValues={
           isNewCategory
-            ? newCategoryInitialValues
-            : existingCategoryInitialValues
+            ? structuredClone(newCategoryInitialValues)
+            : structuredClone(existingCategoryInitialValues)
         }
         validationSchema={Yup.object().shape({
           categoryName: Yup.string(),
@@ -142,16 +142,17 @@ const Category = () => {
           }
         }}
       >
-        {({ isSubmitting, dirty }) => (
+        {({ isSubmitting, dirty, values }) => (
           <Form>
             {isNewCategory && (
               <Field
                 component={TextField}
-                variant={"standard"}
                 name={"name"}
                 type={"text"}
                 placeholder={"Category Name"}
                 fullWidth
+                variant={"outlined"}
+                style={{ marginBottom: "1rem" }}
               />
             )}
             <Field
@@ -165,52 +166,79 @@ const Category = () => {
               maxRows={5}
               rows={3}
               fullWidth
+              style={{ marginBottom: "1rem" }}
             />
             <Typography variant="h5" display="inline">
               Custom Fields
             </Typography>
 
-            {/* I guess this is where custom field adding will go @ivy */}
-            <CustomItemsSelector
-              customFields={customFields}
-              setCustomFields={setCustomFields}
-            />
-            <br />
-            {isNewCategory && (
-              <Typography variant="body1" display={"inline"}>
-                Custom fields will be applied to all clients in your new
-                category.
-              </Typography>
-            )}
-            {!isNewCategory && (
-              <>
-                <Typography variant="body1" display={"inline"}>
-                  Custom fields are applied to all clients in the{" "}
-                </Typography>
-                <Typography variant="body1" display={"inline"} color="primary">
-                  {categoryName}
-                </Typography>
-                <Typography variant="body1" display={"inline"}>
-                  {" "}
-                  category.
-                </Typography>
-              </>
-            )}
-            <br />
+            <CustomItemsSelectorInput name={"customFields"} />
 
             <Button
               type={"submit"}
               variant={"contained"}
               color={"primary"}
-              disabled={isSubmitting || !dirty}
+              disabled={
+                isSubmitting ||
+                (!dirty &&
+                  zipWith(
+                    (x: string, y: string) => x === y,
+                    values.customFields,
+                    existingCategoryInitialValues.customFields
+                  ).every((x: boolean) => x))
+              }
               className={classes.submitButton}
             >
               {isNewCategory && "Save"}
               {!isNewCategory && "Update"}
             </Button>
+
+            {!isNewCategory && (
+              <DeleteButtonWithDialog
+                buttonText="Delete Category"
+                dialogTitle="Delete Category?"
+                dialogContent="Are you sure you wish to permanently delete this category and all its associated data? This
+                action cannot be reversed."
+                deleteFunction={() => {
+                  categoryReference
+                    .delete()
+                    .then(() => {
+                      enqueueSnackbar("Category deleted!", {
+                        variant: "success"
+                      });
+                      history.push("/");
+                    })
+                    .catch((err) => {
+                      console.error(err);
+                      enqueueSnackbar("Something went wrong.", {
+                        variant: "error"
+                      });
+                    });
+                }}
+              />
+            )}
           </Form>
         )}
       </Formik>
+      {isNewCategory && (
+        <Typography variant="body1" display={"inline"}>
+          Custom fields will be applied to all clients in your new category.
+        </Typography>
+      )}
+      {!isNewCategory && (
+        <>
+          <Typography variant="body1" display={"inline"}>
+            Custom fields are applied to all clients in the{" "}
+          </Typography>
+          <Typography variant="body1" display={"inline"} color="primary">
+            {categoryName}
+          </Typography>
+          <Typography variant="body1" display={"inline"}>
+            {" "}
+            category.
+          </Typography>
+        </>
+      )}
     </>
   );
 };

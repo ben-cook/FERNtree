@@ -24,8 +24,8 @@ const useStyles = makeStyles((theme) =>
     form: {
       marginTop: theme.spacing(8)
     },
-    submitButton: {
-      marginTop: theme.spacing(2)
+    signOutButton: {
+      marginRight: theme.spacing(2)
     }
   })
 );
@@ -53,12 +53,15 @@ const UserDetails = (user: firebase.User) => {
         )}
 
         <Button
+          className={classes.signOutButton}
           variant="contained"
           color="primary"
           onClick={() => firebase.auth().signOut()}
           data-cy="logout"
         >
-          Sign Out
+          <Typography style={{ color: "#fff" }} variant="button">
+            Sign Out
+          </Typography>
         </Button>
 
         <DeleteButtonWithDialog

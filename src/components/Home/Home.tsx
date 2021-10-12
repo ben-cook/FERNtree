@@ -11,12 +11,15 @@ import {
   TextField,
   MenuItem,
   ButtonGroup,
-  Button
+  Button,
+  useTheme
 } from "@material-ui/core";
+// Import icons
 import AddIcon from "@material-ui/icons/Add";
+import EditIcon from "@material-ui/icons/Edit";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
-import SettingsIcon from "@material-ui/icons/Settings";
+// Import firebase and react
 import firebase from "firebase";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -49,10 +52,22 @@ const useStyles = makeStyles((theme) =>
       height: 60
     },
     categoryButtonGroup: {
-      backgroundColor: "white"
+      backgroundColor: theme.palette.primary.light
     },
     resetButton: {
-      backgroundColor: "white",
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText
+    },
+    resetButtonContainer: {
+      display: "flex",
+      flexDirection: "row",
+      width: "100%",
+      [theme.breakpoints.down("xs")]: {
+        justifyContent: "center"
+      },
+      [theme.breakpoints.up("sm")]: {
+        justifyContent: "flex-end"
+      }
     }
   })
 );
@@ -60,6 +75,7 @@ const useStyles = makeStyles((theme) =>
 const Home = () => {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme();
 
   const [authUser] = useAuthState(firebase.auth());
 
@@ -91,7 +107,7 @@ const Home = () => {
   // setSelectedTag updates selectedTag when called
   // useState is initialising the state to the string "All"
   const [selectedTag, setSelectedTag] = useState<string>("All");
-  
+
   // declaring a state variable called selectedCategory
   // setSelectedCategory updates selectedCategory when called
   // useState is initialising the state to the string "All"
@@ -100,7 +116,6 @@ const Home = () => {
   // declaring a state variable called searchValue
   // to be used in search bar to filter results
   const [searchValue, setSearchValue] = useState<string>("");
-
 
   // Getting Category Values
   const categoriesReference = firebase
@@ -127,7 +142,16 @@ const Home = () => {
         };
       });
 
-      
+  // List of category names to be passed into client cards for category verification
+  let categoryNames: string[] = [];
+  categoryNames = !categoryData
+    ? [] // return empty array if no category data
+    : categoryData.map((value) => {
+        return value.name;
+      });
+
+  console.log("Category Names:", categoryNames);
+
   // Defining tags for dropdown
   let tags: string[] = [];
   if (firestoreUser) {
@@ -136,8 +160,7 @@ const Home = () => {
     } else {
       tags = ["All"];
     }
-  } 
-
+  }
 
   // Reset all search filters to default values
   const handleResetSearch = () => {
@@ -162,11 +185,11 @@ const Home = () => {
                 margin="normal"
                 size="medium"
                 value={searchValue}
-                onChange={(event) =>
-                  setSearchValue(event.target.value)
-                }
+                onChange={(event) => setSearchValue(event.target.value)}
                 InputProps={{
-                  style: { backgroundColor: "white" },
+                  style: {
+                    backgroundColor: theme.palette.background.default
+                  },
                   endAdornment: (
                     <InputAdornment component="div" position="end">
                       <IconButton>
@@ -189,7 +212,7 @@ const Home = () => {
                   margin="normal"
                   size="medium"
                   InputProps={{
-                    style: { backgroundColor: "white" }
+                    style: { backgroundColor: theme.palette.background.default }
                   }}
                   select
                   value={selectedTag}
@@ -204,9 +227,9 @@ const Home = () => {
                 </TextField>
               )}
             </Grid>
-            
+
             {/*Category Filtering Buttons*/}
-            <Grid item xs={10}>
+            <Grid item xs={12} sm={10}>
               <ButtonGroup className={classes.categoryButtonGroup}>
                 {/*Add Category Button*/}
                 <Button onClick={() => history.push("/category/new")}>
@@ -218,10 +241,12 @@ const Home = () => {
                 <Button
                   // Selected button is coloured
                   color={selectedCategory === "All" ? "primary" : "default"}
-                  variant={selectedCategory === "All" ? "contained" : "outlined"}
+                  variant={
+                    selectedCategory === "All" ? "contained" : "outlined"
+                  }
                   // Show clients in all categories
                   onClick={() => setSelectedCategory("All")}
-                > 
+                >
                   All
                 </Button>
                 {/*Category Buttons*/}
@@ -229,38 +254,40 @@ const Home = () => {
                   <Button
                     key={label.value}
                     // Selected button is coloured
-                    color={label.value === selectedCategory ? "primary" : "default"}
-                    variant={label.value === selectedCategory ? "contained" : "outlined"}
-
-                    //onClick={() => history.push(`/category/${label.value}`)}
-                    // Filter the home page by category 
+                    color={
+                      label.value === selectedCategory ? "primary" : "default"
+                    }
+                    variant={
+                      label.value === selectedCategory
+                        ? "contained"
+                        : "outlined"
+                    }
+                    // Filter the home page by category
                     onClick={() => setSelectedCategory(label.value)}
                   >
                     {label.value}
+
+                    {/*Edit category icon appears when category is selected*/}
+                    {selectedCategory == label.value && (
+                      <Button
+                        size="small"
+                        // Redirect to Category Settings page of selected category
+                        onClick={() => history.push(`/category/${label.value}`)}
+                      >
+                        <EditIcon fontSize="small" />
+                      </Button>
+                    )}
                   </Button>
                 ))}
               </ButtonGroup>
             </Grid>
 
-            <Grid item xs={2}>
-
-              <div style={{ flexDirection: "row", justifyContent: "flex-end"}}>
-                <ButtonGroup
-                    className={classes.resetButton}
-                  >
-                    {/*RESET SEARCH BUTTON*/}
-                    <Button
-                      onClick={() => handleResetSearch()}
-                    >
-                      Reset Search
-                    </Button>
-                </ButtonGroup>
-                {/*CATEGORY SETTINGS BUTTON*/}
-                <IconButton>
-                  <SettingsIcon style={{ color: "black", fontSize: 28 }} />
-                </IconButton>
+            <Grid item xs={12} sm={2}>
+              <div className={classes.resetButtonContainer}>
+                <Button variant="outlined" onClick={() => handleResetSearch()}>
+                  Reset Search
+                </Button>
               </div>
-
             </Grid>
           </Grid>
         </CardContent>
@@ -271,7 +298,7 @@ const Home = () => {
         {/*Add new client card*/}
         <Grid item key={0} xs={12} sm={6} md={4}>
           <Link to="/client/new">
-            <Card style={{ height: "100%" }}>
+            <Card style={{ height: "100%", minHeight: 400 }}>
               <Grid
                 container
                 direction="column"
@@ -313,21 +340,32 @@ const Home = () => {
                   // If the selected tag AND category is "All", display this client
                   return true;
                 }
-                
+
                 if (!client.tags && !client.category) {
                   // If the client has no tags or no category, don't display
                   return false;
                 }
-                
+
                 // If client has tag or selected category, display client
                 // Fancy logic here:
-                  // If client has the selected category and tags is set to All, return that client
-                  // If client has the selected tag and category is set to All, return that client
-                  // If client has selected tag AND selected category, return that client
-                return (selectedCategory === "All" ? true : client.category == selectedCategory) && (selectedTag === "All" ? true : client.tags?.includes(selectedTag)); 
+                // If client has the selected category and tags is set to All, return that client
+                // If client has the selected tag and category is set to All, return that client
+                // If client has selected tag AND selected category, return that client
+                return (
+                  (selectedCategory === "All"
+                    ? true
+                    : client.category == selectedCategory) &&
+                  (selectedTag === "All"
+                    ? true
+                    : client.tags?.includes(selectedTag))
+                );
               }
             })
-            .sort((a, b) => a.firstName.localeCompare(b.firstName))
+            .sort((a, b) => {
+              return a.firstname && b.firstName
+                ? a.firstName.localeCompare(b.firstName)
+                : 1;
+            })
             .reverse()
             .map((client, idx) => {
               const {
@@ -362,6 +400,7 @@ const Home = () => {
                       jobStatus,
                       notes
                     }}
+                    categoryNames={categoryNames}
                     tags={tags}
                     customFields={rest}
                   />
