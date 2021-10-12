@@ -1,19 +1,23 @@
 import { createTheme } from "@material-ui/core/styles";
 
-const theme = createTheme({
-  palette: {
-    primary: {
-      // Random colors I chose
-      // main: "#4caf50",
-      // light: "#81c784",
-      // dark: "#388e3c"
+export type ThemeValue = "light" | "dark";
 
-      // Alternate option for theme from https://material.io/resources/color/#!/?view.left=0&view.right=0&primary.color=388E3C
-      main: "#388e3c",
-      light: "#6abf69",
-      dark: "#00600f"
-    }
+export const ferntreeColor = {
+  light: "#6abf69",
+  main: "#388e3c",
+  dark: "#00600f"
+};
+
+export const lightTheme = createTheme({
+  palette: {
+    type: "light",
+    primary: { ...ferntreeColor, contrastText: "#ffffff" }
   }
 });
 
-export default theme;
+export const darkTheme = createTheme({
+  palette: {
+    type: "dark",
+    primary: { ...ferntreeColor, contrastText: "#000000" }
+  }
+});

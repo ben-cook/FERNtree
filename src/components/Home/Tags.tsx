@@ -6,15 +6,16 @@ import {
   InputAdornment,
   makeStyles,
   TextField,
-  Theme
+  Theme,
+  useTheme
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import RemoveIcon from "@material-ui/icons/Remove";
+import { Autocomplete } from "@material-ui/lab";
 import firebase from "firebase/app";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
-import { Autocomplete } from "@material-ui/lab";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -34,6 +35,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
   const classes = useStyles();
+  const theme = useTheme();
 
   const [authUser, authLoading] = useAuthState(firebase.auth());
 
@@ -62,13 +64,15 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
     }
 
     // Add tag to user collection
-    if (!firestoreUser.userTags) {
-      userReference.set({ userTags: [tagToAdd] }, { merge: true });
-    } else if (!firestoreUser.userTags.includes(tagToAdd)) {
-      userReference.set(
-        { userTags: [...firestoreUser.userTags, tagToAdd] },
-        { merge: true }
-      );
+    if (firestoreUser) {
+      if (!firestoreUser.userTags) {
+        userReference.set({ userTags: [tagToAdd] }, { merge: true });
+      } else if (!firestoreUser.userTags.includes(tagToAdd)) {
+        userReference.set(
+          { userTags: [...firestoreUser.userTags, tagToAdd] },
+          { merge: true }
+        );
+      }
     }
   };
 
@@ -93,19 +97,19 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
   // };
 
   const handleAutoFillFieldChange = (
-    event: React.ChangeEvent<HTMLInputElement> , value: string) => {
+    event: React.ChangeEvent<HTMLInputElement>,
+    value: string
+  ) => {
     setTextFieldValue(value); // set to that value
   };
 
   // Add the tag if enter is pressed on the keyboard
   const handleEnterTag = (event) => {
-
-    if ((event.which || event.charCode || event.keyCode) == 13){
+    if ((event.which || event.charCode || event.keyCode) == 13) {
       addTag(textFieldValue); // Add tag
       setTextFieldValue(""); // Reset field value
     }
   };
-
 
   if (authLoading || firestoreLoading) {
     return <></>;
@@ -133,7 +137,8 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
           className={classes.chip}
         />
 
-        {showAddTag && ( //if adding tags is shown
+        {showAddTag && (
+          //if adding tags is shown
 
           // Autofill already existing tags
           <Autocomplete
@@ -142,8 +147,11 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
             clearOnBlur
             clearOnEscape
             // show all existing tags as autofill
-            options={firestoreUser.userTags ?
-                      firestoreUser.userTags.map((tag) => tag) : []} // if user has no tags, return empty array
+            options={
+              firestoreUser && firestoreUser.userTags
+                ? firestoreUser.userTags.map((tag) => tag)
+                : []
+            } // if user has no tags, return empty array
             onInputChange={handleAutoFillFieldChange} // When changed, update textfieldvalue
             onKeyPress={handleEnterTag} // Add tag when Enter key is pressed
             inputValue={textFieldValue}
@@ -158,28 +166,27 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
                 // onKeyPress={handleEnterTag}
                 InputProps={{
                   ...params.InputProps,
-                  style: { backgroundColor: "white" },
+                  style: { backgroundColor: theme.palette.background.default },
                   endAdornment: (
                     <>
-                    {/*Add tag button*/}
-                    <InputAdornment component="div" position="end">
-                      <IconButton
-                        onClick={() => {
-                          //When clicked, add the tag and reset textFieldValue
-                          addTag(textFieldValue);
-                          setTextFieldValue("");
-                        }}
-                      >
-                        <AddIcon />
-                      </IconButton>
-                  </InputAdornment>
-                  </>
+                      {/*Add tag button*/}
+                      <InputAdornment component="div" position="end">
+                        <IconButton
+                          onClick={() => {
+                            //When clicked, add the tag and reset textFieldValue
+                            addTag(textFieldValue);
+                            setTextFieldValue("");
+                          }}
+                        >
+                          <AddIcon />
+                        </IconButton>
+                      </InputAdornment>
+                    </>
                   )
                 }}
               />
             )}
           />
-          
         )}
       </div>
     </>

@@ -1,8 +1,8 @@
 import { CustomCategory } from "../../types";
 import { structuredClone, zipWith } from "../../util";
+import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
 import { CustomItemsSelectorInput } from "./CustomItemsSelector";
-import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import {
   Typography,
   makeStyles,
@@ -68,12 +68,10 @@ const Category = () => {
 
   console.log("Category ", category, categoryLoading);
 
-
   // Loading
   if (authLoading || categoryLoading) {
     return <Loading />;
   }
-
 
   // Set initial field values
   const existingCategoryInitialValues: FormValues = {
@@ -149,11 +147,12 @@ const Category = () => {
             {isNewCategory && (
               <Field
                 component={TextField}
-                variant={"standard"}
                 name={"name"}
                 type={"text"}
                 placeholder={"Category Name"}
                 fullWidth
+                variant={"outlined"}
+                style={{ marginBottom: "1rem" }}
               />
             )}
             <Field
@@ -167,6 +166,7 @@ const Category = () => {
               maxRows={5}
               rows={3}
               fullWidth
+              style={{ marginBottom: "1rem" }}
             />
             <Typography variant="h5" display="inline">
               Custom Fields
@@ -215,8 +215,8 @@ const Category = () => {
               {!isNewCategory && "Update"}
             </Button>
 
-            {!isNewCategory &&
-                <DeleteButtonWithDialog
+            {!isNewCategory && (
+              <DeleteButtonWithDialog
                 buttonText="Delete Category"
                 dialogTitle="Delete Category?"
                 dialogContent="Are you sure you wish to permanently delete this category and all its associated data? This
@@ -238,8 +238,7 @@ const Category = () => {
                     });
                 }}
               />
-            }
-            
+            )}
           </Form>
         )}
       </Formik>

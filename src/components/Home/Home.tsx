@@ -11,14 +11,14 @@ import {
   TextField,
   MenuItem,
   ButtonGroup,
-  Button
+  Button,
+  useTheme
 } from "@material-ui/core";
 // Import icons
 import AddIcon from "@material-ui/icons/Add";
 import EditIcon from "@material-ui/icons/Edit";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
-import SettingsIcon from "@material-ui/icons/Settings";
 // Import firebase and react
 import firebase from "firebase";
 import { useState } from "react";
@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     searchCard: {
       marginTop: "1rem",
-      backgroundColor: theme.palette.primary.light
+      backgroundColor: theme.palette.primary.main
     },
     clientSearchField: {},
     grid: {
@@ -52,10 +52,11 @@ const useStyles = makeStyles((theme) =>
       height: 60
     },
     categoryButtonGroup: {
-      backgroundColor: "white"
+      backgroundColor: theme.palette.primary.main
     },
     resetButton: {
-      backgroundColor: "white"
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.primary.contrastText
     }
   })
 );
@@ -63,6 +64,7 @@ const useStyles = makeStyles((theme) =>
 const Home = () => {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme();
 
   const [authUser] = useAuthState(firebase.auth());
 
@@ -174,7 +176,9 @@ const Home = () => {
                 value={searchValue}
                 onChange={(event) => setSearchValue(event.target.value)}
                 InputProps={{
-                  style: { backgroundColor: "white" },
+                  style: {
+                    backgroundColor: theme.palette.background.default
+                  },
                   endAdornment: (
                     <InputAdornment component="div" position="end">
                       <IconButton>
@@ -197,7 +201,7 @@ const Home = () => {
                   margin="normal"
                   size="medium"
                   InputProps={{
-                    style: { backgroundColor: "white" }
+                    style: { backgroundColor: theme.palette.background.default }
                   }}
                   select
                   value={selectedTag}
@@ -275,10 +279,6 @@ const Home = () => {
                     Reset Search
                   </Button>
                 </ButtonGroup>
-                {/*CATEGORY SETTINGS BUTTON*/}
-                <IconButton>
-                  <SettingsIcon style={{ color: "black", fontSize: 28 }} />
-                </IconButton>
               </div>
             </Grid>
           </Grid>

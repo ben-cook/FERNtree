@@ -5,10 +5,10 @@ import {
 } from "../../types";
 import { CustomCategory } from "../../types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
+import Tags from "../Home/Tags";
 import Loading from "../Loading";
 import { CategorySelectorInput } from "./CategorySelector";
 import ClientAvatar from "./ClientAvatar";
-import Tags from "../Home/Tags"
 import {
   Typography,
   makeStyles,
@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     newClientTitle: {
       marginTop: theme.spacing(5),
-      marginBottom: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     existingClientTitle: {
       marginTop: theme.spacing(5),
@@ -79,15 +79,16 @@ const Client = () => {
     .collection("clients")
     .doc(clientId);
 
-  const [clientData, clientLoading] = 
-    useDocumentData<ClientType>(existingClientReference);
+  const [clientData, clientLoading] = useDocumentData<ClientType>(
+    existingClientReference
+  );
 
   // getting the client's tags
   let tags: string[] = [];
 
   if (clientData && clientData.tags) {
     tags = clientData.tags;
-  } 
+  }
 
   // Loading
   if (authLoading || categoriesLoading || clientLoading) {
@@ -192,7 +193,6 @@ const Client = () => {
       {/* HEADER: NAME + AVATAR */}
       {isNewClient && (
         <Grid container direction={"row"} spacing={2} justifyContent="center">
-        
           <Grid item>
             <Typography variant="h4" className={classes.newClientTitle}>
               New Client Profile
@@ -200,27 +200,23 @@ const Client = () => {
           </Grid>
         </Grid>
       )}
-        
+
       {!isNewClient && (
         <Grid container direction={"row"} spacing={2} justifyContent="center">
           <Grid item xs={6} sm={4} md={3}>
-              <Typography variant="h4" className={classes.existingClientTitle}>
-                {`${clientData?.firstName} ${clientData?.lastName}`}
-              </Typography>
+            <Typography variant="h4" className={classes.existingClientTitle}>
+              {`${clientData?.firstName} ${clientData?.lastName}`}
+            </Typography>
           </Grid>
-        
+
           <Grid item xs={6} sm={4} md={3}>
-              <ClientAvatar client={clientData} size={256} />
+            <ClientAvatar client={clientData} size={256} />
           </Grid>
         </Grid>
-
       )}
 
-      
-      
       {/* FORM */}
       <Grid item xs={12} sm={8} md={6}>
-
         <Formik
           initialValues={
             isNewClient ? newClientInitialValues : existingClientInitialValues
@@ -313,7 +309,7 @@ const Client = () => {
                     placeholder={"Last Name"}
                     fullWidth
                   />
-                </Grid>         
+                </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
                     component={TextField}
@@ -426,7 +422,7 @@ const Client = () => {
                     placeholder={"Notes"}
                     fullWidth
                   />
-                </Grid>         
+                </Grid>
 
                 <Grid
                   container
@@ -484,17 +480,12 @@ const Client = () => {
         <Grid
           container
           //direction={'column'}
-          spacing = {10}
+          spacing={10}
           justifyContent="space-around"
           alignItems="center"
         >
-          <Grid item>
-            {clientData && 
-              (<Tags id={clientId} tags={tags} />
-              )}
-          </Grid>
+          <Grid item>{clientData && <Tags id={clientId} tags={tags} />}</Grid>
         </Grid>
-
       </Grid>
     </Grid>
   );
