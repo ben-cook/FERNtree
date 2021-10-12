@@ -20,7 +20,8 @@ const MAX_CLIENT_NAME_LENGTH = 20;
 const useStyles = makeStyles((theme) =>
   createStyles({
     root: {
-      height: "100%"
+      height: "100%",
+      minHeight: 400
     },
 
     content: {

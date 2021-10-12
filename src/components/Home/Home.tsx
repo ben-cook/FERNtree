@@ -57,6 +57,17 @@ const useStyles = makeStyles((theme) =>
     resetButton: {
       backgroundColor: theme.palette.primary.main,
       color: theme.palette.primary.contrastText
+    },
+    resetButtonContainer: {
+      display: "flex",
+      flexDirection: "row",
+      width: "100%",
+      [theme.breakpoints.down("xs")]: {
+        justifyContent: "center"
+      },
+      [theme.breakpoints.up("sm")]: {
+        justifyContent: "flex-end"
+      }
     }
   })
 );
@@ -218,7 +229,7 @@ const Home = () => {
             </Grid>
 
             {/*Category Filtering Buttons*/}
-            <Grid item xs={10}>
+            <Grid item xs={12} sm={10}>
               <ButtonGroup className={classes.categoryButtonGroup}>
                 {/*Add Category Button*/}
                 <Button onClick={() => history.push("/category/new")}>
@@ -271,14 +282,11 @@ const Home = () => {
               </ButtonGroup>
             </Grid>
 
-            <Grid item xs={2}>
-              <div style={{ flexDirection: "row", justifyContent: "flex-end" }}>
-                <ButtonGroup className={classes.resetButton}>
-                  {/*RESET SEARCH BUTTON*/}
-                  <Button onClick={() => handleResetSearch()}>
-                    Reset Search
-                  </Button>
-                </ButtonGroup>
+            <Grid item xs={12} sm={2}>
+              <div className={classes.resetButtonContainer}>
+                <Button variant="outlined" onClick={() => handleResetSearch()}>
+                  Reset Search
+                </Button>
               </div>
             </Grid>
           </Grid>
@@ -290,7 +298,7 @@ const Home = () => {
         {/*Add new client card*/}
         <Grid item key={0} xs={12} sm={6} md={4}>
           <Link to="/client/new">
-            <Card style={{ height: "100%" }}>
+            <Card style={{ height: "100%", minHeight: 400 }}>
               <Grid
                 container
                 direction="column"
