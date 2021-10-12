@@ -120,17 +120,6 @@ const Login = () => {
                   Log In
                 </Button>
               </Grid>
-              <Grid item xs={7}>
-                {/* <Button
-                  variant={"text"}
-                  color={"default"}
-                  className={classes.input}
-                  size={"small"}
-                  disabled={true}
-                >
-                  Forgot password?
-                </Button> */}
-              </Grid>
             </Grid>
           </Form>
         )}

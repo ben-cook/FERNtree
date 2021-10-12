@@ -86,7 +86,6 @@ const Category = () => {
 
   return (
     <>
-    
       {/*<pre>{JSON.stringify(firestoreUser, null, 2)}</pre>*/}
       <Grid container>
         <Typography variant="h4" className={classes.title}>
@@ -160,32 +159,32 @@ const Category = () => {
                 style={{ marginBottom: "1rem" }}
               />
             )}
-            <Grid
-            container 
-            spacing={2}
-            direction="column"
-            >
-
-              <Grid item xs={6} sm={4} md={3} >
+            <Grid container spacing={2} direction="column">
+              <Grid item xs={6} sm={4} md={3}>
                 <Typography variant="h5" display="inline">
                   Custom Fields
                 </Typography>
               </Grid>
 
               {isNewCategory && (
-                <Grid item xs={12} >
+                <Grid item xs={12}>
                   <Typography variant="body1" display={"inline"}>
-                    Custom fields will be applied to all clients in your new category.
+                    Custom fields will be applied to all clients in your new
+                    category.
                   </Typography>
                 </Grid>
               )}
 
               {!isNewCategory && (
-                <Grid item xs={12} >
+                <Grid item xs={12}>
                   <Typography variant="body1" display={"inline"}>
                     Custom fields are applied to all clients in the{" "}
                   </Typography>
-                  <Typography variant="body1" display={"inline"} color="primary">
+                  <Typography
+                    variant="body1"
+                    display={"inline"}
+                    color="primary"
+                  >
                     {categoryName}
                   </Typography>
                   <Typography variant="body1" display={"inline"}>
@@ -260,12 +259,11 @@ const Category = () => {
                     }}
                   />
                 )}
-
               </Grid>
             </Grid>
           </Form>
         )}
-      </Formik> 
+      </Formik>
     </>
   );
 };

@@ -26,10 +26,11 @@ export function CategorySelector(props: {
             {category}
           </MenuItem>
         ))}
-      
-      {/*If user does not want to select a category*/}
-      <MenuItem value="" key="none"> No Category </MenuItem>
 
+      {/*If user does not want to select a category*/}
+      <MenuItem value="" key="none">
+        No Category
+      </MenuItem>
     </TextField>
   );
 }
