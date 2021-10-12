@@ -29,6 +29,15 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     chip: {
       margin: theme.spacing(0.5)
+    },
+    chipLabel: {
+      display: "flex",
+      alignContent: "center",
+      justifyContent: "center"
+    },
+    tagGroup: {
+      display: "flex",
+      justifyContent: "center"
     }
   })
 );
@@ -119,23 +128,29 @@ const Tags = ({ id: clientID, tags }: { id: string; tags: string[] }) => {
     <>
       {/* <Typography variant="caption">Tags:</Typography> */}
       <div className={classes.root}>
-        {tags &&
-          tags.map((tag, idx) => (
-            <Chip
-              key={idx}
-              label={tag}
-              onDelete={deleteTag(tag)}
-              className={classes.chip}
-            />
-          ))}
-        <Chip
-          label={showAddTag ? <RemoveIcon /> : <AddIcon />} // Changing the icon for adding tags
-          color="primary"
-          onClick={() =>
-            showAddTag ? setShowAddTag(false) : setShowAddTag(true)
-          }
-          className={classes.chip}
-        />
+        <div className={classes.tagGroup}>
+          {tags &&
+            tags.map((tag, idx) => (
+              <Chip
+                key={idx}
+                label={tag}
+                onDelete={deleteTag(tag)}
+                className={classes.chip}
+              />
+            ))}
+          <Chip
+            label={showAddTag ? <RemoveIcon /> : <AddIcon />} // Changing the icon for adding tags
+            color="primary"
+            onClick={() =>
+              showAddTag ? setShowAddTag(false) : setShowAddTag(true)
+            }
+            className={classes.chip}
+            classes={{
+              label: classes.chipLabel
+            }}
+            style={{ color: "#fff" }}
+          />
+        </div>
 
         {showAddTag && (
           //if adding tags is shown

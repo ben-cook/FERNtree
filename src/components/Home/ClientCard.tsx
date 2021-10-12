@@ -5,12 +5,12 @@ import {
   Card,
   CardContent,
   CardActions,
-  Chip,
   createStyles,
   IconButton,
   makeStyles,
   Typography,
-  Grid
+  Grid,
+  Button
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
 import { useHistory } from "react-router-dom";
@@ -96,25 +96,30 @@ const ClientCard = ({ id, concreteValues, categoryNames, tags }: Props) => {
       >
         <Grid item>
           <CardContent className={classes.label}>
-            {/*Category Label*/}
-
-            {categoryNames.includes(category) ? (
-              // Only categories which exist are displayed
-              <Chip
-                label={category}
-                color="primary"
-                clickable
-                onClick={() => history.push(`/category/${category}`)} // Go to edit category page when clicked.
-              />
-            ) : (
-              <Chip color="primary" />
-            )}
-
-            {concreteValues && concreteValues.firstName && (
-              <div className={classes.avatar}>
-                <ClientAvatar client={concreteValues} size={55} />
-              </div>
-            )}
+            <Grid container alignItems="center" justifyContent="space-between">
+              <Grid item>
+                {categoryNames.includes(category) && (
+                  // Only categories which exist are displayed
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    style={{ height: 35 }}
+                    disableRipple
+                    disableElevation
+                    disableFocusRipple
+                  >
+                    {category}
+                  </Button>
+                )}
+              </Grid>
+              <Grid item>
+                {concreteValues && concreteValues.firstName && (
+                  <div className={classes.avatar}>
+                    <ClientAvatar client={concreteValues} size={55} />
+                  </div>
+                )}
+              </Grid>
+            </Grid>
           </CardContent>
 
           <CardContent className={classes.content}>

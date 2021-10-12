@@ -1,4 +1,4 @@
-import logo from "./logo.svg";
+import logo from "./logoWhite.svg";
 import {
   IconButton,
   Button,
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     noTextDecoration: {
       textDecoration: "none",
-      color: theme.palette.primary.contrastText
+      color: "#fff"
     },
     noTextDecorationDrawerItem: {
       textDecoration: "none",
@@ -148,7 +148,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                           display="inline"
                           style={{ marginRight: "0.4rem" }}
                         >
-                          Light mode
+                          Light Mode
                         </Typography>
                         <Brightness4Icon style={{ flexGrow: 1 }} />
                       </div>
@@ -167,7 +167,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                             display="inline"
                             style={{ marginRight: "0.4rem" }}
                           >
-                            Dark mode
+                            Dark Mode
                           </Typography>
                           <Brightness7Icon style={{ flexGrow: 1 }} />
                         </div>
@@ -205,7 +205,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                       variant="body1"
                       style={{ marginRight: "0.4rem" }}
                     >
-                      light mode
+                      Light Mode
                     </Typography>
                     <Brightness4Icon />
                   </>
@@ -215,7 +215,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                       variant="body1"
                       style={{ marginRight: "0.4rem" }}
                     >
-                      dark mode
+                      Dark Mode
                     </Typography>
                     <Brightness7Icon />
                   </>

@@ -173,28 +173,6 @@ const Category = () => {
             </Typography>
 
             <CustomItemsSelectorInput name={"customFields"} />
-            <br />
-            {isNewCategory && (
-              <Typography variant="body1" display={"inline"}>
-                Custom fields will be applied to all clients in your new
-                category.
-              </Typography>
-            )}
-            {!isNewCategory && (
-              <>
-                <Typography variant="body1" display={"inline"}>
-                  Custom fields are applied to all clients in the{" "}
-                </Typography>
-                <Typography variant="body1" display={"inline"} color="primary">
-                  {categoryName}
-                </Typography>
-                <Typography variant="body1" display={"inline"}>
-                  {" "}
-                  category.
-                </Typography>
-              </>
-            )}
-            <br />
 
             <Button
               type={"submit"}
@@ -242,6 +220,25 @@ const Category = () => {
           </Form>
         )}
       </Formik>
+      {isNewCategory && (
+        <Typography variant="body1" display={"inline"}>
+          Custom fields will be applied to all clients in your new category.
+        </Typography>
+      )}
+      {!isNewCategory && (
+        <>
+          <Typography variant="body1" display={"inline"}>
+            Custom fields are applied to all clients in the{" "}
+          </Typography>
+          <Typography variant="body1" display={"inline"} color="primary">
+            {categoryName}
+          </Typography>
+          <Typography variant="body1" display={"inline"}>
+            {" "}
+            category.
+          </Typography>
+        </>
+      )}
     </>
   );
 };

@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     searchCard: {
       marginTop: "1rem",
-      backgroundColor: theme.palette.primary.main
+      backgroundColor: theme.palette.primary.light
     },
     clientSearchField: {},
     grid: {
@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) =>
       height: 60
     },
     categoryButtonGroup: {
-      backgroundColor: theme.palette.primary.main
+      backgroundColor: theme.palette.primary.light
     },
     resetButton: {
       backgroundColor: theme.palette.primary.main,
