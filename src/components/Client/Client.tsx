@@ -14,7 +14,9 @@ import {
   makeStyles,
   createStyles,
   Button,
-  Grid
+  Grid,
+  useTheme,
+  useMediaQuery
 } from "@material-ui/core";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
@@ -48,6 +50,9 @@ const useStyles = makeStyles((theme) =>
 const Client = () => {
   const classes = useStyles();
   const history = useHistory();
+  const theme = useTheme();
+  const mobileView = useMediaQuery(theme.breakpoints.down("xs"));
+
   const { clientId } = useParams<{ clientId: string }>();
   const { enqueueSnackbar } = useSnackbar();
   const isNewClient = clientId == "new";
@@ -194,7 +199,32 @@ const Client = () => {
         </Grid>
       )}
 
-      {!isNewClient && (
+      {!isNewClient && mobileView && (
+        <Grid
+          container
+          direction={"column"}
+          spacing={2}
+          justifyContent="center"
+          alignItems="center"
+          style={{ marginTop: "1rem" }}
+        >
+          <Grid item>
+            <ClientAvatar client={clientData} size={120} />
+          </Grid>
+
+          <Grid item>
+            <Typography
+              variant="h4"
+              align="center"
+              style={{ marginBottom: "1.5rem" }}
+            >
+              {`${clientData?.firstName} ${clientData?.lastName}`}
+            </Typography>
+          </Grid>
+        </Grid>
+      )}
+
+      {!isNewClient && !mobileView && (
         <Grid
           container
           direction={"row"}
@@ -209,19 +239,8 @@ const Client = () => {
             </Typography>
           </Grid>
 
-          <Grid
-            container
-            item
-            xs={6}
-            sm={4}
-            md={3}
-            justifyContent="center"
-            alignItems="center"
-            alignContent="center"
-          >
-            <Grid item>
-              <ClientAvatar client={clientData} size={200} />
-            </Grid>
+          <Grid item xs={6} sm={4} md={3}>
+            <ClientAvatar client={clientData} size={200} />
           </Grid>
         </Grid>
       )}
