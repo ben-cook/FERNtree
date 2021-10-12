@@ -172,7 +172,7 @@ const Home = () => {
     setSearchValue("");
   };
 
-  if (clientsData){
+  if (clientsData) {
     console.log(clientsData);
   }
 

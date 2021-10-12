@@ -26,29 +26,27 @@ export function CategorySelector(props: {
             {category}
           </MenuItem>
         ))}
-      
-      {/*If user does not want to select a category*/}
-      <MenuItem value="" key="none"> No Category </MenuItem>
-
     </TextField>
   );
 }
 
-// Formik-aware wrapper
-export function CategorySelectorInput(props: {
+interface CategorySelectorInputProps {
   name: string;
   categories: string[];
-}) {
+}
+
+export function CategorySelectorInput({
+  name,
+  categories
+}: CategorySelectorInputProps) {
   return (
-    <Field name={props.name} id={props.name}>
+    <Field name={name} id={name}>
       {({ field: { value }, form: { setFieldValue } }) => (
-        <div>
-          <CategorySelector
-            selectedCategory={value}
-            handleChange={(category) => setFieldValue(props.name, category)}
-            categories={props.categories}
-          />
-        </div>
+        <CategorySelector
+          selectedCategory={value}
+          handleChange={(category) => setFieldValue(name, category)}
+          categories={categories}
+        />
       )}
     </Field>
   );
