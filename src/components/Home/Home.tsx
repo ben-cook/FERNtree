@@ -290,7 +290,7 @@ const Home = () => {
         {/*Add new client card*/}
         <Grid item key={0} xs={12} sm={6} md={4}>
           <Link to="/client/new">
-            <Card style={{ height: "100%" }}>
+            <Card style={{ height: "100%", minHeight: 400 }}>
               <Grid
                 container
                 direction="column"
