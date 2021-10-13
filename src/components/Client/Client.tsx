@@ -94,12 +94,20 @@ const Client = () => {
   }
 
   // Get all category names
-  const categories = categoriesData.map((category) => category.id);
+  const categories = [
+    ...categoriesData.map((category) => category.id),
+    "No Category"
+  ];
 
   // Get relevant category fields when user selects a new category
 
   // Function which returns category fields of a given category Id
   function getCategoryFields(categoryId: string): string[] {
+    if (categoryId === "No Category") {
+      console.log("id of no category");
+
+      return [];
+    }
     let categoryFields = [];
 
     categoriesData.forEach((category) => {
@@ -163,7 +171,7 @@ const Client = () => {
     lastName: "",
     business: "",
     address: "",
-    category: "", // no category selected yet
+    category: "No Category", // set default value to no category
     email: "",
     phone: "",
     payRate: "",
@@ -266,13 +274,10 @@ const Client = () => {
           validationSchema={Yup.object().shape({
             firstName: Yup.string().required(),
             lastName: Yup.string().required(),
-            business: Yup.string(),
             address: Yup.string(),
-            category: Yup.string(), //adding category in
+            category: Yup.string().required(),
             email: Yup.string().email(),
             phone: Yup.string(),
-            payRate: Yup.string(),
-            jobStatus: Yup.string(),
             notes: Yup.string()
           })}
           onSubmit={(

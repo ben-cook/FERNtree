@@ -118,7 +118,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                 </Link>
                 <Link to={"/"} className={classes.noTextDecorationDrawerItem}>
                   <MenuItem>
-                    <Typography variant="h6">My Clients</Typography>
+                    <Typography variant="h6">My Contacts</Typography>
                   </MenuItem>
                 </Link>
                 <Link
@@ -222,7 +222,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                 )}
               </IconButton>
 
-              {/* My Clients Button visible when logged in and not on home page. */}
+              {/* My Contacts Button visible when logged in and not on home page. */}
               <Link to="/" className={classes.noTextDecoration}>
                 <Button
                   variant="outlined"
@@ -230,7 +230,7 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                   className={classes.myClientsButton}
                   disabled={!user || location.pathname == "/"}
                 >
-                  My Clients
+                  My Contacts
                 </Button>
               </Link>
 

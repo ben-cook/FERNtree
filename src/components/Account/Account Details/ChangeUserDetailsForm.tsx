@@ -174,7 +174,9 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
             disabled={!dirty || isSubmitting}
             className={classes.submitButton}
           >
-            Update Details
+            <Typography style={{ color: "#fff" }} variant="button">
+              Update Details
+            </Typography>
           </Button>
         </Form>
       )}

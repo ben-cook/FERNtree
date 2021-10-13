@@ -152,7 +152,7 @@ const Home = () => {
         return value.name;
       });
 
-  console.log("Category Names:", categoryNames);
+  //console.log("Category Names:", categoryNames);
 
   // Defining tags for dropdown
   let tags: string[] = [];
@@ -171,6 +171,10 @@ const Home = () => {
     setSelectedTag("All");
     setSearchValue("");
   };
+
+  if (clientsData) {
+    console.log(clientsData);
+  }
 
   return (
     <>
@@ -408,6 +412,11 @@ const Home = () => {
                       jobStatus,
                       notes
                     }}
+                    // firstName={firstName}
+                    // lastName={lastName}
+                    // email={email}
+                    // phone={phone}
+                    // category={category}
                     categoryNames={categoryNames}
                     tags={tags}
                     customFields={rest}
