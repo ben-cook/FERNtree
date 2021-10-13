@@ -67,7 +67,7 @@ const Category = () => {
     ? [null, null]
     : useDocumentData<CustomCategory>(categoryReference);
 
-  console.log("Category ", category, categoryLoading);
+  // console.log("Category ", category, categoryLoading);
 
   // Loading
   if (authLoading || categoryLoading) {
@@ -82,7 +82,7 @@ const Category = () => {
       (!isNewCategory && !categoryLoading && category?.customFields) || []
   };
 
-  console.log(existingCategoryInitialValues);
+  // console.log(existingCategoryInitialValues);
 
   return (
     <>

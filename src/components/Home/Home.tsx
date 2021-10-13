@@ -133,7 +133,7 @@ const Home = () => {
     }
   );
 
-  console.log(categoryData);
+  // console.log(categoryData);
 
   const labels = !categoryData
     ? []
@@ -173,7 +173,7 @@ const Home = () => {
   };
 
   if (clientsData) {
-    console.log(clientsData);
+    // console.log(clientsData);
   }
 
   return (

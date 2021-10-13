@@ -79,7 +79,7 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
 
         const promises = [];
 
-        console.log(user);
+        // console.log(user);
 
         if (
           firstName !== initialValues.firstName ||
