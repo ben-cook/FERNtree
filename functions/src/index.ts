@@ -104,20 +104,26 @@ exports.deleteTag = functions
       }
 
       // Update the userTags on the user document
-      // const userDocumentReference = db.users.doc(auth.uid);
-      // const userDocument = await userDocumentReference.get();
-      // const user = await userDocument.data();
+      const userDocumentReference = db.users.doc(auth.uid);
+      const userDocument = await userDocumentReference.get();
+      const user = await userDocument.data();
 
-      // Add tag to user collection
-      // if (user) {
-      //   if (!user.userTags) {
-      //     userDocumentReference.update({ userTags: [tag] });
-      //   } else if (!user.userTags.includes(tag)) {
-      //     userDocumentReference.update({
-      //       userTags: [...user.userTags, tag]
-      //     });
-      //   }
-      // }
+      const allClientsDocuments = await db.userClients(auth.uid).get();
+      const allClients = allClientsDocuments.docs.map((doc) => doc.data());
+
+      // Remove tag from user collection if it doesn't exist on any clients
+      if (user && user.userTags) {
+        const existsOnClient = allClients.some(
+          (client) => client.tags && client.tags.includes(tagToDelete)
+        );
+        if (!existsOnClient) {
+          userDocumentReference.update({
+            userTags: user.userTags.filter(
+              (existingTag) => existingTag !== tagToDelete
+            )
+          });
+        }
+      }
 
       return { success: true };
     } catch (error) {
