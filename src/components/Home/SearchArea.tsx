@@ -19,7 +19,10 @@ import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
 import EditIcon from "@material-ui/icons/Edit";
 import SearchIcon from "@material-ui/icons/Search";
 import ViewListRoundedIcon from "@material-ui/icons/ViewListRounded";
+import firebase from "firebase";
 import { Dispatch, SetStateAction } from "react";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { useDocumentData } from "react-firebase-hooks/firestore";
 import { Data } from "react-firebase-hooks/firestore/dist/firestore/types";
 import { useHistory } from "react-router";
 
@@ -65,9 +68,6 @@ interface SearchAreaProps {
   isListView: boolean;
   setIsListView: Dispatch<SetStateAction<boolean>>;
 
-  firestoreUser: Data<User, "", "">;
-  firestoreLoading: boolean;
-
   categoryData: Data<
     CustomCategory & {
       name: string;
@@ -85,8 +85,6 @@ const SearchArea = (props: SearchAreaProps) => {
     setSelectedTag,
     selectedCategory,
     setSelectedCategory,
-    firestoreUser,
-    firestoreLoading,
     isListView,
     setIsListView,
     categoryData
@@ -95,6 +93,16 @@ const SearchArea = (props: SearchAreaProps) => {
   const history = useHistory();
   const theme = useTheme();
   const mobileView = useMediaQuery(theme.breakpoints.down("xs"));
+
+  const [authUser] = useAuthState(firebase.auth());
+
+  const userReference = firebase
+    .firestore()
+    .collection("users")
+    .doc(authUser.uid);
+
+  const [firestoreUser, firestoreLoading] =
+    useDocumentData<User>(userReference);
 
   // Reset all search filters to default values
   const handleResetSearch = () => {

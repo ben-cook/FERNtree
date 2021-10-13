@@ -1,4 +1,4 @@
-import { Client, CustomCategory, User } from "../../../functions/src/types";
+import { Client, CustomCategory } from "../../../functions/src/types";
 import GridView from "./GridView";
 import ListView from "./ListView";
 import SearchArea from "./SearchArea";
@@ -6,10 +6,7 @@ import { createStyles, makeStyles } from "@material-ui/core";
 import firebase from "firebase";
 import { useState } from "react";
 import { useAuthState } from "react-firebase-hooks/auth";
-import {
-  useCollectionData,
-  useDocumentData
-} from "react-firebase-hooks/firestore";
+import { useCollectionData } from "react-firebase-hooks/firestore";
 
 const useStyles = makeStyles((theme) =>
   createStyles({
@@ -41,9 +38,6 @@ const Home = () => {
     .firestore()
     .collection("users")
     .doc(authUser.uid);
-
-  const [firestoreUser, firestoreLoading] =
-    useDocumentData<User>(userReference);
 
   // Getting client values
   const clientsReference = userReference.collection("clients");
@@ -135,8 +129,6 @@ const Home = () => {
         setSelectedTag={setSelectedTag}
         selectedCategory={selectedCategory}
         setSelectedCategory={setSelectedCategory}
-        firestoreUser={firestoreUser}
-        firestoreLoading={firestoreLoading}
         isListView={isListView}
         setIsListView={setIsListView}
         categoryData={categoryData}
