@@ -12,7 +12,8 @@ import {
   MenuItem,
   ButtonGroup,
   Button,
-  useTheme
+  useTheme,
+  useMediaQuery
 } from "@material-ui/core";
 // Import icons
 import AddIcon from "@material-ui/icons/Add";
@@ -76,6 +77,7 @@ const Home = () => {
   const classes = useStyles();
   const history = useHistory();
   const theme = useTheme();
+  const mobileView = useMediaQuery(theme.breakpoints.down("xs"));
 
   const [authUser] = useAuthState(firebase.auth());
 
@@ -150,7 +152,7 @@ const Home = () => {
         return value.name;
       });
 
-  console.log("Category Names:", categoryNames);
+  //console.log("Category Names:", categoryNames);
 
   // Defining tags for dropdown
   let tags: string[] = [];
@@ -169,6 +171,10 @@ const Home = () => {
     setSelectedTag("All");
     setSearchValue("");
   };
+
+  if (clientsData) {
+    console.log(clientsData);
+  }
 
   return (
     <>
@@ -230,7 +236,13 @@ const Home = () => {
 
             {/*Category Filtering Buttons*/}
             <Grid item xs={12} sm={10}>
-              <ButtonGroup className={classes.categoryButtonGroup}>
+              <ButtonGroup
+                className={classes.categoryButtonGroup}
+                disableElevation
+                variant="outlined"
+                orientation={mobileView ? "vertical" : "horizontal"}
+                fullWidth={mobileView}
+              >
                 {/*Add Category Button*/}
                 <Button onClick={() => history.push("/category/new")}>
                   <AddIcon />
@@ -394,6 +406,11 @@ const Home = () => {
                       phone,
                       notes
                     }}
+                    // firstName={firstName}
+                    // lastName={lastName}
+                    // email={email}
+                    // phone={phone}
+                    // category={category}
                     categoryNames={categoryNames}
                     tags={tags}
                     customFields={rest}

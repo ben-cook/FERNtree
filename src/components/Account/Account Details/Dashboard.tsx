@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) =>
   createStyles({
     title: {
       [theme.breakpoints.down("xs")]: {
-        marginTop: theme.spacing(4)
+        marginTop: theme.spacing(8)
       },
       [theme.breakpoints.up("sm")]: {
         marginTop: theme.spacing(16)
