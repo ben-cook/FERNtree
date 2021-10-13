@@ -1,9 +1,9 @@
 import {
   Client as ClientType,
   ClientConcreteValues,
-  ClientCustomFields
-} from "../../types";
-import { CustomCategory } from "../../types";
+  ClientCustomFields,
+  CustomCategory
+} from "../../../functions/src/types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Tags from "../Home/Tags";
 import Loading from "../Loading";
@@ -104,7 +104,7 @@ const Client = () => {
   // Function which returns category fields of a given category Id
   function getCategoryFields(categoryId: string): string[] {
     if (categoryId === "No Category") {
-      console.log("id of no category");
+      // console.log("id of no category");
 
       return [];
     }
@@ -113,12 +113,12 @@ const Client = () => {
     categoriesData.forEach((category) => {
       if (!category.customFields || category.customFields[0] === "") {
         // Ignore if no custom fields
-        console.log("Fields are empty");
+        // console.log("Fields are empty");
       } else if (category.id == categoryId) {
         categoryFields = category.customFields;
 
-        console.log("Category changed:" + categoryId);
-        console.log("Category Fields changed:" + categoryFields);
+        // console.log("Category changed:" + categoryId);
+        // console.log("Category Fields changed:" + categoryFields);
       }
     });
 
@@ -156,26 +156,23 @@ const Client = () => {
     return acc;
   }, {});
 
-  console.log(
-    "existingcategoryinitialvalues: " +
-      JSON.stringify(existingClientCategoryInitialValues)
-  );
+  // console.log(
+  //   "existingcategoryinitialvalues: " +
+  //     JSON.stringify(existingClientCategoryInitialValues)
+  // );
 
-  console.log(
-    "newclientcategoryinitialvalues: " +
-      JSON.stringify(newClientCategoryInitialValues)
-  );
+  // console.log(
+  //   "newclientcategoryinitialvalues: " +
+  //     JSON.stringify(newClientCategoryInitialValues)
+  // );
 
   const newClientInitialValues: FormValues = {
     firstName: "",
     lastName: "",
-    business: "",
     address: "",
     category: "No Category", // set default value to no category
     email: "",
     phone: "",
-    payRate: "",
-    jobStatus: "Not Started",
     notes: "",
     ...newClientCategoryInitialValues
   };
@@ -183,13 +180,10 @@ const Client = () => {
   const existingClientInitialValues: FormValues = {
     firstName: clientData?.firstName,
     lastName: clientData?.lastName,
-    business: clientData?.business,
     address: clientData?.address,
     category: clientData?.category, // Set initial category
     email: clientData?.email,
     phone: clientData?.phone,
-    payRate: clientData?.payRate,
-    jobStatus: clientData?.jobStatus || "Not Started",
     notes: clientData?.notes,
     ...existingClientCategoryInitialValues
   };
@@ -294,7 +288,7 @@ const Client = () => {
                 .collection("clients")
                 .add(values)
                 .then(() => {
-                  console.log("Testing new category fields : ", values);
+                  // console.log("Testing new category fields : ", values);
                   enqueueSnackbar("New client created!", {
                     variant: "success"
                   });
@@ -314,8 +308,8 @@ const Client = () => {
                 .doc(clientId)
                 .set(values, { merge: true })
                 .then(() => {
-                  console.log("Testing category changed:", values.category);
-                  console.log("Testing category fields changed: ", values);
+                  // console.log("Testing category changed:", values.category);
+                  // console.log("Testing category fields changed: ", values);
 
                   enqueueSnackbar("Updated client details.", {
                     variant: "success"

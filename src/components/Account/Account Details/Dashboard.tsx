@@ -1,4 +1,4 @@
-import { User, Client, CustomCategory } from "../../../types";
+import { User, Client, CustomCategory } from "../../../../functions/src/types";
 import { Typography, createStyles, makeStyles } from "@material-ui/core";
 import firebase from "firebase/app";
 import {

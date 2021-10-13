@@ -1,4 +1,4 @@
-import { User } from "../../../types";
+import { User } from "../../../../functions/src/types";
 import DeleteButtonWithDialog from "../../DeleteButtonWithDialog";
 import ChangeUserDetailsForm from "./ChangeUserDetailsForm";
 import Dashboard from "./Dashboard";

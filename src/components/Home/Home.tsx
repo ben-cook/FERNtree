@@ -1,4 +1,4 @@
-import { Client, User, CustomCategory } from "../../types";
+import { Client, User, CustomCategory } from "../../../functions/src/types";
 import ClientCard from "./ClientCard";
 import {
   Card,
@@ -133,7 +133,7 @@ const Home = () => {
     }
   );
 
-  console.log(categoryData);
+  // console.log(categoryData);
 
   const labels = !categoryData
     ? []
@@ -173,7 +173,7 @@ const Home = () => {
   };
 
   if (clientsData) {
-    console.log(clientsData);
+    // console.log(clientsData);
   }
 
   return (
@@ -374,7 +374,7 @@ const Home = () => {
               }
             })
             .sort((a, b) => {
-              return a.firstname && b.firstName
+              return a.firstName && b.firstName
                 ? a.firstName.localeCompare(b.firstName)
                 : 1;
             })
@@ -384,13 +384,10 @@ const Home = () => {
                 id,
                 firstName,
                 lastName,
-                business,
                 address,
                 category,
                 email,
                 phone,
-                payRate,
-                jobStatus,
                 notes,
                 tags,
                 ...rest
@@ -403,13 +400,10 @@ const Home = () => {
                     concreteValues={{
                       firstName,
                       lastName,
-                      business,
                       address,
                       category,
                       email,
                       phone,
-                      payRate,
-                      jobStatus,
                       notes
                     }}
                     // firstName={firstName}
