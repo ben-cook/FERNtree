@@ -1,10 +1,6 @@
 import { Client, User, CustomCategory } from "../../../functions/src/types";
 import ClientCard from "./ClientCard";
 import { ListViewTable } from "./ListViewTable";
-// import GridOnIcon from '@material-ui/icons/GridOn';
-import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
-// import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
-import ViewListRoundedIcon from '@material-ui/icons/ViewListRounded';
 import {
   Card,
   CardContent,
@@ -22,9 +18,13 @@ import {
 } from "@material-ui/core";
 // Import icons
 import AddIcon from "@material-ui/icons/Add";
+// import GridOnIcon from '@material-ui/icons/GridOn';
+import AppsRoundedIcon from "@material-ui/icons/AppsRounded";
 import EditIcon from "@material-ui/icons/Edit";
 import PersonAddIcon from "@material-ui/icons/PersonAdd";
 import SearchIcon from "@material-ui/icons/Search";
+// import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
+import ViewListRoundedIcon from "@material-ui/icons/ViewListRounded";
 // Import firebase and react
 import firebase from "firebase";
 import { useState } from "react";
@@ -76,13 +76,10 @@ const useStyles = makeStyles((theme) =>
       [theme.breakpoints.up("sm")]: {
         justifyContent: "flex-end"
       },
-      alignItems: 'center',
+      alignItems: "center"
     }
   })
 );
-
-
-
 
 const Home = () => {
   const classes = useStyles();
@@ -186,69 +183,76 @@ const Home = () => {
     setSearchValue("");
   };
 
-  // Generate table rows for list view 
+  // Generate table rows for list view
   function createData(id, firstName, lastName, category, email, phone, notes) {
     return { id, firstName, lastName, category, email, phone, notes };
   }
 
   const listRows = [];
 
-  if (clientsData && isListView){
-
+  if (clientsData && isListView) {
     clientsData
-    // Filtering which clients to show based on search, category filter and tags
-    .filter((client) => {
-      // for every value (of each field), if the value is not ID AND includes search
-      // remove client id from string
-      // eslint-disable-next-line
-      const { tags, ...rest } = client;
+      // Filtering which clients to show based on search, category filter and tags
+      .filter((client) => {
+        // for every value (of each field), if the value is not ID AND includes search
+        // remove client id from string
+        // eslint-disable-next-line
+        const { tags, ...rest } = client;
 
-      const reduction: string = Object.values(rest).reduce(
-        (a, b) => `${JSON.stringify(a)} ${JSON.stringify(b)}`,
-        ""
-      );
-
-      if (
-        reduction
-          .replace(client.id, "")
-          .toLowerCase()
-          .includes(searchValue.toLowerCase())
-      ) {
-        // NOW CHECK TAGS and CATEGORY
-        if (selectedTag === "All" && selectedCategory === "All") {
-          // If the selected tag AND category is "All", display this client
-          return true;
-        }
-
-        if (!client.tags && !client.category) {
-          // If the client has no tags or no category, don't display
-          return false;
-        }
-
-        // If client has tag or selected category, display client
-        // Fancy logic here:
-        // If client has the selected category and tags is set to All, return that client
-        // If client has the selected tag and category is set to All, return that client
-        // If client has selected tag AND selected category, return that client
-        return (
-          (selectedCategory === "All"
-            ? true
-            : client.category == selectedCategory) &&
-          (selectedTag === "All"
-            ? true
-            : client.tags?.includes(selectedTag))
+        const reduction: string = Object.values(rest).reduce(
+          (a, b) => `${JSON.stringify(a)} ${JSON.stringify(b)}`,
+          ""
         );
-      }
-    })
-    .sort((a, b) => {
-      return a.firstname && b.firstName
-        ? a.firstName.localeCompare(b.firstName)
-        : 1;
-    })
-    .reverse()
-    .map((client) => {
-      listRows.push(createData(client.id, client.firstName, client.lastName, client.category, client.email, client.phone, client.notes));
-    });
+
+        if (
+          reduction
+            .replace(client.id, "")
+            .toLowerCase()
+            .includes(searchValue.toLowerCase())
+        ) {
+          // NOW CHECK TAGS and CATEGORY
+          if (selectedTag === "All" && selectedCategory === "All") {
+            // If the selected tag AND category is "All", display this client
+            return true;
+          }
+
+          if (!client.tags && !client.category) {
+            // If the client has no tags or no category, don't display
+            return false;
+          }
+
+          // If client has tag or selected category, display client
+          // Fancy logic here:
+          // If client has the selected category and tags is set to All, return that client
+          // If client has the selected tag and category is set to All, return that client
+          // If client has selected tag AND selected category, return that client
+          return (
+            (selectedCategory === "All"
+              ? true
+              : client.category == selectedCategory) &&
+            (selectedTag === "All" ? true : client.tags?.includes(selectedTag))
+          );
+        }
+      })
+      .sort((a, b) => {
+        return a.firstname && b.firstName
+          ? a.firstName.localeCompare(b.firstName)
+          : 1;
+      })
+      .reverse()
+      .map((client) => {
+        listRows.push(
+          createData(
+            client.id,
+            client.firstName,
+            client.lastName,
+            client.category,
+            client.email,
+            client.phone,
+            client.notes
+          )
+        );
+      });
 
     console.log("List rows:", listRows);
   }
@@ -257,9 +261,9 @@ const Home = () => {
   const handleListView = () => {
     console.info("You clicked the reset search button.");
 
-    if (isListView == true){
+    if (isListView == true) {
       setIsList(false);
-    }else{
+    } else {
       setIsList(true);
     }
   };
@@ -384,17 +388,31 @@ const Home = () => {
 
             <Grid item xs={12} sm={4}>
               <div className={classes.resetButtonContainer}>
-                <Button variant="outlined"  className={classes.resetButton} onClick={() => handleResetSearch()}>
+                <Button
+                  variant="outlined"
+                  className={classes.resetButton}
+                  onClick={() => handleResetSearch()}
+                >
                   Reset Search
                 </Button>
-                
+
                 {/*List / Grid View Button*/}
-                <IconButton size="medium" className={classes.icon} onClick={() => handleListView()}>
-                  {isListView ? 
-                    <AppsRoundedIcon fontSize="large" />
-                    :
-                    <ViewListRoundedIcon fontSize="large" />
-                  }
+                <IconButton
+                  size="medium"
+                  className={classes.icon}
+                  onClick={() => handleListView()}
+                >
+                  {isListView ? (
+                    <AppsRoundedIcon
+                      fontSize="large"
+                      style={{ color: "black" }}
+                    />
+                  ) : (
+                    <ViewListRoundedIcon
+                      fontSize="large"
+                      style={{ color: "black" }}
+                    />
+                  )}
                 </IconButton>
 
                 {/* <Button variant="outlined" onClick={() => handleListView()}>
@@ -405,132 +423,132 @@ const Home = () => {
           </Grid>
         </CardContent>
       </Card>
-      
+
       {/* Show all clients as a list */}
-      {isListView &&
+      {isListView && (
         <Grid container spacing={3} className={classes.grid}>
           <Grid item xs={12} sm={12} md={12}>
-            <ListViewTable rows={listRows}/>
+            <ListViewTable rows={listRows} />
           </Grid>
         </Grid>
-      }
+      )}
 
       {/* Show all clients as cards in a grid */}
-      {!isListView &&
+      {!isListView && (
         <Grid container spacing={3} className={classes.grid}>
-        {/*Add new client card*/}
-        <Grid item key={0} xs={12} sm={6} md={4}>
-          <Link to="/client/new">
-            <Card style={{ height: "100%", minHeight: 400 }}>
-              <Grid
-                container
-                direction="column"
-                justifyContent="center"
-                alignContent="stretch"
-                alignItems="center"
-                style={{ height: "100%" }}
-              >
-                <Grid item>
-                  <PersonAddButton />
+          {/*Add new client card*/}
+          <Grid item key={0} xs={12} sm={6} md={4}>
+            <Link to="/client/new">
+              <Card style={{ height: "100%", minHeight: 400 }}>
+                <Grid
+                  container
+                  direction="column"
+                  justifyContent="center"
+                  alignContent="stretch"
+                  alignItems="center"
+                  style={{ height: "100%" }}
+                >
+                  <Grid item>
+                    <PersonAddButton />
+                  </Grid>
                 </Grid>
-              </Grid>
-            </Card>
-          </Link>
-        </Grid>
+              </Card>
+            </Link>
+          </Grid>
 
-        {clientsData &&
-          clientsData
-            // Filtering which clients to show based on search, category filter and tags
-            .filter((client) => {
-              // for every value (of each field), if the value is not ID AND includes search
-              // remove client id from string
-              // eslint-disable-next-line
-              const { tags, ...rest } = client;
+          {clientsData &&
+            clientsData
+              // Filtering which clients to show based on search, category filter and tags
+              .filter((client) => {
+                // for every value (of each field), if the value is not ID AND includes search
+                // remove client id from string
+                // eslint-disable-next-line
+                const { tags, ...rest } = client;
 
-              const reduction: string = Object.values(rest).reduce(
-                (a, b) => `${JSON.stringify(a)} ${JSON.stringify(b)}`,
-                ""
-              );
-
-              if (
-                reduction
-                  .replace(client.id, "")
-                  .toLowerCase()
-                  .includes(searchValue.toLowerCase())
-              ) {
-                // NOW CHECK TAGS and CATEGORY
-                if (selectedTag === "All" && selectedCategory === "All") {
-                  // If the selected tag AND category is "All", display this client
-                  return true;
-                }
-
-                if (!client.tags && !client.category) {
-                  // If the client has no tags or no category, don't display
-                  return false;
-                }
-
-                // If client has tag or selected category, display client
-                // Fancy logic here:
-                // If client has the selected category and tags is set to All, return that client
-                // If client has the selected tag and category is set to All, return that client
-                // If client has selected tag AND selected category, return that client
-                return (
-                  (selectedCategory === "All"
-                    ? true
-                    : client.category == selectedCategory) &&
-                  (selectedTag === "All"
-                    ? true
-                    : client.tags?.includes(selectedTag))
+                const reduction: string = Object.values(rest).reduce(
+                  (a, b) => `${JSON.stringify(a)} ${JSON.stringify(b)}`,
+                  ""
                 );
-              }
-            })
-            .sort((a, b) => {
-              return a.firstName && b.firstName
-                ? a.firstName.localeCompare(b.firstName)
-                : 1;
-            })
-            .reverse()
-            .map((client, idx) => {
-              const {
-                id,
-                firstName,
-                lastName,
-                address,
-                category,
-                email,
-                phone,
-                notes,
-                tags,
-                ...rest
-              } = client;
 
-              return (
-                <Grid item key={idx} xs={12} sm={6} md={4}>
-                  <ClientCard
-                    id={id}
-                    concreteValues={{
-                      firstName,
-                      lastName,
-                      address,
-                      category,
-                      email,
-                      phone,
-                      notes
-                    }}
-                    // firstName={firstName}
-                    // lastName={lastName}
-                    // email={email}
-                    // phone={phone}
-                    // category={category}
-                    categoryNames={categoryNames}
-                    tags={tags}
-                    customFields={rest}
-                  />
-                </Grid>
-              );
-            })}
-      </Grid>
-      }
+                if (
+                  reduction
+                    .replace(client.id, "")
+                    .toLowerCase()
+                    .includes(searchValue.toLowerCase())
+                ) {
+                  // NOW CHECK TAGS and CATEGORY
+                  if (selectedTag === "All" && selectedCategory === "All") {
+                    // If the selected tag AND category is "All", display this client
+                    return true;
+                  }
+
+                  if (!client.tags && !client.category) {
+                    // If the client has no tags or no category, don't display
+                    return false;
+                  }
+
+                  // If client has tag or selected category, display client
+                  // Fancy logic here:
+                  // If client has the selected category and tags is set to All, return that client
+                  // If client has the selected tag and category is set to All, return that client
+                  // If client has selected tag AND selected category, return that client
+                  return (
+                    (selectedCategory === "All"
+                      ? true
+                      : client.category == selectedCategory) &&
+                    (selectedTag === "All"
+                      ? true
+                      : client.tags?.includes(selectedTag))
+                  );
+                }
+              })
+              .sort((a, b) => {
+                return a.firstName && b.firstName
+                  ? a.firstName.localeCompare(b.firstName)
+                  : 1;
+              })
+              .reverse()
+              .map((client, idx) => {
+                const {
+                  id,
+                  firstName,
+                  lastName,
+                  address,
+                  category,
+                  email,
+                  phone,
+                  notes,
+                  tags,
+                  ...rest
+                } = client;
+
+                return (
+                  <Grid item key={idx} xs={12} sm={6} md={4}>
+                    <ClientCard
+                      id={id}
+                      concreteValues={{
+                        firstName,
+                        lastName,
+                        address,
+                        category,
+                        email,
+                        phone,
+                        notes
+                      }}
+                      // firstName={firstName}
+                      // lastName={lastName}
+                      // email={email}
+                      // phone={phone}
+                      // category={category}
+                      categoryNames={categoryNames}
+                      tags={tags}
+                      customFields={rest}
+                    />
+                  </Grid>
+                );
+              })}
+        </Grid>
+      )}
     </>
   );
 };

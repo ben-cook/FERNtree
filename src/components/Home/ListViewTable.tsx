@@ -1,18 +1,17 @@
 import ClientAvatar from "../Client/ClientAvatar";
-import React from 'react';
-import PropTypes from 'prop-types';
-import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TablePagination from '@material-ui/core/TablePagination';
-import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Paper from "@material-ui/core/Paper";
+import Table from "@material-ui/core/Table";
+import TableBody from "@material-ui/core/TableBody";
+import TableCell from "@material-ui/core/TableCell";
+import TableContainer from "@material-ui/core/TableContainer";
+import TableHead from "@material-ui/core/TableHead";
+import TablePagination from "@material-ui/core/TablePagination";
+import TableRow from "@material-ui/core/TableRow";
+import TableSortLabel from "@material-ui/core/TableSortLabel";
+import { makeStyles } from "@material-ui/core/styles";
+import PropTypes from "prop-types";
+import React from "react";
 import { useHistory } from "react-router-dom";
-import Paper from '@material-ui/core/Paper';
-
 
 // Sorting List Functions
 function descendingComparator(a, b, orderBy) {
@@ -26,7 +25,7 @@ function descendingComparator(a, b, orderBy) {
 }
 
 function getComparator(order, orderBy) {
-  return order === 'desc'
+  return order === "desc"
     ? (a, b) => descendingComparator(a, b, orderBy)
     : (a, b) => -descendingComparator(a, b, orderBy);
 }
@@ -43,12 +42,17 @@ function stableSort(array, comparator) {
 
 //List view header titles
 const headCells = [
-    { id: 'firstName', numeric: false, disablePadding: false, label: 'First Name' },
-    { id: 'lastName', numeric: false, disablePadding: false, label: 'Last Name' },
-    { id: 'category', numeric: false, disablePadding: false, label: 'Category' },
-    { id: 'email', numeric: false, disablePadding: false, label: 'Email' },
-    { id: 'phone', numeric: false, disablePadding: false, label: 'Phone' },
-    { id: 'notes', numeric: false, disablePadding: false, label: 'Notes' },
+  {
+    id: "firstName",
+    numeric: false,
+    disablePadding: false,
+    label: "First Name"
+  },
+  { id: "lastName", numeric: false, disablePadding: false, label: "Last Name" },
+  { id: "category", numeric: false, disablePadding: false, label: "Category" },
+  { id: "email", numeric: false, disablePadding: false, label: "Email" },
+  { id: "phone", numeric: false, disablePadding: false, label: "Phone" },
+  { id: "notes", numeric: false, disablePadding: false, label: "Notes" }
 ];
 
 function EnhancedTableHead(props) {
@@ -60,24 +64,23 @@ function EnhancedTableHead(props) {
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding="none">
-        </TableCell>
+        <TableCell padding="none"></TableCell>
         {headCells.map((headCell) => (
           <TableCell
             key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'normal'}
+            align={headCell.numeric ? "right" : "left"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
               active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
+              direction={orderBy === headCell.id ? order : "asc"}
               onClick={createSortHandler(headCell.id)}
             >
               {headCell.label}
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
+                  {order === "desc" ? "sorted descending" : "sorted ascending"}
                 </span>
               ) : null}
             </TableSortLabel>
@@ -91,32 +94,32 @@ function EnhancedTableHead(props) {
 EnhancedTableHead.propTypes = {
   classes: PropTypes.object.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
+  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
+  orderBy: PropTypes.string.isRequired
   //rowCount: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    width: '100%',
+    width: "100%"
   },
   paper: {
-    width: '100%',
-    marginBottom: theme.spacing(2),
+    width: "100%",
+    marginBottom: theme.spacing(2)
   },
   table: {
-    minWidth: 750,
+    minWidth: 750
   },
   visuallyHidden: {
     border: 0,
-    clip: 'rect(0 0 0 0)',
+    clip: "rect(0 0 0 0)",
     height: 1,
     margin: -1,
-    overflow: 'hidden',
+    overflow: "hidden",
     padding: 0,
-    position: 'absolute',
+    position: "absolute",
     top: 20,
-    width: 1,
+    width: 1
   },
   avatar: {
     marginRight: 15,
@@ -124,29 +127,25 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
 // List View Table
-export function ListViewTable(props: {
-    rows : string[];
-  }) {
+export function ListViewTable(props: { rows: string[] }) {
   const classes = useStyles();
   const history = useHistory();
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('firstName');
+  const [order, setOrder] = React.useState("asc");
+  const [orderBy, setOrderBy] = React.useState("firstName");
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const handleRequestSort = (event, property) => {
+    const isAsc = orderBy === property && order === "asc";
 
-    const isAsc = orderBy === property && order === 'asc';
-
-    setOrder(isAsc ? 'desc' : 'asc');
+    setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
   const handleClick = (event, id) => {
     console.log("Row name selected:", id);
-    history.push(`/client/${id}`)
+    history.push(`/client/${id}`);
   };
 
   const handleChangePage = (event, newPage) => {
@@ -158,7 +157,8 @@ export function ListViewTable(props: {
     setPage(0);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -167,7 +167,7 @@ export function ListViewTable(props: {
           <Table
             className={classes.table}
             aria-labelledby="tableTitle"
-            size={'medium'}
+            size={"medium"}
             aria-label="Contacts"
           >
             <EnhancedTableHead
@@ -185,21 +185,23 @@ export function ListViewTable(props: {
 
                   return (
                     <TableRow
-                       hover
-                       onClick={(event) => handleClick(event, row.id)} // Send to client page when clicked 
-                       key={row.id}
+                      hover
+                      onClick={(event) => handleClick(event, row.id)} // Send to client page when clicked
+                      key={row.id}
                     >
-                    {/* Image*/}
+                      {/* Image*/}
                       <TableCell align="center" padding="none">
                         <div className={classes.avatar}>
-                            <ClientAvatar
-                                firstName={row.firstName}
-                                lastName={row.lastName}
-                                email={row.email}
-                                size={45} />
-                        </div></TableCell>
+                          <ClientAvatar
+                            firstName={row.firstName}
+                            lastName={row.lastName}
+                            email={row.email}
+                            size={45}
+                          />
+                        </div>
+                      </TableCell>
 
-                    {/*Contact Information*/}
+                      {/*Contact Information*/}
                       <TableCell component="th" id={labelId} scope="row">
                         {row.firstName}
                       </TableCell>
