@@ -1,4 +1,4 @@
-import { CustomCategory } from "../../types";
+import { CustomCategory } from "../../../functions/src/types";
 import { structuredClone, zipWith } from "../../util";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
 import Loading from "../Loading";
@@ -67,7 +67,7 @@ const Category = () => {
     ? [null, null]
     : useDocumentData<CustomCategory>(categoryReference);
 
-  console.log("Category ", category, categoryLoading);
+  // console.log("Category ", category, categoryLoading);
 
   // Loading
   if (authLoading || categoryLoading) {
@@ -82,7 +82,7 @@ const Category = () => {
       (!isNewCategory && !categoryLoading && category?.customFields) || []
   };
 
-  console.log(existingCategoryInitialValues);
+  // console.log(existingCategoryInitialValues);
 
   return (
     <>

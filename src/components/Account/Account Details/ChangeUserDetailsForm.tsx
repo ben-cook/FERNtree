@@ -1,4 +1,4 @@
-import { User } from "../../../types";
+import { User } from "../../../../functions/src/types";
 import Loading from "../../Loading";
 import {
   Button,
@@ -79,7 +79,7 @@ const ChangeUserDetailsForm = (user: firebase.User) => {
 
         const promises = [];
 
-        console.log(user);
+        // console.log(user);
 
         if (
           firstName !== initialValues.firstName ||

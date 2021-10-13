@@ -2,7 +2,7 @@ import {
   CustomCategory,
   ClientConcreteValues,
   ClientCustomFields
-} from "../../types";
+} from "../../../functions/src/types";
 import ClientAvatar from "../Client/ClientAvatar";
 import Tags from "./Tags";
 import {
@@ -57,14 +57,6 @@ const useStyles = makeStyles((theme) =>
   })
 );
 
-// type Props = {
-//   id: string;
-//   concreteValues: ClientConcreteValues;
-//   tags: string[];
-//   categoryNames: string[];
-//   customFields: ClientCustomFields;
-// };
-
 const ClientCard = (props: {
   id: string;
   concreteValues: ClientConcreteValues;
@@ -89,18 +81,6 @@ const ClientCard = (props: {
 
   const [category, categoryLoading] =
     useDocumentData<CustomCategory>(categoryReference); // get data for client's category
-
-  // const {
-  //   firstName,
-  //   lastName,
-  //   address,
-  //   category,
-  //   email,
-  //   phone,
-  //   notes
-  // } = concreteValues;
-
-  console.log("Custom Fields", props.customFields);
 
   // If edit button is clicked
   const handleEditClient = () => {
@@ -135,8 +115,6 @@ const ClientCard = (props: {
   // Get custom fields to be displayed
   if (props.customFields && !categoryLoading && category) {
     Object.keys(props.customFields).forEach((key) => {
-      console.log(key, props.customFields[key]); // key , value
-
       // Only add custom fields relating to currently selected category to list
       // Hard limit of 5 fields maximum
       if (category.customFields.includes(key) && numFields < 5) {
@@ -146,8 +124,6 @@ const ClientCard = (props: {
       }
     });
   }
-
-  console.log("Fields:", fields);
 
   return (
     <Card className={classes.root}>

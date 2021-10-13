@@ -1,4 +1,4 @@
-import { ClientConcreteValues } from "../../types";
+import { ClientConcreteValues } from "../../../functions/src/types";
 import { Avatar, makeStyles } from "@material-ui/core";
 import md5 from "md5";
 
