@@ -1,9 +1,5 @@
-import {
-  IAddTagData,
-  IDeleteTagData,
-  User
-} from "../../../functions/src/types";
-import { TypedHttpsCallable } from "../../types";
+import { IAddTagData, IDeleteTagData, User } from "../../functions/src/types";
+import { TypedHttpsCallable } from "../types";
 import {
   Chip,
   createStyles,
