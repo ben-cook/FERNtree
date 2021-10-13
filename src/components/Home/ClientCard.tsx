@@ -185,7 +185,11 @@ const ClientCard = (props: {
               <Grid item>
                 {props.concreteValues && props.concreteValues.firstName && (
                   <div className={classes.avatar}>
-                    <ClientAvatar client={props.concreteValues} size={55} />
+                    <ClientAvatar
+                    firstName={props.concreteValues.firstName}
+                    lastName={props.concreteValues.lastName}
+                    email={props.concreteValues.email}
+                    size={55} />
                   </div>
                 )}
               </Grid>

@@ -126,9 +126,25 @@ const Header = ({ toggleTheme }: { toggleTheme: () => void }) => {
                   className={classes.noTextDecorationDrawerItem}
                 >
                   <MenuItem>
-                    <Typography variant="h6">New Client</Typography>
+                  <div
+                    style={{
+                      display: "flex",
+                      flexDirection: "row",
+                      alignItems: "center"
+                    }}
+                  >
+                    <Typography variant="h6"
+                      align="left"
+                      display="inline"
+                      style={{ marginRight: "0.4rem" }}>
+                        New Contact
+                    </Typography>
+                    <PersonAddOutlinedIcon style={{ flexGrow: 1 }} />
+                  </div>
                   </MenuItem>
+
                 </Link>
+
                 <MenuItem>
                   <div
                     onClick={toggleTheme}

@@ -1,5 +1,10 @@
 import { Client, User, CustomCategory } from "../../types";
 import ClientCard from "./ClientCard";
+import { ListViewTable } from "./ListViewTable";
+// import GridOnIcon from '@material-ui/icons/GridOn';
+import AppsRoundedIcon from '@material-ui/icons/AppsRounded';
+// import ReorderRoundedIcon from '@material-ui/icons/ReorderRounded';
+import ViewListRoundedIcon from '@material-ui/icons/ViewListRounded';
 import {
   Card,
   CardContent,
@@ -49,16 +54,18 @@ const useStyles = makeStyles((theme) =>
       flexDirection: "column"
     },
     icon: {
-      width: 60,
-      height: 60
+      width: 30,
+      height: 30
     },
     categoryButtonGroup: {
       backgroundColor: theme.palette.primary.light
     },
     resetButton: {
-      backgroundColor: theme.palette.primary.main,
-      color: theme.palette.primary.contrastText
+      // backgroundColor: theme.palette.primary.main,
+      // color: theme.palette.primary.contrastText,
+      marginRight: theme.spacing(1)
     },
+
     resetButtonContainer: {
       display: "flex",
       flexDirection: "row",
@@ -68,10 +75,14 @@ const useStyles = makeStyles((theme) =>
       },
       [theme.breakpoints.up("sm")]: {
         justifyContent: "flex-end"
-      }
+      },
+      alignItems: 'center',
     }
   })
 );
+
+
+
 
 const Home = () => {
   const classes = useStyles();
@@ -118,6 +129,9 @@ const Home = () => {
   // declaring a state variable called searchValue
   // to be used in search bar to filter results
   const [searchValue, setSearchValue] = useState<string>("");
+
+  // Trigger switch between list and grid view
+  const [isListView, setIsList] = useState<boolean>(false);
 
   // Getting Category Values
   const categoriesReference = firebase
@@ -172,9 +186,85 @@ const Home = () => {
     setSearchValue("");
   };
 
-  if (clientsData) {
-    console.log(clientsData);
+
+  // Generate table rows for list view 
+  function createData(id, firstName, lastName, category, email, phone, notes) {
+    return { id, firstName, lastName, category, email, phone, notes };
   }
+
+  const listRows = [];
+
+  if (clientsData && isListView){
+
+    clientsData
+    // Filtering which clients to show based on search, category filter and tags
+    .filter((client) => {
+      // for every value (of each field), if the value is not ID AND includes search
+      // remove client id from string
+      // eslint-disable-next-line
+      const { tags, ...rest } = client;
+
+      const reduction: string = Object.values(rest).reduce(
+        (a, b) => `${JSON.stringify(a)} ${JSON.stringify(b)}`,
+        ""
+      );
+
+      if (
+        reduction
+          .replace(client.id, "")
+          .toLowerCase()
+          .includes(searchValue.toLowerCase())
+      ) {
+        // NOW CHECK TAGS and CATEGORY
+        if (selectedTag === "All" && selectedCategory === "All") {
+          // If the selected tag AND category is "All", display this client
+          return true;
+        }
+
+        if (!client.tags && !client.category) {
+          // If the client has no tags or no category, don't display
+          return false;
+        }
+
+        // If client has tag or selected category, display client
+        // Fancy logic here:
+        // If client has the selected category and tags is set to All, return that client
+        // If client has the selected tag and category is set to All, return that client
+        // If client has selected tag AND selected category, return that client
+        return (
+          (selectedCategory === "All"
+            ? true
+            : client.category == selectedCategory) &&
+          (selectedTag === "All"
+            ? true
+            : client.tags?.includes(selectedTag))
+        );
+      }
+    })
+    .sort((a, b) => {
+      return a.firstname && b.firstName
+        ? a.firstName.localeCompare(b.firstName)
+        : 1;
+    })
+    .reverse()
+    .map((client) => {
+      listRows.push(createData(client.id, client.firstName, client.lastName, client.category, client.email, client.phone, client.notes));
+    });
+
+    console.log("List rows:", listRows);
+  }
+
+  // List View Button Clicked, switch to list view
+  const handleListView = () => {
+    console.info("You clicked the reset search button.");
+
+    if (isListView == true){
+      setIsList(false);
+    }else{
+      setIsList(true);
+    }
+  };
+
 
   return (
     <>
@@ -185,7 +275,7 @@ const Home = () => {
             <Grid item xs={12} sm={8}>
               <TextField
                 variant="outlined"
-                label="Find your Client"
+                label="Find a Contact"
                 className={classes.clientSearchField}
                 fullWidth
                 margin="normal"
@@ -235,7 +325,7 @@ const Home = () => {
             </Grid>
 
             {/*Category Filtering Buttons*/}
-            <Grid item xs={12} sm={10}>
+            <Grid item xs={12} sm={8}>
               <ButtonGroup
                 className={classes.categoryButtonGroup}
                 disableElevation
@@ -294,19 +384,42 @@ const Home = () => {
               </ButtonGroup>
             </Grid>
 
-            <Grid item xs={12} sm={2}>
+            <Grid item xs={12} sm={4}>
               <div className={classes.resetButtonContainer}>
-                <Button variant="outlined" onClick={() => handleResetSearch()}>
+                <Button variant="outlined"  className={classes.resetButton} onClick={() => handleResetSearch()}>
                   Reset Search
                 </Button>
+                
+                {/*List / Grid View Button*/}
+                <IconButton size="medium" className={classes.icon} onClick={() => handleListView()}>
+                  {isListView ? 
+                    <AppsRoundedIcon fontSize="large" />
+                    :
+                    <ViewListRoundedIcon fontSize="large" />
+                  }
+                </IconButton>
+
+                {/* <Button variant="outlined" onClick={() => handleListView()}>
+                  List View
+                </Button> */}
               </div>
             </Grid>
           </Grid>
         </CardContent>
       </Card>
+      
+      {/* Show all clients as a list */}
+      {isListView &&
+        <Grid container spacing={3} className={classes.grid}>
+          <Grid item xs={12} sm={12} md={12}>
+            <ListViewTable rows={listRows}/>
+          </Grid>
+        </Grid>
+      }
 
-      {/* Show all clients as cards */}
-      <Grid container spacing={3} className={classes.grid}>
+      {/* Show all clients as cards in a grid */}
+      {!isListView &&
+        <Grid container spacing={3} className={classes.grid}>
         {/*Add new client card*/}
         <Grid item key={0} xs={12} sm={6} md={4}>
           <Link to="/client/new">
@@ -425,6 +538,7 @@ const Home = () => {
               );
             })}
       </Grid>
+      }
     </>
   );
 };

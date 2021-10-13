@@ -201,7 +201,7 @@ const Client = () => {
         <Grid container direction={"row"} spacing={2} justifyContent="center">
           <Grid item>
             <Typography variant="h4" className={classes.newClientTitle}>
-              New Client Profile
+              New Contact Profile
             </Typography>
           </Grid>
         </Grid>
@@ -217,7 +217,11 @@ const Client = () => {
           style={{ marginTop: "1rem" }}
         >
           <Grid item>
-            <ClientAvatar client={clientData} size={120} />
+            <ClientAvatar
+            firstName={clientData?.firstName}
+            lastName={clientData?.lastName}
+            email={clientData?.email}
+            size={120} />
           </Grid>
 
           <Grid item>
@@ -248,7 +252,11 @@ const Client = () => {
           </Grid>
 
           <Grid item xs={6} sm={4} md={3}>
-            <ClientAvatar client={clientData} size={200} />
+            <ClientAvatar
+            firstName={clientData?.firstName}
+            lastName={clientData?.lastName}
+            email={clientData?.email}
+            size={200} />
           </Grid>
         </Grid>
       )}
@@ -394,6 +402,7 @@ const Client = () => {
                 </Grid>
 
                 <Grid item xs={12}>
+                  <br/>
                   <Typography variant="h5">Category Details</Typography>
                 </Grid>
 
@@ -420,6 +429,7 @@ const Client = () => {
                 ))}
 
                 <Grid item xs={12}>
+                  <br/>
                   <Typography variant="h5">Additional Information</Typography>
                 </Grid>
                 <Grid item xs={12}>
