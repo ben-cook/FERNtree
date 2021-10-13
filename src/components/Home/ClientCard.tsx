@@ -4,7 +4,7 @@ import {
   ClientCustomFields
 } from "../../../functions/src/types";
 import ClientAvatar from "../Client/ClientAvatar";
-import Tags from "./Tags";
+import Tags from "../Tags";
 import {
   Card,
   CardContent,

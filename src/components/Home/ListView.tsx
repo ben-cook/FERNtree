@@ -1,3 +1,8 @@
+import {
+  ClientConcreteValues,
+  ClientCustomFields,
+  ClientTags
+} from "../../../functions/src/types";
 import ClientAvatar from "../Client/ClientAvatar";
 import Paper from "@material-ui/core/Paper";
 import Table from "@material-ui/core/Table";
@@ -9,8 +14,8 @@ import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import { makeStyles } from "@material-ui/core/styles";
-import PropTypes from "prop-types";
-import React from "react";
+import { MouseEvent, MouseEventHandler, useState } from "react";
+import { Data } from "react-firebase-hooks/firestore/dist/firestore/types";
 import { useHistory } from "react-router-dom";
 
 // Sorting List Functions
@@ -55,49 +60,17 @@ const headCells = [
   { id: "notes", numeric: false, disablePadding: false, label: "Notes" }
 ];
 
-function EnhancedTableHead(props) {
-  const { classes, order, orderBy, onRequestSort } = props;
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="none"></TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? "right" : "left"}
-            padding={headCell.disablePadding ? "none" : "normal"}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : "asc"}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === "desc" ? "sorted descending" : "sorted ascending"}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
+// Generate table rows for list view
+function createData(id, firstName, lastName, category, email, phone, notes) {
+  return { id, firstName, lastName, category, email, phone, notes };
 }
 
-EnhancedTableHead.propTypes = {
-  classes: PropTypes.object.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(["asc", "desc"]).isRequired,
-  orderBy: PropTypes.string.isRequired
-  //rowCount: PropTypes.number.isRequired,
-};
+type Ordering = "asc" | "desc";
+interface EnhancedTabledHeadProps {
+  onRequestSort: (event: MouseEvent, property: string) => void;
+  order: Ordering;
+  orderBy: string;
+}
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -127,24 +100,46 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+interface ListViewProps {
+  clientData: Data<
+    ClientConcreteValues &
+      ClientTags &
+      ClientCustomFields & {
+        id: string;
+      },
+    "",
+    ""
+  >[];
+}
+
 // List View Table
-export function ListViewTable(props: { rows: string[] }) {
+const ListView = ({ clientData }: ListViewProps) => {
   const classes = useStyles();
   const history = useHistory();
-  const [order, setOrder] = React.useState("asc");
-  const [orderBy, setOrderBy] = React.useState("firstName");
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [order, setOrder] = useState<Ordering>("asc");
+  const [orderBy, setOrderBy] = useState("firstName");
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
 
-  const handleRequestSort = (event, property) => {
+  const listRows = clientData.map((client) => {
+    return createData(
+      client.id,
+      client.firstName,
+      client.lastName,
+      client.category,
+      client.email,
+      client.phone,
+      client.notes
+    );
+  });
+
+  const handleRequestSort = (_event, property) => {
     const isAsc = orderBy === property && order === "asc";
-
     setOrder(isAsc ? "desc" : "asc");
     setOrderBy(property);
   };
 
   const handleClick = (event, id) => {
-    console.log("Row name selected:", id);
     history.push(`/client/${id}`);
   };
 
@@ -158,7 +153,47 @@ export function ListViewTable(props: { rows: string[] }) {
   };
 
   const emptyRows =
-    rowsPerPage - Math.min(rowsPerPage, props.rows.length - page * rowsPerPage);
+    rowsPerPage - Math.min(rowsPerPage, listRows.length - page * rowsPerPage);
+
+  const EnhancedTableHead = (props: EnhancedTabledHeadProps) => {
+    const { order, orderBy, onRequestSort } = props;
+    const createSortHandler =
+      (property: string): MouseEventHandler =>
+      (event) => {
+        onRequestSort(event, property);
+      };
+
+    return (
+      <TableHead>
+        <TableRow>
+          <TableCell padding="none"></TableCell>
+          {headCells.map((headCell) => (
+            <TableCell
+              key={headCell.id}
+              align={headCell.numeric ? "right" : "left"}
+              padding={headCell.disablePadding ? "none" : "normal"}
+              sortDirection={orderBy === headCell.id ? order : false}
+            >
+              <TableSortLabel
+                active={orderBy === headCell.id}
+                direction={orderBy === headCell.id ? order : "asc"}
+                onClick={createSortHandler(headCell.id)}
+              >
+                {headCell.label}
+                {orderBy === headCell.id ? (
+                  <span className={classes.visuallyHidden}>
+                    {order === "desc"
+                      ? "sorted descending"
+                      : "sorted ascending"}
+                  </span>
+                ) : null}
+              </TableSortLabel>
+            </TableCell>
+          ))}
+        </TableRow>
+      </TableHead>
+    );
+  };
 
   return (
     <div className={classes.root}>
@@ -171,14 +206,12 @@ export function ListViewTable(props: { rows: string[] }) {
             aria-label="Contacts"
           >
             <EnhancedTableHead
-              classes={classes}
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              //rowCount={props.rows.length}
             />
             <TableBody>
-              {stableSort(props.rows, getComparator(order, orderBy))
+              {stableSort(listRows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
@@ -224,7 +257,7 @@ export function ListViewTable(props: { rows: string[] }) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 15, 25]}
           component="div"
-          count={props.rows.length}
+          count={listRows.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
@@ -233,4 +266,6 @@ export function ListViewTable(props: { rows: string[] }) {
       </Paper>
     </div>
   );
-}
+};
+
+export default ListView;

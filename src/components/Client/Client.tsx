@@ -5,8 +5,8 @@ import {
   CustomCategory
 } from "../../../functions/src/types";
 import DeleteButtonWithDialog from "../DeleteButtonWithDialog";
-import Tags from "../Home/Tags";
 import Loading from "../Loading";
+import Tags from "../Tags";
 import { CategorySelectorInput } from "./CategorySelector";
 import ClientAvatar from "./ClientAvatar";
 import {
