@@ -52,7 +52,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { classes, order, orderBy, rowCount, onRequestSort } = props;
+  const { classes, order, orderBy, onRequestSort } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -93,7 +93,7 @@ EnhancedTableHead.propTypes = {
   onRequestSort: PropTypes.func.isRequired,
   order: PropTypes.oneOf(['asc', 'desc']).isRequired,
   orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
+  //rowCount: PropTypes.number.isRequired,
 };
 
 const useStyles = makeStyles((theme) => ({
@@ -132,22 +132,24 @@ export function ListViewTable(props: {
   const classes = useStyles();
   const history = useHistory();
   const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('calories');
+  const [orderBy, setOrderBy] = React.useState('firstName');
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
-  const handleRequestSort = (property) => {
+  const handleRequestSort = (event, property) => {
+
     const isAsc = orderBy === property && order === 'asc';
+
     setOrder(isAsc ? 'desc' : 'asc');
     setOrderBy(property);
   };
 
-  const handleClick = (id) => {
+  const handleClick = (event, id) => {
     console.log("Row name selected:", id);
     history.push(`/client/${id}`)
   };
 
-  const handleChangePage = (newPage) => {
+  const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
 
@@ -164,6 +166,7 @@ export function ListViewTable(props: {
         <TableContainer>
           <Table
             className={classes.table}
+            aria-labelledby="tableTitle"
             size={'medium'}
             aria-label="Contacts"
           >
@@ -172,17 +175,18 @@ export function ListViewTable(props: {
               order={order}
               orderBy={orderBy}
               onRequestSort={handleRequestSort}
-              rowCount={props.rows.length}
+              //rowCount={props.rows.length}
             />
             <TableBody>
               {stableSort(props.rows, getComparator(order, orderBy))
                 .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
+                  const labelId = `enhanced-table-checkbox-${index}`;
 
                   return (
                     <TableRow
                        hover
-                       onClick={() => handleClick(row.id)} // Send to client page when clicked 
+                       onClick={(event) => handleClick(event, row.id)} // Send to client page when clicked 
                        key={row.id}
                     >
                     {/* Image*/}
@@ -196,7 +200,7 @@ export function ListViewTable(props: {
                         </div></TableCell>
 
                     {/*Contact Information*/}
-                      <TableCell component="th" id={index} scope="row">
+                      <TableCell component="th" id={labelId} scope="row">
                         {row.firstName}
                       </TableCell>
                       <TableCell align="left">{row.lastName}</TableCell>
