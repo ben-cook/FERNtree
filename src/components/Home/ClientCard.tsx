@@ -82,8 +82,6 @@ const ClientCard = (props: {
   const [category, categoryLoading] =
     useDocumentData<CustomCategory>(categoryReference); // get data for client's category
 
-  // console.log("Custom Fields", props.customFields);
-
   // If edit button is clicked
   const handleEditClient = () => {
     history.push(`/client/${props.id}`);
@@ -117,8 +115,6 @@ const ClientCard = (props: {
   // Get custom fields to be displayed
   if (props.customFields && !categoryLoading && category) {
     Object.keys(props.customFields).forEach((key) => {
-      // console.log(key, props.customFields[key]); // key , value
-
       // Only add custom fields relating to currently selected category to list
       // Hard limit of 5 fields maximum
       if (category.customFields.includes(key) && numFields < 5) {
@@ -128,8 +124,6 @@ const ClientCard = (props: {
       }
     });
   }
-
-  // console.log("Fields:", fields);
 
   return (
     <Card className={classes.root}>
@@ -167,7 +161,12 @@ const ClientCard = (props: {
               <Grid item>
                 {props.concreteValues && props.concreteValues.firstName && (
                   <div className={classes.avatar}>
-                    <ClientAvatar client={props.concreteValues} size={55} />
+                    <ClientAvatar
+                      firstName={props.concreteValues.firstName}
+                      lastName={props.concreteValues.lastName}
+                      email={props.concreteValues.email}
+                      size={55}
+                    />
                   </div>
                 )}
               </Grid>

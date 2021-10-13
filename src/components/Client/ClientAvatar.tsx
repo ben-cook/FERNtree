@@ -1,9 +1,10 @@
-import { ClientConcreteValues } from "../../../functions/src/types";
 import { Avatar, makeStyles } from "@material-ui/core";
 import md5 from "md5";
 
 export default function ClientAvatar(props: {
-  client: ClientConcreteValues;
+  firstName: string;
+  lastName: string;
+  email: string;
   size: number;
 }) {
   const useStyles = makeStyles({
@@ -14,24 +15,24 @@ export default function ClientAvatar(props: {
     }
   });
 
-  if (!(props.client && props.client.firstName)) return <div></div>;
+  if (!(props && props.firstName)) return <div></div>;
 
   const classes = useStyles();
 
   // The url for the backup name image from ui-avatars
   const nameImg = `https://ui-avatars.com/api/${
-    props.client.firstName[0] + props.client.lastName[0]
+    props.firstName[0] + props.lastName[0]
   }/${props.size}/318335/ffffff`;
 
   // The gravatar url, with ui-avatars image encoded as backup
   const gravatar = `https://www.gravatar.com/avatar/${md5(
-    props.client.email.trim()
+    props.email.trim()
   )}?s=${props.size}&d=${encodeURI(nameImg)}`;
 
   // Return mui avatar component
   return (
     <Avatar
-      alt={`${props.client.firstName} ${props.client.lastName}`}
+      alt={`${props.firstName} ${props.lastName}`}
       src={gravatar}
       className={classes.sized}
     />
