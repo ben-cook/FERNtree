@@ -33,7 +33,8 @@ describe("Register a new account", () => {
     cy.wait("@createAccount");
 
     cy.get("[data-cy=profile-button]").click();
-    cy.url().should("eq", "http://localhost:3000/account");
+    cy.url().should("eq", "http://localhost:3000/");
+    cy.visit("/account");
     cy.contains("Account Details");
     cy.contains(firstName);
     cy.contains(lastName);
