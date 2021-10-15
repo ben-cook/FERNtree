@@ -22,6 +22,15 @@ const useStyles = makeStyles((theme) =>
       width: 30,
       height: 30,
       color: theme.palette.getContrastText(theme.palette.primary.contrastText)
+    },
+    newClientCard: {
+      height: "100%",
+      [theme.breakpoints.down("xs")]: {
+        minHeight: 100
+      },
+      [theme.breakpoints.up("sm")]: {
+        minHeight: 400
+      }
     }
   })
 );
@@ -67,7 +76,7 @@ const GridView = ({ clientData, categoryData }: GridViewProps) => {
       {/*Add new client card*/}
       <Grid item key={0} xs={12} sm={6} md={4}>
         <Link to="/client/new">
-          <Card style={{ height: "100%", minHeight: 400 }}>
+          <Card className={classes.newClientCard}>
             <Grid
               container
               direction="column"
