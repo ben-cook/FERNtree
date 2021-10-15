@@ -12,6 +12,7 @@ import {
   Grid
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import { useHistory } from "react-router-dom";
 
 const MAX_CLIENT_NAME_LENGTH = 20;
@@ -143,6 +144,15 @@ const ClientCard = ({
               data-cy={`${firstName}${lastName}`}
             >
               <EditIcon />
+            </IconButton>
+          </CardActions>
+          {/* Mailto button */}
+          <CardActions>
+            <IconButton 
+            href={`mailto:${email}`}
+            aria-label="email"
+            >
+              <MailOutlineIcon />
             </IconButton>
           </CardActions>
         </Grid>
