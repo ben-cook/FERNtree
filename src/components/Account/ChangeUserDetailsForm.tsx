@@ -1,5 +1,5 @@
-import { User } from "../../../../functions/src/types";
-import Loading from "../../Loading";
+import { User } from "../../../functions/src/types";
+import Loading from "../Loading";
 import {
   Button,
   Grid,
