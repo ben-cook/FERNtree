@@ -16,8 +16,10 @@ import {
   Button,
   Grid,
   useTheme,
-  useMediaQuery
+  useMediaQuery,
+  IconButton
 } from "@material-ui/core";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import firebase from "firebase/app";
 import { Field, Form, Formik, FormikHelpers } from "formik";
 import { TextField } from "formik-material-ui";
@@ -224,7 +226,7 @@ const Client = () => {
               style={{ marginBottom: "1.5rem" }}
             >
               {`${clientData?.firstName} ${clientData?.lastName}`}
-            </Typography>
+            </Typography>            
           </Grid>
         </Grid>
       )}
@@ -239,9 +241,11 @@ const Client = () => {
           style={{ marginTop: "1rem" }}
         >
           <Grid item xs={6} sm={4} md={3}>
+
             <Typography variant="h4" align="center">
               {`${clientData?.firstName} ${clientData?.lastName}`}
             </Typography>
+
           </Grid>
 
           <Grid item xs={6} sm={4} md={3}>
@@ -337,7 +341,16 @@ const Client = () => {
             <Form style={{ marginTop: "2rem" }}>
               <Grid container direction={"row"} spacing={2}>
                 <Grid item xs={12}>
-                  <Typography variant="h5">Contact Information</Typography>
+                  <Typography variant="h5">Contact Information
+
+                  <IconButton
+                      href={`mailto:${clientData?.email}`}
+                      aria-label="email"
+                    >
+                      <MailOutlineIcon />
+                  </IconButton>
+                  
+                  </Typography>
                 </Grid>
                 <Grid item xs={12} sm={6}>
                   <Field
