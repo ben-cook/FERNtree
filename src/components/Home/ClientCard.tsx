@@ -17,6 +17,7 @@ import {
   Button
 } from "@material-ui/core";
 import EditIcon from "@material-ui/icons/Edit";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import firebase from "firebase/app";
 import { useAuthState } from "react-firebase-hooks/auth";
 import { useDocumentData } from "react-firebase-hooks/firestore";
@@ -201,7 +202,14 @@ const ClientCard = (props: {
             <Tags id={props.id} tags={props.tags} />
           </CardContent>
           {/*EDIT CLIENT BUTTON*/}
-          <CardActions>
+          <CardActions style={{ justifyContent: "flex-end" }}>
+            {/* Mailto button */}
+            <IconButton
+              href={`mailto:${props.concreteValues.email}`}
+              aria-label="email"
+            >
+              <MailOutlineIcon />
+            </IconButton>
             <IconButton
               className={classes.button}
               aria-label="editClient"
