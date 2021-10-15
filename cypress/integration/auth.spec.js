@@ -21,10 +21,11 @@ describe("Basic Authentication", () => {
     cy.get("[data-cy=email]").type(exampleEmail);
     cy.get("[data-cy=password]").type(examplePassword);
     cy.get("[data-cy=submit]").click();
-    cy.contains("Account Details");
+    cy.contains("Reset Search");
   });
 
   it("can log out using UI", () => {
+    cy.visit("/account");
     cy.get("[data-cy=logout]").click();
     cy.contains("Welcome back to Ferntree!");
   });
