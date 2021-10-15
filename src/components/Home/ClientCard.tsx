@@ -109,19 +109,18 @@ const ClientCard = (props: {
     numFields++;
   }
 
-  if (props.concreteValues.notes) {
-    numFields++;
-  }
-
   // Get custom fields to be displayed
   if (props.customFields && !categoryLoading && category) {
     Object.keys(props.customFields).forEach((key) => {
       // Only add custom fields relating to currently selected category to list
       // Hard limit of 5 fields maximum
       if (category.customFields.includes(key) && numFields < 5) {
-        fields.push(props.customFields[key]);
-        numFields++;
-        //console.log("Add", props.customFields[key], "to fields", numFields);
+        
+        if (props.customFields[key]){ // Only include non-empty fields
+          fields.push(props.customFields[key]);
+          numFields++;
+          console.log("Add", props.customFields[key], "to fields", numFields);
+        }
       }
     });
   }
@@ -192,7 +191,8 @@ const ClientCard = (props: {
                 <Typography key={field}>{field}</Typography>
               ))}
 
-            <Typography>{props.concreteValues.notes}</Typography>
+            {(numFields < 5) && <Typography>{props.concreteValues.notes}</Typography>}
+
           </CardContent>
         </Grid>
 
@@ -201,8 +201,9 @@ const ClientCard = (props: {
             {/*ADD TAGS*/}
             <Tags id={props.id} tags={props.tags} />
           </CardContent>
-          {/*EDIT CLIENT BUTTON*/}
+          
           <CardActions style={{ justifyContent: "flex-end" }}>
+
             {/* Mailto button */}
             <IconButton
               href={`mailto:${props.concreteValues.email}`}
@@ -210,6 +211,8 @@ const ClientCard = (props: {
             >
               <MailOutlineIcon />
             </IconButton>
+
+            {/*EDIT CLIENT BUTTON*/}
             <IconButton
               className={classes.button}
               aria-label="editClient"

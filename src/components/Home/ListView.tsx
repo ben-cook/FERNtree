@@ -13,10 +13,13 @@ import TableHead from "@material-ui/core/TableHead";
 import TablePagination from "@material-ui/core/TablePagination";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
+import MailOutlineIcon from "@material-ui/icons/MailOutline";
+import EditIcon from "@material-ui/icons/Edit";
 import { makeStyles } from "@material-ui/core/styles";
 import { MouseEvent, MouseEventHandler, useState } from "react";
 import { Data } from "react-firebase-hooks/firestore/dist/firestore/types";
 import { useHistory } from "react-router-dom";
+import { IconButton } from "@material-ui/core";
 
 // Sorting List Functions
 function descendingComparator(a, b, orderBy) {
@@ -95,8 +98,7 @@ const useStyles = makeStyles((theme) => ({
     width: 1
   },
   avatar: {
-    marginRight: 15,
-    marginLeft: 15
+    marginRight: 15
   }
 }));
 
@@ -167,6 +169,7 @@ const ListView = ({ clientData }: ListViewProps) => {
       <TableHead>
         <TableRow>
           <TableCell padding="none"></TableCell>
+          <TableCell padding="none"></TableCell>
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -190,6 +193,7 @@ const ListView = ({ clientData }: ListViewProps) => {
               </TableSortLabel>
             </TableCell>
           ))}
+          <TableCell padding="none"></TableCell>
         </TableRow>
       </TableHead>
     );
@@ -219,11 +223,21 @@ const ListView = ({ clientData }: ListViewProps) => {
                   return (
                     <TableRow
                       hover
-                      onClick={(event) => handleClick(event, row.id)} // Send to client page when clicked
+                      //onClick={(event) => handleClick(event, row.id)} // Send to client page when clicked
                       key={row.id}
                     >
+                      {/* Mailto button */}
+                      <TableCell align="center">
+                        <IconButton
+                          href={`mailto:${row.email}`}
+                          aria-label="email"
+                        >
+                          <MailOutlineIcon />
+                        </IconButton>
+                      </TableCell>
+
                       {/* Image*/}
-                      <TableCell align="center" padding="none">
+                      <TableCell align="left" padding="none">
                         <div className={classes.avatar}>
                           <ClientAvatar
                             firstName={row.firstName}
@@ -243,6 +257,16 @@ const ListView = ({ clientData }: ListViewProps) => {
                       <TableCell align="left">{row.email}</TableCell>
                       <TableCell align="left">{row.phone}</TableCell>
                       <TableCell align="left">{row.notes}</TableCell>
+
+                      {/* Edit button */}
+                      <TableCell align="center">
+                        <IconButton
+                          aria-label="editClient"
+                          onClick={(event) => handleClick(event, row.id)}
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
