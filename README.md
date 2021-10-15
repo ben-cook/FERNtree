@@ -1,7 +1,7 @@
 # Ferntree
 
 Ferntree is a personal CRM targeted towards a general user looking to manage their contacts.
-Ferntree was made as part of COMP30022 IT Project @ Unimelb.
+Ferntree was made as part of COMP30022 IT Project @ Unimelb. It is live at https://ferntree.web.app.
 
 ## Documentation
 
