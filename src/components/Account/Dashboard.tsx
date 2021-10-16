@@ -87,7 +87,7 @@ const Dashboard = (user: firebase.User) => {
           </Typography>
         )}
         <Typography variant="h6" display={"inline"}>
-          {` clients`}
+          {` contacts`}
         </Typography>
       </div>
 
