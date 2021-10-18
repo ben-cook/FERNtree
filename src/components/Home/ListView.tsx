@@ -15,11 +15,11 @@ import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
 import MailOutlineIcon from "@material-ui/icons/MailOutline";
 import EditIcon from "@material-ui/icons/Edit";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, useTheme } from "@material-ui/core/styles";
 import { MouseEvent, MouseEventHandler, useState } from "react";
 import { Data } from "react-firebase-hooks/firestore/dist/firestore/types";
 import { useHistory } from "react-router-dom";
-import { IconButton } from "@material-ui/core";
+import { IconButton, useMediaQuery } from "@material-ui/core";
 
 // Sorting List Functions
 function descendingComparator(a, b, orderBy) {
@@ -122,6 +122,8 @@ const ListView = ({ clientData }: ListViewProps) => {
   const [orderBy, setOrderBy] = useState("firstName");
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
+  const theme = useTheme();
+  const mobileView = useMediaQuery(theme.breakpoints.down("xs"));
 
   const listRows = clientData.map((client) => {
     return createData(
@@ -159,6 +161,9 @@ const ListView = ({ clientData }: ListViewProps) => {
 
   const EnhancedTableHead = (props: EnhancedTabledHeadProps) => {
     const { order, orderBy, onRequestSort } = props;
+    const theme = useTheme();
+    const mobileView = useMediaQuery(theme.breakpoints.down("xs"));
+
     const createSortHandler =
       (property: string): MouseEventHandler =>
       (event) => {
@@ -168,8 +173,13 @@ const ListView = ({ clientData }: ListViewProps) => {
     return (
       <TableHead>
         <TableRow>
-          <TableCell padding="none"></TableCell>
-          <TableCell padding="none"></TableCell>
+          {!mobileView &&
+            (<>
+              <TableCell padding="none"></TableCell>
+              <TableCell padding="none"></TableCell>
+            </>)
+          }
+          
           {headCells.map((headCell) => (
             <TableCell
               key={headCell.id}
@@ -227,26 +237,31 @@ const ListView = ({ clientData }: ListViewProps) => {
                       key={row.id}
                     >
                       {/* Mailto button */}
-                      <TableCell align="center">
-                        <IconButton
-                          href={`mailto:${row.email}`}
-                          aria-label="email"
-                        >
-                          <MailOutlineIcon />
-                        </IconButton>
-                      </TableCell>
 
-                      {/* Image*/}
-                      <TableCell align="left" padding="none">
-                        <div className={classes.avatar}>
-                          <ClientAvatar
-                            firstName={row.firstName}
-                            lastName={row.lastName}
-                            email={row.email}
-                            size={45}
-                          />
-                        </div>
-                      </TableCell>
+                      {!mobileView &&
+                        (
+                        <>
+                        <TableCell align="center">
+                          <IconButton
+                            href={`mailto:${row.email}`}
+                            aria-label="email"
+                          >
+                            <MailOutlineIcon />
+                          </IconButton>
+                        </TableCell>
+
+                        <TableCell align="left" padding="none">
+                          <div className={classes.avatar}>
+                            <ClientAvatar
+                              firstName={row.firstName}
+                              lastName={row.lastName}
+                              email={row.email}
+                              size={45}
+                            />
+                          </div>
+                        </TableCell>
+                        </>)
+                      }
 
                       {/*Contact Information*/}
                       <TableCell component="th" id={labelId} scope="row">
