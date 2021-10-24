@@ -52,12 +52,25 @@ const Login = () => {
   const signInWithGoogle = () => {
     const google_provider = new firebase.auth.GoogleAuthProvider();
     firebase.auth().signInWithPopup(google_provider)
-      .then((re)=> {
-        console.log(re);
+      .then((result)=> {
+        const firstName = result.user.displayName.split(" ")[0];
+        const lastName = result.user.displayName.split(" ")[1];
+
+        // set the user's name from federated auth properties if first time signing in (and thus using Ferntree)
+        const user = firebase.auth().currentUser;
+        if(user.metadata.creationTime === user.metadata.lastSignInTime) {
+          firebase
+            .firestore()
+            .collection("users")
+            .doc(user.uid)
+            .set({firstName: firstName, lastName: lastName})
+        }
       })
       .catch((err)=> {
         console.log(err);
       })
+
+      
   }
 
   return (
