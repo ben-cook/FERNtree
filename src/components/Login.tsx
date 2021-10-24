@@ -48,6 +48,17 @@ const Login = () => {
     password: ""
   };
 
+  const signInWithGoogle = () => {
+    const google_provider = new firebase.auth.GoogleAuthProvider();
+    firebase.auth().signInWithPopup(google_provider)
+      .then((re)=> {
+        console.log(re);
+      })
+      .catch((err)=> {
+        console.log(err);
+      })
+  }
+
   return (
     <>
       <Typography variant="h2" className={classes.title}>
@@ -118,6 +129,18 @@ const Login = () => {
                   data-cy="submit"
                 >
                   Log In
+                </Button>
+              </Grid>
+              <Grid item xs={7}>
+                <Button
+                  //type={"submit"}
+                  onClick={signInWithGoogle}
+                  variant={"contained"}
+                  color={"primary"}
+                  disabled={isSubmitting}
+                  className={classes.input}
+                  data-cy="submit">
+                    Google Sign In
                 </Button>
               </Grid>
             </Grid>
