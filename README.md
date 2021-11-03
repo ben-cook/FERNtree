@@ -1,27 +1,32 @@
 
 # FERNtree
 
-<p align="left">
-  <img src="https://github.com/ben-cook/FERNtree/blob/main/src/components/logoBlack.svg"  width="300" >
+<p align="center">
+  <img src="images/ferntree_banner.png"  width="800" >
 </p>
 
-FERNtree is a personal CRM which can be used by anyone looking to manage their contacts.
+<br>
+
+**FERNtree is a personal CRM which can be used by anyone looking to manage their contacts.**
 
 FERNtree was made as part of COMP30022 IT Project @ Unimelb. It is currently live at https://ferntree.web.app.
 
 Tutor: Thomas Bowes (t.bowes@unimelb.edu.au)
 Client: Gaoli Yi
 
+<br>
 
-## Table of contents
+## Table of Contents
 * [Team Members](#team-members)
 * [Quick Start Guide](#quick-start)
-* [Documentation](#documentation)
 * [Requirements](#requirements)
 * [Front End Technologies](#front-end-technologies)
 * [Back End Technologies](#back-end-technologies)
 * [Testing](#testing)
+* [Deployment](#deployment)
 * [Licensing](#licensing)
+
+<br>
 
 <a name="team-members"></a>
 ## Team Members
@@ -33,17 +38,19 @@ Client: Gaoli Yi
 | Julie Zenou  | Design & UI Lead      |  https://github.com/Joooolie |
 | Liam Harding  | Backend Lead      |  https://github.com/kinderdropout |
 
+<br>
+
 <a name="quick-start"></a>
 ## Quick Start Guide
 
-To run FERNtree locally, clone this repository and install dependencies with `yarn`.
-Then, run the app with `yarn start`.
+To run FERNtree locally, follow the following steps:
+1. Clone this repository.
+2. Install dependencies with `yarn` or `yarn install`.
+3. Finally, run the app with `yarn start`.
+
 For more information about the dependencies used in this project, refer to [package.json](https://github.com/ben-cook/FERNtree/blob/main/package.json).
 
-<a name="documentation"></a>
-## Documentation
-
-All project documentation for Ferntree is stored here: https://ferntree.atlassian.net/wiki/spaces/IPF/overview
+<br>
 
 <a name="requirements"></a>
 ## Requirements
@@ -61,10 +68,9 @@ Beyond this, we also completed several additional requirements that we proposed 
 - To allow filtering on both tags and categories on top of the basic search functionality.
 - Dark mode.
 - Ability to switch to List View, and sort contacts in a list, on the main page.
+- Ability to sign in with a Google account.
 
-A summary of completed requirements can be found here:
-https://ferntree.atlassian.net/wiki/spaces/IPF/pages/1409429/Summary+of+Requirements
-
+<br>
 
 <a name="front-end-technologies"></a>
 ## Front End Technologies
@@ -94,6 +100,7 @@ https://ferntree.atlassian.net/wiki/spaces/IPF/pages/1409429/Summary+of+Requirem
 ### Gravatar
 - Gravatar is a service for providing globally unique avatars. If a contact's email address is associated with a Gravatar, this is automatically used as the contact's profile image.
  
+<br>
 
 <a name="back-end-technologies"></a>
 ## Back End Technologies
@@ -103,18 +110,47 @@ https://ferntree.atlassian.net/wiki/spaces/IPF/pages/1409429/Summary+of+Requirem
 - The serverless nature of a cloud backend service allows our application to scale up and down automatically with the needs of our users, which allows our application to potentially serve millions of users if need be.
 - Firestore, one of the NoSQL database options offered through Firebase, was used in our project, because it allowed us to easily add user-defined fields and values into our database.
 
-More information about our backend can be found in our API Documentation here: https://ferntree.atlassian.net/wiki/spaces/IPF/pages/35455376/API+Documentation
-
+<br>
 
 <a name="testing"></a>
 ## Testing
 
 ### Cypress & Firebase Emulator
-FERNtree uses Cypress for end-to-end testing, and Firebase Emulator for backend testing. More information can be found here: https://ferntree.atlassian.net/wiki/spaces/IPF/pages/230070/Testing
+FERNtree uses Cypress for end-to-end testing, and Firebase Emulator for backend testing.
 
-To test FERNtree locally, make sure you have all dependencies installed then open Cypress with `yarn cypress`. From here, you can select which tests you wish to run.
+**To test FERNtree locally via Cypress:**
+1. Make sure you have all dependencies installed.
+2. Open Cypress with `yarn cypress`.
+3. From here, you can select which tests you wish to run.
 
+**To test FERNtree locally with Firestore Rules tests:**
+
+*Requirements:*
+- Installation of Firebase CLI
+- Java 11 or higher installed (if on WSL install within WSL)
+- Jest (Best to run npm i beforehand)
+
+*To run rest:*
+1. In a terminal, invoke the Firestore emulator with `firebase emulators:start --only firestore`
+2. Open a new terminal window, navigating to the ‘tests' directory.
+3. Run tests with `jest tests.js`
+
+<br>
+
+<a name="deployment"></a>
+## Deployment
+Ferntree is built with and hosted by the Firebase platform, which affords incredibly simple CD solutions.
+
+In short, we have enabled Firebase Hosting for our project which allows us to create a GitHub Action that **deploys to Firebase Hosting upon updates to our main branch**.
+
+
+<br>
 
 <a name="licensing"></a>
 ## Licensing
-More information to be added.
+
+**Licensing Details:**
+
+<p align="center">
+  <img src="images/Licensing.PNG"  width="600" >
+</p>
