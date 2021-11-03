@@ -152,5 +152,5 @@ In short, we have enabled Firebase Hosting for our project which allows us to cr
 **Licensing Details:**
 
 <p align="center">
-  <img src="images/Licensing.png"  width="600" >
+  <img src="images/Licensing.PNG"  width="600" >
 </p>
